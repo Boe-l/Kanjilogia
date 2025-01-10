@@ -1,0 +1,28 @@
+[
+    { "kanji": "日", "leitura": "ひ", "significado": "sol/dia" },
+    { "kanji": "月", "leitura": "つき", "significado": "lua" },
+    { "kanji": "火", "leitura": "ひ", "significado": "fogo" },
+    { "kanji": "水", "leitura": "みず", "significado": "água" },
+    { "kanji": "木", "leitura": "き", "significado": "árvore" },
+    { "kanji": "金", "leitura": "きん", "significado": "ouro" },
+    { "kanji": "土", "leitura": "つち", "significado": "terra" },
+    { "kanji": "風", "leitura": "かぜ", "significado": "vento" },
+    { "kanji": "雨", "leitura": "あめ", "significado": "chuva" },
+    { "kanji": "雪", "leitura": "ゆき", "significado": "neve" },
+    { "kanji": "花", "leitura": "はな", "significado": "flor" },
+    { "kanji": "犬", "leitura": "いぬ", "significado": "cachorro" },
+    { "kanji": "猫", "leitura": "ねこ", "significado": "gato" },
+    { "kanji": "魚", "leitura": "さかな", "significado": "peixe" },
+    { "kanji": "鳥", "leitura": "とり", "significado": "pássaro" },
+    { "kanji": "虫", "leitura": "むし", "significado": "inseto" },
+    { "kanji": "牛", "leitura": "うし", "significado": "boi" },
+    { "kanji": "馬", "leitura": "うま", "significado": "cavalo" },
+    { "kanji": "鳴く", "leitura": "なく", "significado": "canto" },
+    { "kanji": "泳ぐ", "leitura": "およぐ", "significado": "nadar" },
+    { "kanji": "食べる", "leitura": "たべる", "significado": "comer" },
+    { "kanji": "飲む", "leitura": "のむ", "significado": "beber" },
+    { "kanji": "寝る", "leitura": "ねる", "significado": "dormir" },
+    { "kanji": "見る", "leitura": "みる", "significado": "ver" }
+
+  ]
+  
