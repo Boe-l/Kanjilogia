@@ -1,0 +1,27 @@
+[
+    { "kanji": "sol", "leitura": "Sol", "significado": "Sol" },
+    { "kanji": "luna", "leitura": "Lua", "significado": "Lua" },
+    { "kanji": "ignis", "leitura": "Fogo", "significado": "Fogo" },
+    { "kanji": "aqua", "leitura": "Água", "significado": "Água" },
+    { "kanji": "arbor", "leitura": "Árvore", "significado": "Árvore" },
+    { "kanji": "aurum", "leitura": "Ouro", "significado": "Ouro" },
+    { "kanji": "terra", "leitura": "Terra", "significado": "Terra" },
+    { "kanji": "ventus", "leitura": "Vento", "significado": "Vento" },
+    { "kanji": "pluvia", "leitura": "Chuva", "significado": "Chuva" },
+    { "kanji": "nix", "leitura": "Neve", "significado": "Neve" },
+    { "kanji": "flos", "leitura": "Flor", "significado": "Flor" },
+    { "kanji": "canis", "leitura": "Cachorro", "significado": "Cachorro" },
+    { "kanji": "felis", "leitura": "Gato", "significado": "Gato" },
+    { "kanji": "piscis", "leitura": "Peixe", "significado": "Peixe" },
+    { "kanji": "avis", "leitura": "Pássaro", "significado": "Pássaro" },
+    { "kanji": "insectum", "leitura": "Inseto", "significado": "Inseto" },
+    { "kanji": "bovis", "leitura": "Boi", "significado": "Boi" },
+    { "kanji": "equus", "leitura": "Cavalo", "significado": "Cavalo" },
+    { "kanji": "canere", "leitura": "Canto", "significado": "Canto" },
+    { "kanji": "natare", "leitura": "Nadar", "significado": "Nadar" },
+    { "kanji": "edere", "leitura": "Comer", "significado": "Comer" },
+    { "kanji": "bibere", "leitura": "Beber", "significado": "Beber" },
+    { "kanji": "dormire", "leitura": "Dormir", "significado": "Dormir" },
+    { "kanji": "videre", "leitura": "Ver", "significado": "Ver" }
+  ]
+  
