@@ -1,11 +1,11 @@
 {
-    "name": "Kanjilogia",
-    "short_name": "Kanjilogia",
+    "name": "jogo",
+    "short_name": "jogo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Kanjilogia: Onde o estudo vira diversão. Onde você vira mestre. ",
+    "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
