@@ -1,31 +1,58 @@
-[
-    { "kanji": "山", "leitura": "shan1", "significado": "montanha" },
-    { "kanji": "河", "leitura": "he2", "significado": "rio" },
-    { "kanji": "田", "leitura": "tian2", "significado": "campo" },
-    { "kanji": "空", "leitura": "kong1", "significado": "céu" },
-    { "kanji": "星", "leitura": "xing1", "significado": "estrela" },
-    { "kanji": "石", "leitura": "shi2", "significado": "pedra" },
-    { "kanji": "海", "leitura": "hai3", "significado": "mar" },
-    { "kanji": "林", "leitura": "lin2", "significado": "bosque" },
-    { "kanji": "竹", "leitura": "zhu2", "significado": "bambu" },
-    { "kanji": "光", "leitura": "guang1", "significado": "luz" },
-    { "kanji": "人", "leitura": "ren2", "significado": "pessoa" },
-    { "kanji": "子", "leitura": "zi3", "significado": "criança" },
-    { "kanji": "女", "leitura": "nu3", "significado": "mulher" },
-    { "kanji": "男", "leitura": "nan2", "significado": "homem" },
-    { "kanji": "友", "leitura": "you3", "significado": "amigo" },
-    { "kanji": "父", "leitura": "fu4", "significado": "pai" },
-    { "kanji": "母", "leitura": "mu3", "significado": "mãe" },
-    { "kanji": "兄", "leitura": "xiong1", "significado": "irmão" },
-    { "kanji": "妹", "leitura": "mei4", "significado": "irmã" },
-    { "kanji": "家", "leitura": "jia1", "significado": "casa" },
-    { "kanji": "手", "leitura": "shou3", "significado": "mão" },
-    { "kanji": "足", "leitura": "zu2", "significado": "pé" },
-    { "kanji": "目", "leitura": "mu4", "significado": "olho" },
-    { "kanji": "耳", "leitura": "er3", "significado": "orelha" },
-    { "kanji": "口", "leitura": "kou3", "significado": "boca" },
-    { "kanji": "心", "leitura": "xin1", "significado": "coração" },
-    { "kanji": "体", "leitura": "ti3", "significado": "corpo" },
-    { "kanji": "電", "leitura": "dian4", "significado": "eletricidade" },
-    { "kanji": "車", "leitura": "che1", "significado": "carro" }
+{
+  "tags": [
+    "chinese",
+    "hsks1"
+  ],
+  "words": [
+    {
+      "word": "行",
+      "reading": "xing2~hang2",
+      "mean": "ir, andar"
+    },
+    {
+      "word": "着",
+      "reading": "zhao1~zhe5",
+      "mean": "usar, estar (em andamento)"
+    },
+    {
+      "word": "会",
+      "reading": "hui4~kuai4",
+      "mean": "encontro, habilidade"
+    },
+    {
+      "word": "了",
+      "reading": "le5~liao3",
+      "mean": "passado, conclusão"
+    },
+    {
+      "word": "重",
+      "reading": "zhong4~chong2",
+      "mean": "pesado, importante"
+    },
+    {
+      "word": "空",
+      "reading": "kong3~kong4",
+      "mean": "vazio, céu"
+    },
+    {
+      "word": "快",
+      "reading": "kuai4~kuai1",
+      "mean": "rápido, feliz"
+    },
+    {
+      "word": "更",
+      "reading": "geng4~geng1",
+      "mean": "ainda mais, mais"
+    },
+    {
+      "word": "回",
+      "reading": "hui2~hui4",
+      "mean": "voltar, resposta"
+    },
+    {
+      "word": "看",
+      "reading": "kan4~kan1",
+      "mean": "olhar, ver"
+    }
   ]
+}
