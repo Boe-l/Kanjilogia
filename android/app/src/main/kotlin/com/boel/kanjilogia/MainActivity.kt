@@ -1,0 +1,5 @@
+package com.boel.kanjilogia
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity()
