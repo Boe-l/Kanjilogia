@@ -76825,7 +76825,7 @@ r.aw()
 q.v3()
 q.Am()},
 L(a){var s=this,r=null,q=B.d.dD(A.bn(a,r,t.l).w.a.a*0.06,16,30),p=A.wg(A.jq(B.mH,r,r),new A.aeh(a),r),o=A.bh(""+s.z+" Pontos",r,r,r,A.bJ(r,r,B.l,r,r,r,r,r,r,r,r,q,r,r,B.b2,r,r,!0,r,r,r,r,r,r,r,r),r,r),n=A.wg(A.jq(B.Fu,B.cH,r),s.gCd(),"Reiniciar Jogo"),m=s.at,l=m<=5&&B.j.br(m,2)===0?B.cI:B.l,k=t.p
-return A.IY(!0,A.arO(A.nf(r,A.iI(B.bD,A.c([new A.bt(B.iL,new A.H6(new A.aei(s),r),r),A.xG(r,A.qW(A.c([p,o,n,A.d0(A.bh(""+m,r,r,r,A.bJ(r,r,l,r,r,r,r,r,r,r,r,q*1.4,r,r,B.b2,r,r,!0,r,r,r,r,r,r,r,r),r,r),r,50)],k),B.ev,B.aB),r,r,16,16,30,r)],k),B.V,B.bx),B.ai,!1,r,r,r,r,r,r,r,r,r,r,r,r,new A.aej(a),r,r,r),r,r,r),B.aQ,!1)}}
+return A.IY(!1,A.arO(A.nf(r,A.iI(B.bD,A.c([new A.bt(B.iL,new A.H6(new A.aei(s),r),r),A.xG(r,A.qW(A.c([p,o,n,A.d0(A.bh(""+m,r,r,r,A.bJ(r,r,l,r,r,r,r,r,r,r,r,q*1.4,r,r,B.b2,r,r,!0,r,r,r,r,r,r,r,r),r,r),r,50)],k),B.ev,B.aB),r,r,16,16,30,r)],k),B.V,B.bx),B.ai,!1,r,r,r,r,r,r,r,r,r,r,r,r,new A.aej(a),r,r,r),r,r,r),B.aQ,!1)}}
 A.adC.prototype={
 $0(){var s=this.a.e
 if(!s.gbp())s.fF()},
