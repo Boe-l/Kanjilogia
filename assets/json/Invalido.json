@@ -1,0 +1,27 @@
+{
+    "filename": "test_invalid.json",
+    "content": {
+      "tags": ["tag1", "tag2", 123, null],
+      "words": [
+        {
+          "word": "palavra1",
+          "reading": 123, 
+          "mean": null 
+        },
+        {
+          "word": "palavra2"
+        },
+        {
+          "reading": "読み方",
+          "mean": "significado" 
+        },
+        {
+          "word": "palavra3",
+          "reading": "よみがな",
+          "mean": "意味",
+          "tags": ["tag_extra"] 
+        }
+      ]
+    }
+  }
+  

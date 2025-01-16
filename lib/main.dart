@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui';
-import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'game_screen.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'makehive.dart';
+import 'managepage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      statusBarColor:
-          const Color.fromARGB(0, 0, 0, 0), // Cor transparente para ver o fundo
-      statusBarIconBrightness:
-          Brightness.dark, // Ícones escuros para Status Bar clara
-    ),
-  );
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(Kanjilogia());
 }
 
@@ -47,7 +43,7 @@ class PreferencesService {
   /// Get the saved maximum time
   Future<int> getMaxTime() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_maxTimeKey) ?? 29;
+    return prefs.getInt(_maxTimeKey) ?? 30;
   }
 }
 
@@ -57,6 +53,7 @@ class Kanjilogia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Kanjilogia - 漢字ロギア',
       theme: ThemeData.dark(),
       home: MainMenu(),
       debugShowCheckedModeBanner: false,
@@ -73,8 +70,9 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu>
     with SingleTickerProviderStateMixin {
-  List<String> _jsonFiles = [];
-  List<String> _filteredJsonFiles = [];
+  Map<String, Set<String>> _jsonFiles =
+      {}; // Para armazenar filenames e suas tags
+  Map<String, Set<String>> _filteredJsonFiles = {};
   final List<String> _selectedFiles = [];
   final TextEditingController _searchController = TextEditingController();
   late int selectedTime = 30;
@@ -224,33 +222,40 @@ class _MainMenuState extends State<MainMenu>
     super.dispose();
   }
 
+  // Variáveis para armazenar chaves e tags separadas
+
+  List<Set<String>> _tags = [];
+
   Future<void> _loadJsonFiles() async {
     try {
-      // Carregar o AssetManifest usando a nova API
-      final assetManifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+      // Obtendo os dados com os filenames e tags
+      final jsonFiles = await listFilenamesWithTags();
 
-      // Filtrar os arquivos JSON da pasta 'assets/json'
-      final jsonFiles = assetManifest
-          .listAssets()
-          .where((path) =>
-              path.startsWith('assets/json/') && path.endsWith('.json'))
-          .toList();
+      // Preenchendo as listas com os dados obtidos
+
+      _tags = jsonFiles.values.toList();
 
       setState(() {
+        // Aqui estamos atualizando a interface com as listas de dados
         _jsonFiles = jsonFiles;
         _filteredJsonFiles = jsonFiles;
       });
     } catch (e) {
-      // Tratar erros, se necessário
+      // Tratar erros
+      print('Erro ao carregar arquivos JSON: $e');
     }
   }
 
   void _filterJsonFiles() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      _filteredJsonFiles = _jsonFiles
-          .where((file) => file.split('/').last.toLowerCase().contains(query))
-          .toList();
+      // Filtrando o mapa de _jsonFiles com base no filename
+      _filteredJsonFiles = Map.fromEntries(
+        _jsonFiles.entries.where((entry) {
+          // Verificando se o filename contém a consulta (em minúsculas)
+          return entry.key.toLowerCase().contains(query);
+        }),
+      );
     });
   }
 
@@ -271,25 +276,20 @@ class _MainMenuState extends State<MainMenu>
     }
 
     try {
-      List<dynamic> finalJsonData =
-          []; // Lista que vai armazenar os dados combinados
+      // Chamar a função getWordsByFilenames com os arquivos selecionados
+      List<String> selectedFilesList =
+          _selectedFiles; // Ou qualquer outro critério para os nomes de arquivos
+      List<dynamic> finalWords = await getWordsByFilenames(selectedFilesList);
 
-      // Iterar pelos arquivos selecionados
-      for (String file in _selectedFiles) {
-        final fileContents =
-            await rootBundle.loadString(file); // Carregar conteúdo do arquivo
-        final Map<String, dynamic> jsonData =
-            json.decode(fileContents); // Decodificar o JSON como um mapa
-
-        // Adicionar os valores do mapa na lista finalJsonData
-        finalJsonData
-            .add(jsonData); // Adiciona o objeto inteiro como um item na lista
+      if (finalWords.isEmpty) {
+        _showErrorDialog("Nenhuma palavra foi carregada.");
+        return;
       }
 
       // Preparando os dados para serem enviados para a próxima tela
       final data = {
         'selectedTime': selectedTime,
-        'finalJsonData': finalJsonData,
+        'finalJsonData': finalWords, // Dados das palavras retornadas
       };
 
       // Navegar para a próxima tela passando os dados
@@ -304,7 +304,7 @@ class _MainMenuState extends State<MainMenu>
       _selectedFiles.clear();
     } catch (e) {
       // Em caso de erro, exibe uma mensagem de erro
-      _showErrorDialog("Erro ao carregar os arquivos JSON: $e");
+      _showErrorDialog("Erro ao carregar as palavras: $e");
     }
   }
 
@@ -325,92 +325,13 @@ class _MainMenuState extends State<MainMenu>
     );
   }
 
-  Future<void> _settings(BuildContext context) async {
-    // Tempo padrão inicial
-
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.3,
-            height: MediaQuery.of(context).size.height * 0.5,
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Configurações',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Tempo máximo de resposta:',
-                  style: TextStyle(fontSize: 16),
-                ),
-                StatefulBuilder(
-                  builder: (BuildContext context, StateSetter setState) {
-                    return Column(
-                      children: [
-                        Slider(
-                          value: selectedTime.toDouble(),
-                          min: 10,
-                          max: 50,
-                          divisions: 4, // Intervalo de 10 segundos
-                          label: "$selectedTime segundos",
-                          onChanged: (double value) {
-                            setState(() {
-                              selectedTime = value.toInt();
-                            });
-                            preferencesService.saveMaxTime(selectedTime);
-                          },
-                        ),
-                        Text('$selectedTime segundos'),
-                      ],
-                    );
-                  },
-                ),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('Cancelar'),
-                    ),
-                    SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(selectedTime);
-                      },
-                      child: Text('Salvar'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    ).then((value) {
-      if (value != null) {
-        // Use o tempo escolhido conforme necessário
-      }
-    });
-  }
 
   void showTutorial() {
     TutorialCoachMark(
       targets: targets, // List<TargetFocus>
       colorShadow: Colors.red, // DEFAULT Colors.black
       // alignSkip: Alignment.bottomRight,
-      // textSkip: "SKIP",
+      textSkip: "Pular",
       // paddingFocus: 10,
       // opacityShadow: 0.8,
       onClickTarget: (target) {},
@@ -428,373 +349,346 @@ class _MainMenuState extends State<MainMenu>
     final screenWidth = MediaQuery.of(context).size.width;
 
     return SafeArea(
-      child: AnimatedBuilder(
-        animation: _colorAnimation,
-        builder: (context, child) {
-          return Scaffold(
-              resizeToAvoidBottomInset: true,
-              body: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      _colorAnimation.value!,
-                      const Color.fromARGB(255, 56, 16, 115)
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+      top: false,
+      child: Main(screenWidth),
+    );
+  }
+
+  AnimatedBuilder Main(double screenWidth) {
+    return AnimatedBuilder(
+      animation: _colorAnimation,
+      builder: (context, child) {
+        return Scaffold(
+            resizeToAvoidBottomInset: true,
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    _colorAnimation.value!,
+                    const Color.fromARGB(255, 56, 16, 115)
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 500),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 26),
-                        Text(
-                          "Kanjilogia",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: screenWidth < 600 ? 28 : 36,
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(
-                                color: Colors.blueAccent,
-                                blurRadius: 10,
-                              )
-                            ],
-                          ),
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 500),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 26),
+                      Text(
+                        "Kanjilogia",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: screenWidth < 600 ? 28 : 36,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.blueAccent,
+                              blurRadius: 10,
+                            )
+                          ],
                         ),
-                        SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: TextField(
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              hintText: "Buscar...",
-                              hintStyle: TextStyle(color: Colors.white),
-                              prefixIcon:
-                                  Icon(Icons.search, color: Colors.white),
-                              filled: false, // Para o fundo preenchido
-                              fillColor: Colors.grey[800], // Cor do fundo
+                      ),
+                      SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: "Buscar...",
+                            hintStyle: TextStyle(color: Colors.white),
+                            prefixIcon:
+                                Icon(Icons.search, color: Colors.white),
+                            filled: false, // Para o fundo preenchido
+                            fillColor: Colors.grey[800], // Cor do fundo
 
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                    30), // Borda arredondada
-                                borderSide: BorderSide(
-                                    color: Colors.blue,
-                                    width: 2), // Cor e largura da borda
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                    30), // Borda arredondada
-                                borderSide: BorderSide(
-                                    color: Colors.blue,
-                                    width:
-                                        4), // Cor e largura da borda ao focar
-                              ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                  30), // Borda arredondada
+                              borderSide: BorderSide(
+                                  color: Colors.blue,
+                                  width: 2), // Cor e largura da borda
                             ),
-                            style: TextStyle(color: Colors.white),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                  30), // Borda arredondada
+                              borderSide: BorderSide(
+                                  color: Colors.blue,
+                                  width:
+                                      4), // Cor e largura da borda ao focar
+                            ),
                           ),
+                          style: TextStyle(color: Colors.white),
                         ),
-                        Expanded(
-                          child: _filteredJsonFiles.isEmpty
-                              ? Center(
-                                  child: Text(
-                                    'Nenhum arquivo JSON encontrado.',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18),
+                      ),
+                      Expanded(
+                        child: _filteredJsonFiles.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Nenhum arquivo JSON encontrado.',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              )
+                            : AnimationLimiter(
+                                child: ScrollConfiguration(
+                                  behavior: ScrollConfiguration.of(context)
+                                      .copyWith(
+                                    dragDevices: {
+                                      PointerDeviceKind.mouse,
+                                      PointerDeviceKind.touch,
+                                    },
+                                    scrollbars: false,
                                   ),
-                                )
-                              : AnimationLimiter(
-                                  child: ScrollConfiguration(
-                                    behavior: ScrollConfiguration.of(context)
-                                        .copyWith(
-                                      dragDevices: {
-                                        PointerDeviceKind.mouse,
-                                        PointerDeviceKind.touch,
-                                      },
-                                      scrollbars: false,
-                                    ),
-                                    child: AnimationLimiter(
-                                      child: GridView.builder(
-                                        controller: _scrollController,
-                                        padding: const EdgeInsets.all(16),
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount:
-                                              screenWidth < 320 ? 2 : 3,
-                                          crossAxisSpacing: 16,
-                                          mainAxisSpacing: 16,
-                                        ),
-                                        itemCount: _filteredJsonFiles.length,
-                                        itemBuilder: (context, index) {
-                                          final fileName =
-                                              _filteredJsonFiles[index];
-                                          final alias = fileName
-                                              .split('/')
-                                              .last
-                                              .replaceAll('.json', '');
-                                          final isSelected =
-                                              _selectedFiles.contains(fileName);
-                                          return MouseRegion(
-                                            cursor: SystemMouseCursors.click,
-                                            child: AnimationConfiguration
-                                                .staggeredGrid(
-                                              position: index,
-                                              columnCount:
-                                                  screenWidth < 320 ? 2 : 3,
-                                              duration:
-                                                  Duration(milliseconds: 600),
-                                              child: SlideAnimation(
-                                                curve: Curves.decelerate,
-                                                verticalOffset: 250,
-                                                child: FadeInAnimation(
-                                                  duration: Duration(
-                                                      milliseconds: 1000),
-                                                  child: FutureBuilder<String>(
-                                                    key: index == 2
-                                                        ? grid3
-                                                        : null,
-                                                    future: rootBundle.loadString(
-                                                        fileName), // Carregar JSON
-                                                    builder:
-                                                        (context, snapshot) {
-                                                      if (snapshot
-                                                              .connectionState ==
-                                                          ConnectionState
-                                                              .waiting) {
-                                                        return const Center(
-                                                            child:
-                                                                CircularProgressIndicator());
-                                                      }
+                                  child: AnimationLimiter(
+                                    child: GridView.builder(
+                                      controller: _scrollController,
+                                      padding: const EdgeInsets.all(16),
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount:
+                                            screenWidth < 320 ? 2 : 3,
+                                        crossAxisSpacing: 16,
+                                        mainAxisSpacing: 16,
+                                      ),
+                                      itemCount: _filteredJsonFiles.length,
+                                      itemBuilder: (context, index) {
+                                        final fileName = _filteredJsonFiles
+                                            .keys
+                                            .elementAt(index);
 
-                                                      if (snapshot.hasError) {
-                                                        // Não faz nada se houver erro
-                                                        return SizedBox
-                                                            .shrink(); // Retorna um widget vazio
-                                                      } else if (!snapshot
-                                                          .hasData) {
-                                                        // Também não faz nada se não houver dados
-                                                        return SizedBox
-                                                            .shrink(); // Retorna um widget vazio
-                                                      }
-
-                                                      // Decodificar o JSON
-                                                      final fileData = json
-                                                          .decode(snapshot
-                                                              .data!) as Map<
-                                                          String, dynamic>;
-                                                      final tags = fileData[
-                                                                  'tags']
-                                                              as List<
-                                                                  dynamic>? ??
-                                                          [];
-                                                      final language =
-                                                          tags.isNotEmpty
-                                                              ? tags[0]
-                                                              : 'unknown';
-
-                                                      // Obter o caminho da bandeira
-                                                      final flagAssetPath =
-                                                          _getFlagAssetPath(
-                                                              language);
-
-                                                      // Calcular o tamanho ideal para a bandeira
-                                                      final screenSize =
-                                                          MediaQuery.of(context)
-                                                              .size;
-                                                      final flagSize = (screenSize
-                                                                  .shortestSide *
-                                                              0.12)
-                                                          .clamp(36.0, 72.0);
-
-                                                      return AnimationConfiguration
-                                                          .staggeredGrid(
-                                                        position: index,
-                                                        columnCount:
-                                                            _filteredJsonFiles
-                                                                .length,
-                                                        duration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    300),
-                                                        child: SlideAnimation(
-                                                          verticalOffset: 50,
-                                                          child:
-                                                              FadeInAnimation(
-                                                            delay:
-                                                                const Duration(
-                                                                    milliseconds:
-                                                                        150),
-                                                            child:
-                                                                GestureDetector(
-                                                              onTap: () =>
-                                                                  _toggleSelection(
-                                                                      fileName),
-                                                              child:
-                                                                  AnimatedContainer(
-                                                                duration:
-                                                                    const Duration(
-                                                                        milliseconds:
-                                                                            250),
-                                                                curve: Curves
-                                                                    .easeInOutQuint,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  boxShadow: [
-                                                                    BoxShadow(
-                                                                      color: Colors
-                                                                          .black
-                                                                          .withOpacity(
-                                                                              0.2),
-                                                                      spreadRadius:
-                                                                          2,
-                                                                      blurRadius:
-                                                                          10,
-                                                                      offset:
-                                                                          Offset(
-                                                                              0,
-                                                                              3),
-                                                                    ),
+                                        final isSelected =
+                                            _selectedFiles.contains(fileName);
+                                        return MouseRegion(
+                                          cursor: SystemMouseCursors.click,
+                                          child: AnimationConfiguration
+                                              .staggeredGrid(
+                                            position: index,
+                                            columnCount:
+                                                screenWidth < 320 ? 2 : 3,
+                                            duration: const Duration(
+                                                milliseconds: 600),
+                                            child: SlideAnimation(
+                                              curve: Curves.decelerate,
+                                              verticalOffset: 250,
+                                              child: FadeInAnimation(
+                                                duration: const Duration(
+                                                    milliseconds: 1000),
+                                                child: GestureDetector(
+                                                  onTap: () =>
+                                                      _toggleSelection(
+                                                          fileName),
+                                                  child:
+                                                      AnimatedContainer(
+                                                    duration:
+                                                        const Duration(
+                                                            milliseconds:
+                                                                250),
+                                                    curve: Curves
+                                                        .easeInOutQuint,
+                                                    decoration:
+                                                        BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors
+                                                              .black
+                                                              .withOpacity(
+                                                                  0.2),
+                                                          spreadRadius:
+                                                              2,
+                                                          blurRadius:
+                                                              10,
+                                                          offset:
+                                                              const Offset(
+                                                                  0, 3),
+                                                        ),
+                                                      ],
+                                                      gradient:
+                                                          LinearGradient(
+                                                        colors:
+                                                            isSelected
+                                                                ? [
+                                                                    const Color.fromARGB(255, 80, 36, 133).withOpacity(0.4),
+                                                                    const Color.fromARGB(255, 80, 36, 133).withOpacity(0.1),
+                                                                  ]
+                                                                : [
+                                                                    const Color.fromARGB(
+                                                                        255,
+                                                                        80,
+                                                                        36,
+                                                                        133),
+                                                                    const Color.fromARGB(255, 80, 36, 133).withOpacity(0.4),
                                                                   ],
-                                                                  gradient:
-                                                                      LinearGradient(
-                                                                    colors:
-                                                                        isSelected
-                                                                            ? [
-                                                                                const Color.fromARGB(255, 80, 36, 133).withOpacity(0.4),
-                                                                                const Color.fromARGB(255, 80, 36, 133).withOpacity(0.1),
-                                                                              ]
-                                                                            : [
-                                                                                const Color.fromARGB(255, 80, 36, 133),
-                                                                                const Color.fromARGB(255, 80, 36, 133).withOpacity(0.4),
-                                                                              ],
-                                                                    begin: Alignment
-                                                                        .topLeft,
-                                                                    end: Alignment
-                                                                        .bottomRight,
-                                                                  ),
-                                                                  border: Border.all(
-                                                                      color: isSelected
-                                                                          ? const Color
-                                                                              .fromARGB(
-                                                                              255,
-                                                                              47,
-                                                                              3,
-                                                                              68)
-                                                                          : const Color.fromARGB(255, 159, 7, 219).withAlpha(
-                                                                              0),
-                                                                      width: isSelected
-                                                                          ? 3
-                                                                          : 1),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                ),
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Image.asset(
-                                                                      flagAssetPath,
-                                                                      width:
-                                                                          flagSize, // Tamanho dinâmico da largura
-                                                                      height:
-                                                                          flagSize, // Tamanho dinâmico da altura
-                                                                    ),
-                                                                    const SizedBox(
-                                                                        height:
-                                                                            8), // Espaçamento entre a bandeira e o texto
-                                                                    Text(
-                                                                      alias,
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: isSelected
-                                                                            ? const Color.fromARGB(
-                                                                                255,
-                                                                                255,
-                                                                                255,
-                                                                                255)
-                                                                            : Colors.white.withAlpha(255),
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        shadows: [
-                                                                          Shadow(
-                                                                              color: Colors.blueAccent,
-                                                                              blurRadius: 10),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
+                                                        begin: Alignment
+                                                            .topLeft,
+                                                        end: Alignment
+                                                            .bottomRight,
+                                                      ),
+                                                      border:
+                                                          Border.all(
+                                                        color: isSelected
+                                                            ? const Color
+                                                                .fromARGB(
+                                                                255,
+                                                                47,
+                                                                3,
+                                                                68)
+                                                            : const Color
+                                                                    .fromARGB(
+                                                                    255,
+                                                                    159,
+                                                                    7,
+                                                                    219)
+                                                                .withAlpha(
+                                                                    0),
+                                                        width:
+                                                            isSelected
+                                                                ? 3
+                                                                : 1,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                                  20),
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        // Adicionando Spacer para controlar o espaço superior
+                                                        Spacer(
+                                                            flex:
+                                                                1), // Faz a bandeira não ficar tão próxima do topo
+                                                                                                
+                                                        // Imagem ajustando proporcionalmente
+                                                        Expanded(
+                                                          flex: 5,
+                                                          child: Image
+                                                              .asset(
+                                                            _getFlagAssetPath(
+                                                                _tags[index]
+                                                                    .first),
+                                                            fit: BoxFit
+                                                                .contain,
                                                           ),
                                                         ),
-                                                      );
-                                                    },
+                                                        Expanded(
+                                                          flex: 2,
+                                                          child: Text(
+                                                            fileName,
+                                                            textAlign:
+                                                                TextAlign
+                                                                    .center,
+                                                            style:
+                                                                TextStyle(
+                                                              color: isSelected
+                                                                  ? const Color
+                                                                      .fromARGB(
+                                                                      255,
+                                                                      255,
+                                                                      255,
+                                                                      255)
+                                                                  : Colors
+                                                                      .white
+                                                                      .withAlpha(255),
+                                                              fontSize: screenWidth <
+                                                                      320
+                                                                  ? 14
+                                                                  : 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              shadows: [
+                                                                Shadow(
+                                                                  color:
+                                                                      Colors.blueAccent,
+                                                                  blurRadius:
+                                                                      10,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 2,
+                                                          ),
+                                                        ),
+                                                                                                
+                                                        // Adicionando Spacer para evitar que o texto fique muito distante do fundo
+                                                        Spacer(
+                                                            flex:
+                                                                1), // Coloca um espaço para o texto ficar mais perto do fundo
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          );
-                                        },
-                                      ),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerFloat,
-              floatingActionButton: AnimatedOpacity(
-                opacity: _showFloatingButtons ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 300),
-                child: IgnorePointer(
-                  ignoring:
-                      !_showFloatingButtons, // Ignora interações quando invisível
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Botão de configurações à esquerda
-                      FloatingActionButton(
-                        key: settingsKey,
-                        heroTag: 'settings',
-                        onPressed: () {
-                          // Ação do botão de configurações
-                          _settings(context);
-                        },
-                        backgroundColor: Colors.blue,
-                        child: Icon(Icons.settings),
-                      ),
-                      SizedBox(
-                        width: screenWidth * 0.186, // Espaço entre os botões
-                      ),
-                      // Botão de "Iniciar Jogo" com ícone de play
-                      FloatingActionButton(
-                        key: playButtonKey,
-                        heroTag: 'play',
-                        onPressed: () => _startGame(context, selectedTime),
-                        backgroundColor: Colors.blue,
-                        child: Icon(Icons.play_arrow),
+                              ),
                       ),
                     ],
                   ),
                 ),
-              ));
-        },
-      ),
+              ),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: AnimatedOpacity(
+              opacity: _showFloatingButtons ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 300),
+              child: IgnorePointer(
+                ignoring:
+                    !_showFloatingButtons, // Ignora interações quando invisível
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Botão de configurações à esquerda
+                    FloatingActionButton(
+                      key: settingsKey,
+                      heroTag: 'settings',
+                      onPressed: () {
+                        // Ação do botão de configurações
+                        //_settings(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ManagerPage()),
+                        ).then((_) {
+                          // Chama _loadJsonFiles() ou função similar para atualizar a tela principal
+                          _loadJsonFiles();
+                        });
+                      },
+                      backgroundColor: const Color(0xFF6C5CE7),
+                      child: Icon(Icons.settings),
+                    ),
+                    SizedBox(
+                      width: screenWidth * 0.186, // Espaço entre os botões
+                    ),
+                    // Botão de "Iniciar Jogo" com ícone de play
+                    FloatingActionButton(
+                      key: playButtonKey,
+                      heroTag: 'play',
+                      onPressed: () => _startGame(context, selectedTime),
+                      backgroundColor: Color(0xFF6C5CE7),
+                      child: Icon(Icons.play_arrow),
+                    ),
+                  ],
+                ),
+              ),
+            ));
+      },
     );
   }
 }
