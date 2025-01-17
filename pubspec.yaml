@@ -49,6 +49,7 @@ dependencies:
   universal_platform: ^1.0.0+1
   animated_floating_buttons: ^0.0.1
   rxdart:
+  idb_shim: ^2.6.1+7
 flutter_icons:
   android: true
   ios: true

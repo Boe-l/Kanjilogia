@@ -13,10 +13,14 @@ extension GetWordCollection on Isar {
   IsarCollection<Word> get words => this.collection();
 }
 
-const WordSchema = CollectionSchema(
+// Definindo o BigInt e convertendo para um número compatível com int
+final BigInt largeId = BigInt.parse("2997905348638732671");
+// Convertendo o BigInt para um número seguro no intervalo de 64 bits'
+
+var WordSchema = CollectionSchema(
   name: r'Word',
-  id: 2997905348638732671,
-  properties: {
+  id: largeId.toInt(), // Usando o valor convertido
+  properties: const {
     r'filename': PropertySchema(
       id: 0,
       name: r'filename',
@@ -48,9 +52,9 @@ const WordSchema = CollectionSchema(
   deserialize: _wordDeserialize,
   deserializeProp: _wordDeserializeProp,
   idName: r'id',
-  indexes: {},
-  links: {},
-  embeddedSchemas: {},
+  indexes: const {},
+  links: const {},
+  embeddedSchemas: const {},
   getId: _wordGetId,
   getLinks: _wordGetLinks,
   attach: _wordAttach,

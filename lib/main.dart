@@ -101,7 +101,7 @@ class _MainMenuState extends State<MainMenu>
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Text(
-                    "Selecione um ou mais items para jogar.",
+                    "Selecione um ou mais itens para jogar.",
                     style: TextStyle(color: Colors.white),
                   ),
                 )
