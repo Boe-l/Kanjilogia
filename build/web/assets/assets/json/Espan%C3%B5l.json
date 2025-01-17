@@ -1,0 +1,29 @@
+{
+    "filename": "Espanhol",
+    "content": {
+    "tags": [
+        "es",
+        "basic"
+    ],
+    "words": [
+        {
+            "word": "Teste",
+            "reading": "teste",
+            "mean": "definição teste"
+        },
+        {
+            "word": "Teste",
+            "reading": "teste",
+            "mean": "definição teste"
+        },
+        {
+            "word": "Teste",
+            "reading": "teste",
+            "mean": "definição teste"
+        },
+        {
+            "word": "Teste",
+            "reading": "teste",
+            "mean": "definição teste"
+        }
+    ]}}
