@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Permissões -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:label="Kanjilogia"
         android:name="${applicationName}"

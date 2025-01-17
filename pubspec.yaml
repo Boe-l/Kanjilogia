@@ -1,5 +1,5 @@
 name: kanjilogia
-description: "A new Flutter project."
+description: "Kanjilogia"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -40,9 +40,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.3.5
-  flutter_launcher_icons: ^0.9.2 #remove later
-  dict_reader: ^1.1.4 #remove later
-  beautiful_soup_dart: ^0.3.0 #remove later
   isar: *isar_version
   isar_flutter_libs: *isar_version 
   path_provider: any
@@ -51,6 +48,7 @@ dependencies:
   universal_io: ^2.2.2
   universal_platform: ^1.0.0+1
   animated_floating_buttons: ^0.0.1
+  rxdart:
 flutter_icons:
   android: true
   ios: true

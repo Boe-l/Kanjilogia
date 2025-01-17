@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'dart:math';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:kana_kit/kana_kit.dart';
-import 'main.dart';
+import 'sharedpref.dart';
 class GameScreen extends StatefulWidget {
   // Recebe o jsonData como parâmetro no construtor do GameScreen
   final Map<String, dynamic> data;
@@ -108,7 +108,7 @@ class _GameScreenState extends State<GameScreen> {
 
   void _startTimer() {
     _timer?.cancel();
-    PreferencesService().getMaxTime().then((value) {
+    SharedPrefs().getMaxTime().then((value) {
       setState(() {
         _timeLeft = value;
       });

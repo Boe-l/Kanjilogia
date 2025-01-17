@@ -7,7 +7,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'game_screen.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'sharedpref.dart';
 import 'makehive.dart';
 import 'managepage.dart';
 
@@ -16,35 +16,6 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(Kanjilogia());
-}
-
-class PreferencesService {
-  static const String _tutorialCompleteKey = 'tutorial_complete';
-  static const String _maxTimeKey = 'max_time';
-
-  /// Save the tutorial completion status
-  Future<void> saveTutorialComplete(bool isComplete) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_tutorialCompleteKey, isComplete);
-  }
-
-  /// Save the selected maximum time
-  Future<void> saveMaxTime(int maxTime) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_maxTimeKey, maxTime);
-  }
-
-  /// Get the tutorial completion status
-  Future<bool> isTutorialComplete() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_tutorialCompleteKey) ?? false;
-  }
-
-  /// Get the saved maximum time
-  Future<int> getMaxTime() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_maxTimeKey) ?? 30;
-  }
 }
 
 class Kanjilogia extends StatelessWidget {
@@ -78,7 +49,6 @@ class _MainMenuState extends State<MainMenu>
   late int selectedTime = 30;
   late AnimationController _backgroundController;
   late Animation<Color?> _colorAnimation;
-  final preferencesService = PreferencesService();
 
   Map<String, dynamic> data = {
     'selectedTime': 1,
@@ -97,7 +67,7 @@ class _MainMenuState extends State<MainMenu>
     super.initState();
     _loadJsonFiles();
     _searchController.addListener(_filterJsonFiles);
-    preferencesService.getMaxTime().then((time) {
+    SharedPrefs().getMaxTime().then((time) {
       setState(() {
         selectedTime = time;
       });
@@ -122,7 +92,7 @@ class _MainMenuState extends State<MainMenu>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "Como jogar.",
+                  "Tutorial de jogo",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -148,7 +118,7 @@ class _MainMenuState extends State<MainMenu>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "Começar jogo.",
+                  "Começar o jogo",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -174,7 +144,7 @@ class _MainMenuState extends State<MainMenu>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "Configurações do jogo.",
+                  "Configurações do jogo",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -183,7 +153,7 @@ class _MainMenuState extends State<MainMenu>
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Text(
-                    "Clique aqui para alterar configurações como o tempo de resposta das perguntas.",
+                    "Clique aqui para alterar o tempo de resposta, adicionar mais arquivos ao jogo ou deletá-los.",
                     style: TextStyle(color: Colors.white),
                   ),
                 )
@@ -191,14 +161,15 @@ class _MainMenuState extends State<MainMenu>
             ),
           ))
     ]));
+  
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(Duration(seconds: 2));
-      bool isComplete = await preferencesService.isTutorialComplete();
+      bool isComplete = await SharedPrefs().isTutorialComplete();
       if (isComplete == false) {
         showTutorial();
       }
-      await preferencesService.saveTutorialComplete(true);
+      await SharedPrefs().saveTutorialComplete(true);
     });
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
@@ -215,6 +186,9 @@ class _MainMenuState extends State<MainMenu>
     });
   }
 
+  
+    
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -224,7 +198,7 @@ class _MainMenuState extends State<MainMenu>
 
   // Variáveis para armazenar chaves e tags separadas
 
-  List<Set<String>> _tags = [];
+  
 
   Future<void> _loadJsonFiles() async {
     try {
@@ -233,7 +207,6 @@ class _MainMenuState extends State<MainMenu>
 
       // Preenchendo as listas com os dados obtidos
 
-      _tags = jsonFiles.values.toList();
 
       setState(() {
         // Aqui estamos atualizando a interface com as listas de dados
@@ -252,7 +225,6 @@ class _MainMenuState extends State<MainMenu>
       // Filtrando o mapa de _jsonFiles com base no filename
       _filteredJsonFiles = Map.fromEntries(
         _jsonFiles.entries.where((entry) {
-          // Verificando se o filename contém a consulta (em minúsculas)
           return entry.key.toLowerCase().contains(query);
         }),
       );
@@ -406,18 +378,18 @@ class _MainMenuState extends State<MainMenu>
 
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
-                                  30), // Borda arredondada
+                                  20), // Borda arredondada
                               borderSide: BorderSide(
-                                  color: Colors.blue,
+                                  color: const Color.fromARGB(255, 109, 33, 223),
                                   width: 2), // Cor e largura da borda
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
-                                  30), // Borda arredondada
+                                  20), // Borda arredondada
                               borderSide: BorderSide(
-                                  color: Colors.blue,
+                                  color: Color.fromARGB(255, 109, 33, 223),
                                   width:
-                                      4), // Cor e largura da borda ao focar
+                                      2), // Cor e largura da borda ao focar
                             ),
                           ),
                           style: TextStyle(color: Colors.white),
@@ -427,7 +399,7 @@ class _MainMenuState extends State<MainMenu>
                         child: _filteredJsonFiles.isEmpty
                             ? Center(
                                 child: Text(
-                                  'Nenhum arquivo JSON encontrado.',
+                                  'Nenhum arquivo encontrado.',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 18),
                                 ),
@@ -455,6 +427,7 @@ class _MainMenuState extends State<MainMenu>
                                       ),
                                       itemCount: _filteredJsonFiles.length,
                                       itemBuilder: (context, index) {
+                                        
                                         final fileName = _filteredJsonFiles
                                             .keys
                                             .elementAt(index);
@@ -465,6 +438,8 @@ class _MainMenuState extends State<MainMenu>
                                           cursor: SystemMouseCursors.click,
                                           child: AnimationConfiguration
                                               .staggeredGrid(
+                                                key: index == 0 ? grid3 : null
+                                                ,
                                             position: index,
                                             columnCount:
                                                 screenWidth < 320 ? 2 : 3,
@@ -572,8 +547,8 @@ class _MainMenuState extends State<MainMenu>
                                                           child: Image
                                                               .asset(
                                                             _getFlagAssetPath(
-                                                                _tags[index]
-                                                                    .first),
+                                                                _filteredJsonFiles[fileName]!.first
+                                                                    ),
                                                             fit: BoxFit
                                                                 .contain,
                                                           ),

@@ -49,7 +49,7 @@ Future<String> addJsonToDatabase({String? jsonFilePath, Uint8List? jsonBytes}) a
 
   String jsonString;
 
-  // Ler o conteúdo do JSON de acordo com a origem fornecida
+  // Lê o conteúdo do JSON de acordo com a origem fornecida
   if (jsonFilePath != null) {
     final file = File(jsonFilePath);
 
@@ -57,41 +57,42 @@ Future<String> addJsonToDatabase({String? jsonFilePath, Uint8List? jsonBytes}) a
       return '404'; // Arquivo não encontrado
     }
 
-    jsonString = await file.readAsString();
+    jsonString = await file.readAsString(encoding: utf8);
   } else if (jsonBytes != null) {
-    jsonString = String.fromCharCodes(jsonBytes);
+    jsonString = utf8.decode(jsonBytes);
   } else {
     return '400'; // Nenhum dado válido fornecido
   }
 
   try {
+    // Decodifica o JSON
     final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
 
-    // Valida o JSON como um todo antes de processar
+    // Validações do JSON principal
     if (!jsonData.containsKey('filename') || jsonData['filename'] is! String) {
-      return '400'; // Formato do JSON incorreto (falta a chave 'filename' ou tipo errado)
+      return '400'; // Formato do JSON incorreto: falta 'filename'
     }
 
     final filename = jsonData['filename'] as String;
 
     if (!jsonData.containsKey('content') || jsonData['content'] is! Map<String, dynamic>) {
-      return '400'; // Formato do JSON incorreto (falta a chave 'content' ou tipo errado)
+      return '400'; // Formato do JSON incorreto: falta 'content'
     }
 
     final content = jsonData['content'] as Map<String, dynamic>;
     final tags = content['tags'] as List<dynamic>;
     final wordsJson = content['words'] as List<dynamic>;
 
-    // Instância do Isar e transação de escrita
+    // Obtem a instância do Isar
     final isar = await getIsarInstance();
 
-    // Verifica se o arquivo já existe no banco de dados
+    // Verifica duplicação no banco de dados
     final existingFile = await isar.words.filter().filenameEqualTo(filename).findFirst();
     if (existingFile != null) {
-      return '409'; // Conflito: arquivo com o mesmo filename já existe
+      return '409'; // Conflito: arquivo já existe
     }
 
-    // Insere apenas palavras válidas
+    // Validação e inserção de palavras
     await isar.writeTxn(() async {
       for (final wordJson in wordsJson) {
         if (wordJson is Map<String, dynamic> && validateJson(wordJson)) {
