@@ -5,7 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:idb_shim/idb_browser.dart'; // Para a Web
 
-// Definir o nome do object store
 import 'package:isar/isar.dart'; // Para dispositivos móveis e desktop
 
 part 'makehive.g.dart'; // Certifique-se de que o arquivo gerado estará aqui
@@ -22,10 +21,25 @@ class Word {
   late List<String> tags; // Lista de tags para cada palavra
   late String filename; // Armazenar o nome do arquivo associado
 }
-
+Isar? _isarInstance;
 // Função para obter a instância do banco de dados
+Future<Isar> getIsarInstance() async {
+  if (_isarInstance != null) {
+    // Se já existe uma instância aberta, retorna a mesma
+    return _isarInstance!;
+  }
+
+  final dir = await getApplicationDocumentsDirectory();
+  _isarInstance = await Isar.open(
+    [WordSchema],
+    directory: dir.path,
+  );
+
+  return _isarInstance!;
+}
+
 Future<dynamic> getDbInstance() async {
-  if (kIsWeb) {
+  
     // Se for Web, usar IndexedDB com idb_shim
     final dbFactory = getIdbFactory()?.open(
       'wordDatabase',
@@ -36,12 +50,8 @@ Future<dynamic> getDbInstance() async {
       },
     );
     return dbFactory;
-  } else {
-    // Se for iOS, Android, ou Desktop, usar Isar
-    final dir = await getApplicationDocumentsDirectory();
-    final isarInstance = await Isar.open([WordSchema], directory: dir.path);
-    return isarInstance;
-  }
+
+    
 }
 
 bool validateJson(Map<String, dynamic> json) {
@@ -94,7 +104,7 @@ Future<String> addJsonToDatabase(
     final wordsJson = content['words'] as List<dynamic>;
 
     // Obtém a instância do banco de dados
-    final db = await getDbInstance();
+    
     final allValid = wordsJson.every((word) => validateJson(word));
 
     if (!allValid) {
@@ -102,6 +112,7 @@ Future<String> addJsonToDatabase(
     }
 
     if (kIsWeb) {
+      final db = await getDbInstance();
       final txn = db.transaction('words', idbModeReadWrite);
       final store = txn.objectStore('words');
       final result = await store.getAll();
@@ -120,7 +131,7 @@ Future<String> addJsonToDatabase(
       await txn.completed;
     } else {
       // Se for outras plataformas, usar Isar
-      final isar = db as Isar;
+      final isar = await getIsarInstance();
       final existingFile =
           await isar.words.filter().filenameEqualTo(filename).findFirst();
       if (existingFile != null) {
@@ -152,9 +163,10 @@ Future<String> addJsonToDatabase(
 // Lista todos os filenames distintos no banco de dados
 // Lista todos os filenames distintos no banco de dados
 Future<Map<String, Set<String>>> listFilenamesWithTags() async {
-  final db = await getDbInstance();
+  
 
   if (kIsWeb) {
+    final db = await getDbInstance();
     // Para Web, usar IndexedDB
     final txn = db.transaction('words', idbModeReadOnly);
     final store = txn.objectStore('words');
@@ -171,10 +183,14 @@ Future<Map<String, Set<String>>> listFilenamesWithTags() async {
     return filenamesWithTags;
   } else {
     // Para outras plataformas, usar Isar
-    final isar = db as Isar;
+    final isar = await getIsarInstance();
+
+    // Obtém todas as palavras diretamente
     final allWords = await isar.words.where().findAll();
 
+    // Agrupa tags por filename
     final Map<String, Set<String>> filenamesWithTags = {};
+
     for (var word in allWords) {
       if (!filenamesWithTags.containsKey(word.filename)) {
         filenamesWithTags[word.filename] = {};
@@ -187,16 +203,17 @@ Future<Map<String, Set<String>>> listFilenamesWithTags() async {
 
 // Apaga todas as entradas relacionadas a um filename específico
 Future<String> deleteFilename(String filename) async {
-  final db = await getDbInstance();
+  
 
   if (kIsWeb) {
+    final db = await getDbInstance();
     final txn = db.transaction('words', idbModeReadWrite);
     final store = txn.objectStore('words');
     await store.delete(filename);
     await txn.completed;
     return 'Arquivo deletado com sucesso';
   } else {
-    final isar = db as Isar;
+    final isar = await getIsarInstance();
     final result = await isar.writeTxn(() async {
       final deletedCount =
           await isar.words.filter().filenameEqualTo(filename).deleteAll();
@@ -239,7 +256,7 @@ Future<List<Word>> getWordsByFilenames(List<String> filenames) async {
       return results;
     } else {
       // Usar Isar para outras plataformas
-      final isar = await getDbInstance();
+      final isar = await getIsarInstance();
       final results = <Word>[];
 
       for (final filename in filenames) {
