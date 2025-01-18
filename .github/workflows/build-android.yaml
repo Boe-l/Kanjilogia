@@ -1,0 +1,36 @@
+name: Build Android
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use Ubuntu para construir o aplicativo Android
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Flutter SDK
+        uses: flutter-actions/setup-flutter@v2
+        with:
+          channel: stable
+          version: 3.27.1
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Analyze Source Code
+        run: dart analyze
+
+      #- name: Run Tests
+      #  run: flutter test
+
+      - name: Build Android APK
+        run: flutter build apk --release
+
+      - name: Upload Android Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kanjilogia Android
+          path: build/app/outputs/flutter-apk/app-release.apk

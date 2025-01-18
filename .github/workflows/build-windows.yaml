@@ -1,0 +1,36 @@
+name: Build Windows
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: windows-latest  # Use Windows para construir o aplicativo Windows
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Flutter SDK
+        uses: flutter-actions/setup-flutter@v2
+        with:
+          channel: stable
+          version: 3.27.1
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Analyze Source Code
+        run: dart analyze
+
+      #- name: Run Tests
+      #  run: flutter test
+
+      - name: Build Windows Executable
+        run: flutter build windows --release
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kanjilogia - Windows
+          path: build/windows/x64/runner/Release/**

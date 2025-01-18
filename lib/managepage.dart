@@ -70,7 +70,7 @@ class _ManagerPageState extends State<ManagerPage>
       }
     });
   }
-  
+
   Future<void> _loadInitialData() async {
     // Carrega o status do tutorial, tempo máximo e arquivos
     // final tutorialComplete = await _sharedPrefs.isTutorialComplete();
@@ -79,10 +79,9 @@ class _ManagerPageState extends State<ManagerPage>
     slider = updateslider();
     setState(() {
       // _isTutorialComplete = tutorialComplete;
-      
+
       _files = files;
     });
-     
   }
 
   // Future<void> _toggleTutorialComplete() async {
@@ -98,23 +97,23 @@ class _ManagerPageState extends State<ManagerPage>
     });
     await _sharedPrefs.saveMaxTime(newMaxTime);
   }
-  updateslider(){
+
+  updateslider() {
     return Slider(
-                          value: _maxTime.toDouble(),
-                          min: 10,
-                          max: 60,
-                          divisions: 5,
-                          label: "$_maxTime Segundos",
-                          thumbColor: const Color.fromARGB(255, 101, 55, 156),
-                          onChanged: (newTime) {
-                            setState(() {
-                              _maxTime = newTime.toInt();
-                            });
-                            _updateMaxTime(_maxTime);
-                            slider = updateslider();
-                           
-                          },
-                        );
+      value: _maxTime.toDouble(),
+      min: 10,
+      max: 60,
+      divisions: 5,
+      label: "$_maxTime Segundos",
+      thumbColor: const Color.fromARGB(255, 101, 55, 156),
+      onChanged: (newTime) {
+        setState(() {
+          _maxTime = newTime.toInt();
+        });
+        _updateMaxTime(_maxTime);
+        slider = updateslider();
+      },
+    );
   }
 
   Future<void> _refreshFiles() async {
@@ -192,7 +191,7 @@ class _ManagerPageState extends State<ManagerPage>
               file['name']?.toLowerCase().contains(query.toLowerCase()) ??
               false)
           .toList();
-      
+
       // Atualiza a AnimatedList com animações
       setState(() {});
     }
@@ -223,7 +222,6 @@ class _ManagerPageState extends State<ManagerPage>
                   data['content']['tags'] is List) {
                 List<String> tags =
                     (data['content']['tags'] as List).cast<String>();
-                
 
                 // Atualiza o fileData com tags, contagem de palavras e bandeira
                 fileData[file['name']] = {
@@ -240,13 +238,12 @@ class _ManagerPageState extends State<ManagerPage>
       // Espera todas as requisições terminarem
       await Future.wait(fetchTasks);
     }
-    
-  if (counterSubject.hasListener) {
-    counterSubject.close(); // Feche o controlador existente
-  }
-  final StreamController<int> newController = StreamController<int>();
-  counterSubject.addStream(newController.stream);
 
+    if (counterSubject.hasListener) {
+      counterSubject.close(); // Feche o controlador existente
+    }
+    final StreamController<int> newController = StreamController<int>();
+    counterSubject.addStream(newController.stream);
 
     await fetchAndSetFileData(filteredFiles);
 
@@ -296,7 +293,7 @@ class _ManagerPageState extends State<ManagerPage>
                           ),
                         ],
                       ),
-                      
+
                       // Barra de pesquisa
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -393,14 +390,12 @@ class _ManagerPageState extends State<ManagerPage>
                                             icon: const Icon(Icons.download,
                                                 color: Colors.white),
                                             onPressed: () async {
-                                              
                                               final downloadUrl =
                                                   file['download_url'] ?? '';
                                               if (downloadUrl.isNotEmpty) {
                                                 await _addFile(
                                                     true, downloadUrl);
                                               }
-                                              
                                             },
                                           ),
                                         ),
@@ -419,9 +414,9 @@ class _ManagerPageState extends State<ManagerPage>
             });
       },
     ).whenComplete(() {
-    // Fechar o StreamController ao fechar o modal
-    newController.close();
-  });
+      // Fechar o StreamController ao fechar o modal
+      newController.close();
+    });
   }
 
   Future<void> _addFile(bool type, String? url) async {
@@ -432,20 +427,37 @@ class _ManagerPageState extends State<ManagerPage>
         type: FileType.custom,
         allowedExtensions: ['json'],
         allowMultiple: true,
+        withData: kIsWeb, // Incluye datos en la selección si estamos en la web
       );
 
       if (result != null && result.files.isNotEmpty) {
         try {
           for (final file in result.files) {
-            final filePath = file.path;
-            if (filePath != null) {
-              await addJsonToDatabase(jsonFilePath: filePath);
+            if (kIsWeb) {
+              // En la web, usamos bytes
+              final fileBytes = file.bytes;
+              if (fileBytes != null) {
+                code = await addJsonToDatabase(jsonBytes: fileBytes); 
+              }
+            } else {
+              // En plataformas locales, usamos la ruta del archivo
+              final filePath = file.path;
+              if (filePath != null) {
+                code = await addJsonToDatabase(jsonFilePath: filePath);
+              
+              }
             }
+                if (code == '409') {
+                  _showToast('Erro: Arquivo ja existente.', Colors.red);
+                } else if (code == '500') {
+                  _showToast(
+                      'Erro: Fomatação do arquivo inválida.', Colors.red);
+                }
+                else
+                  _showToast("Arquivo adicionado com sucesso!", Colors.green);
           }
-          await _loadFilenames(); // Recarrega a lista sem duplicatas
-          _showToast("Arquivos adicionados com sucesso!", Colors.green);
+          await _loadFilenames(); // Recarrega la lista sin duplicados
         } catch (e) {
-          _showToast('Erro ao adicionar os arquivos: $e', Colors.red);
         }
       }
     } else {
@@ -456,12 +468,11 @@ class _ManagerPageState extends State<ManagerPage>
           if (response.statusCode == 200) {
             final bytes = response.bodyBytes;
             code = await addJsonToDatabase(jsonBytes: bytes);
-            await _loadFilenames(); 
-            print(code);// Recarrega a lista sem duplicatas
+            await _loadFilenames();
+            print(code); // Recarrega a lista sem duplicatas
             if (code == '409') {
               _showToast('Erro: Arquivo ja existente.', Colors.red);
-            }
-            else if (code == '500') {
+            } else if (code == '500') {
               _showToast('Erro: Fomatação do arquivo inválida.', Colors.red);
             } else
               _showToast("Arquivo adicionado com sucesso!", Colors.green);
@@ -484,32 +495,33 @@ class _ManagerPageState extends State<ManagerPage>
           WidgetsBinding.instance.addPostFrameCallback((_) {
             textFieldFocus.requestFocus();
           });
-            urlController.clear();
+          urlController.clear();
           return AlertDialog(
             backgroundColor: Color.fromARGB(255, 49, 19, 94),
-            title: const Text('Adicionar Arquivo por URL', style: TextStyle(fontSize: 17),),
+            title: const Text(
+              'Adicionar Arquivo por URL',
+              style: TextStyle(fontSize: 17),
+            ),
             content: TextField(
               focusNode: textFieldFocus,
               controller: urlController,
-              
               decoration: InputDecoration(
-                labelText: 'Insira o URL do arquivo JSON',
-                hintText: 'https://exemplo.com/arquivo.json',
-                suffixIcon: IconButton(
-          icon: Icon(Icons.paste),
-          tooltip: 'Colar do clipboard',
-          onPressed: () async {
-            // Obter texto do clipboard
-            final ClipboardData? clipboardData =
-                await Clipboard.getData(Clipboard.kTextPlain);
+                  labelText: 'Insira o URL do arquivo JSON',
+                  hintText: 'https://exemplo.com/arquivo.json',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.paste),
+                    tooltip: 'Colar do clipboard',
+                    onPressed: () async {
+                      // Obter texto do clipboard
+                      final ClipboardData? clipboardData =
+                          await Clipboard.getData(Clipboard.kTextPlain);
 
-            if (clipboardData != null) {
-              // Atualizar o controlador com o texto colado
-              urlController.text = clipboardData.text!;
-            }
-          },
-        )
-              ),
+                      if (clipboardData != null) {
+                        // Atualizar o controlador com o texto colado
+                        urlController.text = clipboardData.text!;
+                      }
+                    },
+                  )),
             ),
             actions: [
               TextButton(
@@ -530,17 +542,18 @@ class _ManagerPageState extends State<ManagerPage>
                         await _loadFilenames();
                         print(code);
                         if (code == '409') {
-              _showToast('Erro: Arquivo ja existente.', Colors.red);
-            }
-            else if (code == '500') {
-              _showToast('Erro: Fomatação do arquivo inválida.', Colors.red);
-            } else
-              _showToast("Arquivo adicionado com sucesso!", Colors.green);
-          } else {
-            _showToast(
-                'Erro ao baixar o arquivo. Código: ${response.statusCode}',
-                Colors.red);
-          }
+                          _showToast('Erro: Arquivo ja existente.', Colors.red);
+                        } else if (code == '500') {
+                          _showToast('Erro: Fomatação do arquivo inválida.',
+                              Colors.red);
+                        } else
+                          _showToast(
+                              "Arquivo adicionado com sucesso!", Colors.green);
+                      } else {
+                        _showToast(
+                            'Erro ao baixar o arquivo. Código: ${response.statusCode}',
+                            Colors.red);
+                      }
                     } catch (e) {
                       _showToast('Erro ao processar o URL: $e', Colors.red);
                     }
@@ -616,7 +629,6 @@ class _ManagerPageState extends State<ManagerPage>
             child: Stack(children: [
               Column(
                 children: [
-                  
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -644,7 +656,6 @@ class _ManagerPageState extends State<ManagerPage>
                           'Tempo de resposta: $_maxTime segundos',
                           style: TextStyle(color: Colors.white),
                         ),
-
                         slider ?? SizedBox()
                       ],
                     ),
