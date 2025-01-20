@@ -1,0 +1,531 @@
+{
+  "filename": "Katakana",
+  "content": {
+    "tags": [
+      "jp",
+      "katakana"
+    ],
+    "words": [
+      {
+        "word": "ア",
+        "reading": "あ",
+        "mean": ""
+      },
+      {
+        "word": "イ",
+        "reading": "い",
+        "mean": ""
+      },
+      {
+        "word": "ウ",
+        "reading": "う",
+        "mean": ""
+      },
+      {
+        "word": "エ",
+        "reading": "え",
+        "mean": ""
+      },
+      {
+        "word": "オ",
+        "reading": "お",
+        "mean": ""
+      },
+      {
+        "word": "カ",
+        "reading": "か",
+        "mean": ""
+      },
+      {
+        "word": "キ",
+        "reading": "き",
+        "mean": ""
+      },
+      {
+        "word": "ク",
+        "reading": "く",
+        "mean": ""
+      },
+      {
+        "word": "ケ",
+        "reading": "け",
+        "mean": ""
+      },
+      {
+        "word": "コ",
+        "reading": "こ",
+        "mean": ""
+      },
+      {
+        "word": "サ",
+        "reading": "さ",
+        "mean": ""
+      },
+      {
+        "word": "シ",
+        "reading": "し",
+        "mean": ""
+      },
+      {
+        "word": "ス",
+        "reading": "す",
+        "mean": ""
+      },
+      {
+        "word": "セ",
+        "reading": "せ",
+        "mean": ""
+      },
+      {
+        "word": "ソ",
+        "reading": "そ",
+        "mean": ""
+      },
+      {
+        "word": "タ",
+        "reading": "た",
+        "mean": ""
+      },
+      {
+        "word": "チ",
+        "reading": "ち",
+        "mean": ""
+      },
+      {
+        "word": "ツ",
+        "reading": "つ",
+        "mean": ""
+      },
+      {
+        "word": "テ",
+        "reading": "て",
+        "mean": ""
+      },
+      {
+        "word": "ト",
+        "reading": "と",
+        "mean": ""
+      },
+      {
+        "word": "ナ",
+        "reading": "な",
+        "mean": ""
+      },
+      {
+        "word": "ニ",
+        "reading": "に",
+        "mean": ""
+      },
+      {
+        "word": "ヌ",
+        "reading": "ぬ",
+        "mean": ""
+      },
+      {
+        "word": "ネ",
+        "reading": "ね",
+        "mean": ""
+      },
+      {
+        "word": "ノ",
+        "reading": "の",
+        "mean": ""
+      },
+      {
+        "word": "ハ",
+        "reading": "は",
+        "mean": ""
+      },
+      {
+        "word": "ヒ",
+        "reading": "ひ",
+        "mean": ""
+      },
+      {
+        "word": "フ",
+        "reading": "ふ",
+        "mean": ""
+      },
+      {
+        "word": "ヘ",
+        "reading": "へ",
+        "mean": ""
+      },
+      {
+        "word": "ホ",
+        "reading": "ほ",
+        "mean": ""
+      },
+      {
+        "word": "マ",
+        "reading": "ま",
+        "mean": ""
+      },
+      {
+        "word": "ミ",
+        "reading": "み",
+        "mean": ""
+      },
+      {
+        "word": "ム",
+        "reading": "む",
+        "mean": ""
+      },
+      {
+        "word": "メ",
+        "reading": "め",
+        "mean": ""
+      },
+      {
+        "word": "モ",
+        "reading": "も",
+        "mean": ""
+      },
+      {
+        "word": "ヤ",
+        "reading": "や",
+        "mean": ""
+      },
+      {
+        "word": "ユ",
+        "reading": "ゆ",
+        "mean": ""
+      },
+      {
+        "word": "ヨ",
+        "reading": "よ",
+        "mean": ""
+      },
+      {
+        "word": "ラ",
+        "reading": "ら",
+        "mean": ""
+      },
+      {
+        "word": "リ",
+        "reading": "り",
+        "mean": ""
+      },
+      {
+        "word": "ル",
+        "reading": "る",
+        "mean": ""
+      },
+      {
+        "word": "レ",
+        "reading": "れ",
+        "mean": ""
+      },
+      {
+        "word": "ロ",
+        "reading": "ろ",
+        "mean": ""
+      },
+      {
+        "word": "ワ",
+        "reading": "わ",
+        "mean": ""
+      },
+      {
+        "word": "ヲ",
+        "reading": "を",
+        "mean": ""
+      },
+      {
+        "word": "ン",
+        "reading": "ん",
+        "mean": ""
+      },
+      {
+        "word": "ガ",
+        "reading": "が",
+        "mean": ""
+      },
+      {
+        "word": "ギ",
+        "reading": "ぎ",
+        "mean": ""
+      },
+      {
+        "word": "グ",
+        "reading": "ぐ",
+        "mean": ""
+      },
+      {
+        "word": "ゲ",
+        "reading": "げ",
+        "mean": ""
+      },
+      {
+        "word": "ゴ",
+        "reading": "ご",
+        "mean": ""
+      },
+      {
+        "word": "ザ",
+        "reading": "ざ",
+        "mean": ""
+      },
+      {
+        "word": "ジ",
+        "reading": "じ",
+        "mean": ""
+      },
+      {
+        "word": "ズ",
+        "reading": "ず",
+        "mean": ""
+      },
+      {
+        "word": "ゼ",
+        "reading": "ぜ",
+        "mean": ""
+      },
+      {
+        "word": "ゾ",
+        "reading": "ぞ",
+        "mean": ""
+      },
+      {
+        "word": "ダ",
+        "reading": "だ",
+        "mean": ""
+      },
+      {
+        "word": "ヂ",
+        "reading": "ぢ",
+        "mean": ""
+      },
+      {
+        "word": "ヅ",
+        "reading": "づ",
+        "mean": ""
+      },
+      {
+        "word": "デ",
+        "reading": "で",
+        "mean": ""
+      },
+      {
+        "word": "ド",
+        "reading": "ど",
+        "mean": ""
+      },
+      {
+        "word": "バ",
+        "reading": "ば",
+        "mean": ""
+      },
+      {
+        "word": "ビ",
+        "reading": "び",
+        "mean": ""
+      },
+      {
+        "word": "ブ",
+        "reading": "ぶ",
+        "mean": ""
+      },
+      {
+        "word": "ベ",
+        "reading": "べ",
+        "mean": ""
+      },
+      {
+        "word": "ボ",
+        "reading": "ぼ",
+        "mean": ""
+      },
+      {
+        "word": "パ",
+        "reading": "ぱ",
+        "mean": ""
+      },
+      {
+        "word": "ピ",
+        "reading": "ぴ",
+        "mean": ""
+      },
+      {
+        "word": "プ",
+        "reading": "ぷ",
+        "mean": ""
+      },
+      {
+        "word": "ペ",
+        "reading": "ぺ",
+        "mean": ""
+      },
+      {
+        "word": "ポ",
+        "reading": "ぽ",
+        "mean": ""
+      },
+      {
+        "word": "キャ",
+        "reading": "きゃ",
+        "mean": ""
+      },
+      {
+        "word": "キュ",
+        "reading": "きゅ",
+        "mean": ""
+      },
+      {
+        "word": "キョ",
+        "reading": "きょ",
+        "mean": ""
+      },
+      {
+        "word": "シャ",
+        "reading": "しゃ",
+        "mean": ""
+      },
+      {
+        "word": "シュ",
+        "reading": "しゅ",
+        "mean": ""
+      },
+      {
+        "word": "ショ",
+        "reading": "しょ",
+        "mean": ""
+      },
+      {
+        "word": "チャ",
+        "reading": "ちゃ",
+        "mean": ""
+      },
+      {
+        "word": "チュ",
+        "reading": "ちゅ",
+        "mean": ""
+      },
+      {
+        "word": "チョ",
+        "reading": "ちょ",
+        "mean": ""
+      },
+      {
+        "word": "ニャ",
+        "reading": "にゃ",
+        "mean": ""
+      },
+      {
+        "word": "ニュ",
+        "reading": "にゅ",
+        "mean": ""
+      },
+      {
+        "word": "ニョ",
+        "reading": "にょ",
+        "mean": ""
+      },
+      {
+        "word": "ヒャ",
+        "reading": "ひゃ",
+        "mean": ""
+      },
+      {
+        "word": "ヒュ",
+        "reading": "ひゅ",
+        "mean": ""
+      },
+      {
+        "word": "ヒョ",
+        "reading": "ひょ",
+        "mean": ""
+      },
+      {
+        "word": "ミャ",
+        "reading": "みゃ",
+        "mean": ""
+      },
+      {
+        "word": "ミュ",
+        "reading": "みゅ",
+        "mean": ""
+      },
+      {
+        "word": "ミョ",
+        "reading": "みょ",
+        "mean": ""
+      },
+      {
+        "word": "リャ",
+        "reading": "りゃ",
+        "mean": ""
+      },
+      {
+        "word": "リュ",
+        "reading": "りゅ",
+        "mean": ""
+      },
+      {
+        "word": "リョ",
+        "reading": "りょ",
+        "mean": ""
+      },
+      {
+        "word": "ギャ",
+        "reading": "ぎゃ",
+        "mean": ""
+      },
+      {
+        "word": "ギュ",
+        "reading": "ぎゅ",
+        "mean": ""
+      },
+      {
+        "word": "ギョ",
+        "reading": "ぎょ",
+        "mean": ""
+      },
+      {
+        "word": "ジャ",
+        "reading": "じゃ",
+        "mean": ""
+      },
+      {
+        "word": "ジュ",
+        "reading": "じゅ",
+        "mean": ""
+      },
+      {
+        "word": "ジョ",
+        "reading": "じょ",
+        "mean": ""
+      },
+      {
+        "word": "ビャ",
+        "reading": "びゃ",
+        "mean": ""
+      },
+      {
+        "word": "ビュ",
+        "reading": "びゅ",
+        "mean": ""
+      },
+      {
+        "word": "ビョ",
+        "reading": "びょ",
+        "mean": ""
+      },
+      {
+        "word": "ピャ",
+        "reading": "ぴゃ",
+        "mean": ""
+      },
+      {
+        "word": "ピュ",
+        "reading": "ぴゅ",
+        "mean": ""
+      },
+      {
+        "word": "ピョ",
+        "reading": "ぴょ",
+        "mean": ""
+      }
+    ]
+  }
+}

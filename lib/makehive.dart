@@ -65,8 +65,8 @@ bool validateJson(Map<String, dynamic> json) {
 
 // Adiciona um arquivo JSON formatado ao banco de dados
 // Função para adicionar palavras ao banco de dados
-Future<String> addJsonToDatabase(
-    {String? jsonFilePath, Uint8List? jsonBytes}) async {
+
+Future<String> addJsonToDatabase({String? jsonFilePath, Uint8List? jsonBytes}) async {
   if (jsonFilePath == null && jsonBytes == null) {
     return '400'; // Nenhum dado fornecido
   }
@@ -83,6 +83,16 @@ Future<String> addJsonToDatabase(
     jsonString = utf8.decode(jsonBytes);
   } else {
     return '400'; // Nenhum dado válido fornecido
+  }
+
+  // Função para corrigir pinyin
+  String corrigirPinyin(String pinyin) {
+    return pinyin
+        .replaceAll('ɡ', 'g')
+        .replaceAll('ʌ', 'a')
+        .replaceAll('ŋ', 'ng')
+        .replaceAll('ʃ', 'x')
+        .replaceAll('j', 'zh');  // Exemplo: caso queira corrigir o som do 'j'
   }
 
   try {
@@ -142,8 +152,8 @@ Future<String> addJsonToDatabase(
         for (final wordJson in wordsJson) {
           if (wordJson is Map<String, dynamic>) {
             final word = Word()
-              ..word = wordJson['word']
-              ..reading = wordJson['reading']
+              ..word = corrigirPinyin(wordJson['word'])
+              ..reading = corrigirPinyin(wordJson['reading'])
               ..mean = wordJson['mean']
               ..tags = tags.cast<String>()
               ..filename = filename;

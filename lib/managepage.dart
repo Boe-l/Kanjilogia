@@ -15,21 +15,23 @@ import 'package:animated_floating_buttons/animated_floating_buttons.dart';
 import 'sharedpref.dart';
 
 class ManagerPage extends StatefulWidget {
+  const ManagerPage({super.key});
+
   @override
   _ManagerPageState createState() => _ManagerPageState();
 }
 
 class _ManagerPageState extends State<ManagerPage>
     with SingleTickerProviderStateMixin {
-  List<String> _filenames = [];
-  List<Set<String>> _tags = [];
+  final List<String> _filenames = [];
+  final List<Set<String>> _tags = [];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late AnimationController _animationController;
   int _maxTime = 60;
   final ValueNotifier<int> selectedTimeNotifier = ValueNotifier<int>(30);
   final ScrollController _scrollController = ScrollController();
   bool _showFloatingButtons = true;
-  Map<String, int> _wordCounts = {};
+  final Map<String, int> _wordCounts = {};
   final TextEditingController searchController = TextEditingController();
   final GlobalKey<AnimatedFloatingActionButtonState> key =
       GlobalKey<AnimatedFloatingActionButtonState>();
@@ -619,6 +621,7 @@ class _ManagerPageState extends State<ManagerPage>
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 56, 16, 115),

@@ -1,0 +1,86 @@
+{
+    "filename": "Cores",
+    "content": {
+        "tags": [
+            "jp",
+            "cores"
+        ],
+        "words": [
+            {
+                "word": "赤",
+                "reading": "あか",
+                "mean": "vermelho"
+            },
+            {
+                "word": "青",
+                "reading": "あお",
+                "mean": "azul"
+            },
+            {
+                "word": "黄色",
+                "reading": "きいろ",
+                "mean": "amarelo"
+            },
+            {
+                "word": "緑",
+                "reading": "みどり",
+                "mean": "verde"
+            },
+            {
+                "word": "黒",
+                "reading": "くろ",
+                "mean": "preto"
+            },
+            {
+                "word": "白",
+                "reading": "しろ",
+                "mean": "branco"
+            },
+            {
+                "word": "ピンク",
+                "reading": "ぴんく",
+                "mean": "rosa"
+            },
+            {
+                "word": "紫",
+                "reading": "むらさき",
+                "mean": "roxo"
+            },
+            {
+                "word": "茶色",
+                "reading": "ちゃいろ",
+                "mean": "marrom"
+            },
+            {
+                "word": "灰色",
+                "reading": "はいいろ",
+                "mean": "cinza"
+            },
+            {
+                "word": "オレンジ",
+                "reading": "おれんじ",
+                "mean": "laranja"
+            },
+            {
+                "word": "金色",
+                "reading": "きんいろ",
+                "mean": "dourado"
+            },
+            {
+                "word": "銀色",
+                "reading": "ぎんいろ",
+                "mean": "prateado"
+            },
+            {
+                "word": "水色",
+                "reading": "みずいろ",
+                "mean": "azul claro"
+            },
+            {
+                "word": "ベージュ",
+                "reading": "べーじゅ",
+                "mean": "bege"
+            }
+        ]
+    }
+}

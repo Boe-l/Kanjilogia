@@ -373,15 +373,14 @@ class _MainMenuState extends State<MainMenu>
                             hintStyle: TextStyle(color: Colors.white),
                             prefixIcon:
                                 Icon(Icons.search, color: Colors.white),
-                            filled: false, // Para o fundo preenchido
-                            fillColor: Colors.grey[800], // Cor do fundo
-
+                            filled: false, 
+                            fillColor: Colors.grey[800], 
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
-                                  20), // Borda arredondada
+                                  20), 
                               borderSide: BorderSide(
                                   color: const Color.fromARGB(255, 109, 33, 223),
-                                  width: 2), // Cor e largura da borda
+                                  width: 2), 
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
@@ -536,12 +535,12 @@ class _MainMenuState extends State<MainMenu>
                                                           CrossAxisAlignment
                                                               .center,
                                                       children: [
-                                                        // Adicionando Spacer para controlar o espaço superior
+
                                                         Spacer(
                                                             flex:
                                                                 1), // Faz a bandeira não ficar tão próxima do topo
                                                                                                 
-                                                        // Imagem ajustando proporcionalmente
+                                                        
                                                         Expanded(
                                                           flex: 5,
                                                           child: Image
@@ -595,10 +594,10 @@ class _MainMenuState extends State<MainMenu>
                                                           ),
                                                         ),
                                                                                                 
-                                                        // Adicionando Spacer para evitar que o texto fique muito distante do fundo
+                                                        
                                                         Spacer(
                                                             flex:
-                                                                1), // Coloca um espaço para o texto ficar mais perto do fundo
+                                                                1), 
                                                       ],
                                                     ),
                                                   ),
@@ -641,7 +640,7 @@ class _MainMenuState extends State<MainMenu>
                           MaterialPageRoute(
                               builder: (context) => ManagerPage()),
                         ).then((_) {
-                          // Chama _loadJsonFiles() ou função similar para atualizar a tela principal
+                          
                           _loadJsonFiles();
                         });
                       },
@@ -651,7 +650,6 @@ class _MainMenuState extends State<MainMenu>
                     SizedBox(
                       width: screenWidth * 0.186, // Espaço entre os botões
                     ),
-                    // Botão de "Iniciar Jogo" com ícone de play
                     FloatingActionButton(
                       key: playButtonKey,
                       heroTag: 'play',
