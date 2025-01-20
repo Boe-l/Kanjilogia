@@ -21,6 +21,7 @@ class Word {
   late List<String> tags; // Lista de tags para cada palavra
   late String filename; // Armazenar o nome do arquivo associado
 }
+
 Isar? _isarInstance;
 // Função para obter a instância do banco de dados
 Future<Isar> getIsarInstance() async {
@@ -39,19 +40,16 @@ Future<Isar> getIsarInstance() async {
 }
 
 Future<dynamic> getDbInstance() async {
-  
-    // Se for Web, usar IndexedDB com idb_shim
-    final dbFactory = getIdbFactory()?.open(
-      'wordDatabase',
-      version: 1,
-      onUpgradeNeeded: (e) {
-        final db = e.database;
-        db.createObjectStore('words', keyPath: 'filename');
-      },
-    );
-    return dbFactory;
-
-    
+  // Se for Web, usar IndexedDB com idb_shim
+  final dbFactory = getIdbFactory()?.open(
+    'wordDatabase',
+    version: 1,
+    onUpgradeNeeded: (e) {
+      final db = e.database;
+      db.createObjectStore('words', keyPath: 'filename');
+    },
+  );
+  return dbFactory;
 }
 
 bool validateJson(Map<String, dynamic> json) {
@@ -66,7 +64,8 @@ bool validateJson(Map<String, dynamic> json) {
 // Adiciona um arquivo JSON formatado ao banco de dados
 // Função para adicionar palavras ao banco de dados
 
-Future<String> addJsonToDatabase({String? jsonFilePath, Uint8List? jsonBytes}) async {
+Future<String> addJsonToDatabase(
+    {String? jsonFilePath, Uint8List? jsonBytes}) async {
   if (jsonFilePath == null && jsonBytes == null) {
     return '400'; // Nenhum dado fornecido
   }
@@ -86,13 +85,22 @@ Future<String> addJsonToDatabase({String? jsonFilePath, Uint8List? jsonBytes}) a
   }
 
   // Função para corrigir pinyin
-  String corrigirPinyin(String pinyin) {
-    return pinyin
+  String corrigirTexto(String texto) {
+    return texto
         .replaceAll('ɡ', 'g')
         .replaceAll('ʌ', 'a')
         .replaceAll('ŋ', 'ng')
         .replaceAll('ʃ', 'x')
-        .replaceAll('j', 'zh');  // Exemplo: caso queira corrigir o som do 'j'
+        .replaceAll('ç', 'c')
+        .replaceAll('ø', 'o')
+        .replaceAll('ñ', 'n')
+        .replaceAll('ł', 'l')
+        .replaceAll('å', 'a')
+        .replaceAll('æ', 'ae')
+        .replaceAll('œ', 'oe')
+        .replaceAll('€', 'euro')
+        .replaceAll('™', 'tm')
+        .replaceAll('©', 'c');
   }
 
   try {
@@ -113,14 +121,32 @@ Future<String> addJsonToDatabase({String? jsonFilePath, Uint8List? jsonBytes}) a
     final tags = content['tags'] as List<dynamic>;
     final wordsJson = content['words'] as List<dynamic>;
 
-    // Obtém a instância do banco de dados
-    
+    // Corrige o pinyin de todas as palavras antes de continuar
+    if (content.containsKey('words') && content['words'] is List) {
+      List<dynamic> wordsList = content['words'];
+
+      // Iterando sobre a lista de palavras e corrigindo 'word' e 'reading'
+      for (var wordJson in wordsList) {
+        if (wordJson is Map<String, dynamic>) {
+          // Corrigir 'word' e 'reading' dentro de cada item da lista
+          if (wordJson.containsKey('word')) {
+            wordJson['word'] = corrigirTexto(wordJson['word'] ?? '');
+          }
+          if (wordJson.containsKey('reading')) {
+            wordJson['reading'] = corrigirTexto(wordJson['reading'] ?? '');
+          }
+        }
+      }
+    }
+
+    // Valida todas as palavras antes de continuar
     final allValid = wordsJson.every((word) => validateJson(word));
 
     if (!allValid) {
-      return '500';
+      return '500'; // Dados inválidos encontrados
     }
 
+    // Verifica se o arquivo já existe no banco de dados
     if (kIsWeb) {
       final db = await getDbInstance();
       final txn = db.transaction('words', idbModeReadWrite);
@@ -129,10 +155,9 @@ Future<String> addJsonToDatabase({String? jsonFilePath, Uint8List? jsonBytes}) a
 
       for (final item in result) {
         if (item['filename'].contains(filename)) {
-          return '409';
+          return '409'; // Arquivo já existe no banco de dados
         }
       }
-      //verificar se o arquivo ja existe na db
 
       await store.put({
         'filename': filename,
@@ -152,9 +177,9 @@ Future<String> addJsonToDatabase({String? jsonFilePath, Uint8List? jsonBytes}) a
         for (final wordJson in wordsJson) {
           if (wordJson is Map<String, dynamic>) {
             final word = Word()
-              ..word = corrigirPinyin(wordJson['word'])
-              ..reading = corrigirPinyin(wordJson['reading'])
-              ..mean = wordJson['mean']
+              ..word = wordJson['word'] ?? ''
+              ..reading = wordJson['reading'] ?? ''
+              ..mean = wordJson['mean'] ?? ''
               ..tags = tags.cast<String>()
               ..filename = filename;
             await isar.words.put(word);
@@ -173,8 +198,6 @@ Future<String> addJsonToDatabase({String? jsonFilePath, Uint8List? jsonBytes}) a
 // Lista todos os filenames distintos no banco de dados
 // Lista todos os filenames distintos no banco de dados
 Future<Map<String, Set<String>>> listFilenamesWithTags() async {
-  
-
   if (kIsWeb) {
     final db = await getDbInstance();
     // Para Web, usar IndexedDB
@@ -213,8 +236,6 @@ Future<Map<String, Set<String>>> listFilenamesWithTags() async {
 
 // Apaga todas as entradas relacionadas a um filename específico
 Future<String> deleteFilename(String filename) async {
-  
-
   if (kIsWeb) {
     final db = await getDbInstance();
     final txn = db.transaction('words', idbModeReadWrite);

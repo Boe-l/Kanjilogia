@@ -1,0 +1,578 @@
+{
+    "filename": "Chinês",
+    "content": {
+        "tags": [
+            "cn",
+            "basic",
+            "スウェイカイ"
+        ],
+        "words": [
+            
+            {
+                "word": "手",
+                "reading": "shǒu",
+                "mean": "Mão."
+            },
+            {
+                "word": "杯子",
+                "reading": "bēizi",
+                "mean": "Copo"
+            },
+            {
+                "word": "出租车",
+                "reading": "chūzūchē",
+                "mean": "Taxi (Literalmente: carro de alugar)."
+            },
+            {
+                "word": "自行车",
+                "reading": "zìxínɡchē",
+                "mean": "Bicicleta"
+            },
+            {
+                "word": "不客气",
+                "reading": "bùkèqì",
+                "mean": "Por nada."
+            },
+            {
+                "word": "唱歌",
+                "reading": "chànɡɡē",
+                "mean": "Cantar um canção."
+            },
+            {
+                "word": "唱",
+                "reading": "chànɡ",
+                "mean": "Cantar."
+            },
+            {
+                "word": "吃",
+                "reading": "chī",
+                "mean": "Comer."
+            },
+            {
+                "word": "吃饭",
+                "reading": "chīfàn",
+                "mean": "Comer comida"
+            },
+            {
+                "word": "穿",
+                "reading": "chuān",
+                "mean": "Vestir(-se).;;Calçar(-se).;;Perfurar."
+            },
+            {
+                "word": "床",
+                "reading": "chuánɡ",
+                "mean": "Cama."
+            },
+            {
+                "word": "打车",
+                "reading": "dǎchē",
+                "mean": "Pedir um carro por aplicativo."
+            },
+            {
+                "word": "地图",
+                "reading": "dìtú",
+                "mean": "Mapa."
+            },
+            {
+                "word": "弟弟",
+                "reading": "dìdi",
+                "mean": "Irmão mais novo."
+            },
+            {
+                "word": "电脑",
+                "reading": "diànnǎo",
+                "mean": "Computador."
+            },
+            {
+                "word": "电视",
+                "reading": "diànshì",
+                "mean": "Televisão."
+            },
+            {
+                "word": "电视机",
+                "reading": "diànshìjī",
+                "mean": "Televisor."
+            },
+            {
+                "word": "电影",
+                "reading": "diànyǐnɡ",
+                "mean": "Filme."
+            },
+            {
+                "word": "电影院",
+                "reading": "diànyǐnɡyuàn",
+                "mean": "Cinema."
+            },
+            {
+                "word": "飞",
+                "reading": "fēi",
+                "mean": "Voar."
+            },
+            {
+                "word": "飞机",
+                "reading": "fēijī",
+                "mean": "Avião."
+            },
+            {
+                "word": "非常",
+                "reading": "fēichánɡ",
+                "mean": "Muito."
+            },
+            {
+                "word": "高兴",
+                "reading": "ɡāoxìnɡ",
+                "mean": "Contente;;Alegre"
+            },
+            {
+                "word": "告诉",
+                "reading": "ɡàosu；ɡàosù",
+                "mean": "Dizer.；"
+            },
+            {
+                "word": "哥哥",
+                "reading": "ɡēɡe",
+                "mean": "Irmão mais velho."
+            },
+            {
+                "word": "歌",
+                "reading": "ɡē",
+                "mean": "Canção."
+            },
+            {
+                "word": "给",
+                "reading": "ɡěi；jǐ",
+                "mean": "Dar.;;Para.；"
+            },
+            {
+                "word": "礼物",
+                "reading": "lǐwù",
+                "mean": "Presente, regalo."
+            },
+            {
+                "word": "工作",
+                "reading": "ɡōnɡzuò",
+                "mean": "Trabalhar.;;Trabalho."
+            },
+            {
+                "word": "国家",
+                "reading": "ɡuójiā",
+                "mean": "País."
+            },
+            {
+                "word": "还",
+                "reading": "huán；hái；xuán",
+                "mean": "Devolver.；Ainda.；"
+            },
+            {
+                "word": "孩子",
+                "reading": "háizi",
+                "mean": "Criança.;;Filho ou filha."
+            },
+            {
+                "word": "汉字",
+                "reading": "hànzì",
+                "mean": "Caractere chinês."
+            },
+            {
+                "word": "喝",
+                "reading": "hē；hè",
+                "mean": "Beber.；"
+            },
+            {
+                "word": "花",
+                "reading": "huā",
+                "mean": "Flor.;;Gastar."
+            },
+            {
+                "word": "回答",
+                "reading": "huídá",
+                "mean": "Responder.;;Resposta."
+            },
+            {
+                "word": "火车",
+                "reading": "huǒchē",
+                "mean": "Trem."
+            },
+            {
+                "word": "机场",
+                "reading": "jīchǎnɡ",
+                "mean": "Aeroporto."
+            },
+            {
+                "word": "姐姐",
+                "reading": "jiějie",
+                "mean": "Irmã mais velha."
+            },
+            {
+                "word": "看",
+                "reading": "kàn；kān",
+                "mean": "Olhar.；"
+            },
+            {
+                "word": "妈妈",
+                "reading": "māmɑ",
+                "mean": "Mamãe."
+            },
+            {
+                "word": "买",
+                "reading": "mǎi",
+                "mean": "Comprar."
+            },
+            {
+                "word": "卖",
+                "reading": "mài",
+                "mean": "Vender."
+            },
+            {
+                "word": "妹妹",
+                "reading": "mèimei",
+                "mean": "Irmã mais nova."
+            },
+            {
+                "word": "门",
+                "reading": "mén",
+                "mean": "Porta."
+            },
+            {
+                "word": "面包",
+                "reading": "miànbāo",
+                "mean": "Pão."
+            },
+            {
+                "word": "面条",
+                "reading": "miàntiáo",
+                "mean": "Macarrão."
+            },
+            {
+                "word": "名字",
+                "reading": "mínɡzi",
+                "mean": "Nome."
+            },
+            {
+                "word": "明白",
+                "reading": "mínɡbái",
+                "mean": "Entender."
+            },
+            {
+                "word": "明天",
+                "reading": "mínɡtiān",
+                "mean": "Amanhã."
+            },
+            {
+                "word": "男朋友",
+                "reading": "nánpénɡyou",
+                "mean": "Namorado."
+            },
+            {
+                "word": "你",
+                "reading": "nǐ",
+                "mean": "Tu."
+            },
+            {
+                "word": "你们",
+                "reading": "nǐmen",
+                "mean": "Vós."
+            },
+            {
+                "word": "年",
+                "reading": "nián",
+                "mean": "Ano."
+            },
+            {
+                "word": "女儿",
+                "reading": "nǚ’ér",
+                "mean": "Filha."
+            },
+            {
+                "word": "女朋友",
+                "reading": "nǚpénɡyou",
+                "mean": "Namorar."
+            },
+            {
+                "word": "跑",
+                "reading": "pǎo；páo",
+                "mean": "Correr.；"
+            },
+            {
+                "word": "朋友",
+                "reading": "pénɡyou",
+                "mean": "Amigo."
+            },
+            {
+                "word": "起床",
+                "reading": "qǐchuánɡ",
+                "mean": "Levantar-se da cama."
+            },
+            {
+                "word": "汽车",
+                "reading": "qìchē",
+                "mean": "Carro."
+            },
+            {
+                "word": "钱",
+                "reading": "qián",
+                "mean": "Dinheiro."
+            },
+            {
+                "word": "球",
+                "reading": "qiú",
+                "mean": "Bola."
+            },
+            {
+                "word": "人",
+                "reading": "rén",
+                "mean": "Pessoa."
+            },
+            {
+                "word": "认识",
+                "reading": "rènshi",
+                "mean": "Conhecer."
+            },
+            {
+                "word": "肉",
+                "reading": "ròu",
+                "mean": "Carne."
+            },
+            {
+                "word": "山",
+                "reading": "shān",
+                "mean": "Montanha."
+            },
+            {
+                "word": "商场",
+                "reading": "shānɡchǎnɡ",
+                "mean": "Centro comercial."
+            },
+            {
+                "word": "商店",
+                "reading": "shānɡdiàn",
+                "mean": "Loja."
+            },
+            {
+                "word": "谁",
+                "reading": "shéi",
+                "mean": "Quem."
+            },
+            {
+                "word": "身体",
+                "reading": "shēntǐ",
+                "mean": "Corpo."
+            },
+            {
+                "word": "生病",
+                "reading": "shēnɡbìnɡ",
+                "mean": "Adoecer."
+            },
+            {
+                "word": "是",
+                "reading": "shì",
+                "mean": "Ser."
+            },
+            {
+                "word": "手机",
+                "reading": "shǒujī",
+                "mean": "Celular."
+            },
+            {
+                "word": "书",
+                "reading": "shū",
+                "mean": "Livro."
+            },
+            {
+                "word": "书包",
+                "reading": "shūbāo",
+                "mean": "Mochila."
+            },
+            {
+                "word": "树",
+                "reading": "shù",
+                "mean": "Árvore."
+            },
+            {
+                "word": "水",
+                "reading": "shuǐ",
+                "mean": "Água."
+            },
+            {
+                "word": "水果",
+                "reading": "shuǐɡuǒ",
+                "mean": "Fruta."
+            },
+            {
+                "word": "睡",
+                "reading": "shuì",
+                "mean": "Dormir."
+            },
+            {
+                "word": "睡觉",
+                "reading": "shuìjiào；shuìjué",
+                "mean": "Dormir um sono.；"
+            },
+            {
+                "word": "说",
+                "reading": "shuō；shuì；yuè",
+                "mean": "Falar.；；"
+            },
+            {
+                "word": "说话",
+                "reading": "shuōhuà",
+                "mean": "Falar uma fala."
+            },
+            {
+                "word": "岁",
+                "reading": "suì",
+                "mean": "Ano de idade."
+            },
+            {
+                "word": "图书馆",
+                "reading": "túshūɡuǎn",
+                "mean": "Biblioteca."
+            },
+            {
+                "word": "晚饭",
+                "reading": "wǎnfàn",
+                "mean": "Janta."
+            },
+            {
+                "word": "我",
+                "reading": "wǒ",
+                "mean": "Eu."
+            },
+            {
+                "word": "问",
+                "reading": "wèn",
+                "mean": "Perguntar."
+            },
+            {
+                "word": "我们",
+                "reading": "wǒmen",
+                "mean": "Nós."
+            },
+            {
+                "word": "午饭",
+                "reading": "wǔfàn",
+                "mean": "Almoço."
+            },
+            {
+                "word": "喜欢",
+                "reading": "xǐhuɑn",
+                "mean": "Gostar."
+            },
+            {
+                "word": "现在",
+                "reading": "xiànzài",
+                "mean": "Agora."
+            },
+            {
+                "word": "笑",
+                "reading": "xiào",
+                "mean": "Rir."
+            },
+            {
+                "word": "写",
+                "reading": "xiě；xiè",
+                "mean": "Escrever.；"
+            },
+            {
+                "word": "休息",
+                "reading": "xiūxi",
+                "mean": "Descansar."
+            },
+            {
+                "word": "学",
+                "reading": "xué",
+                "mean": "Estudar.;;Imitar."
+            },
+            {
+                "word": "学生",
+                "reading": "xuéshenɡ",
+                "mean": "Aluno."
+            },
+            {
+                "word": "学校",
+                "reading": "xuéxiào",
+                "mean": "Escola."
+            },
+            {
+                "word": "也",
+                "reading": "yě",
+                "mean": "Também."
+            },
+            {
+                "word": "衣服",
+                "reading": "yīfu",
+                "mean": "Roupa."
+            },
+            {
+                "word": "医生",
+                "reading": "yīshēnɡ",
+                "mean": "Médico."
+            },
+            {
+                "word": "医院",
+                "reading": "yīyuàn",
+                "mean": "Hospital."
+            },
+            {
+                "word": "有",
+                "reading": "yǒu；yòu",
+                "mean": "Ter.;;Haver.；"
+            },
+            {
+                "word": "雨",
+                "reading": "yǔ；yù",
+                "mean": "Chuva.；"
+            },
+            {
+                "word": "远",
+                "reading": "yuǎn",
+                "mean": "Longe."
+            },
+            {
+                "word": "在",
+                "reading": "zài",
+                "mean": "Estar."
+            },
+            {
+                "word": "早饭",
+                "reading": "zǎofàn",
+                "mean": "Merenda."
+            },
+            {
+                "word": "找",
+                "reading": "zhǎo",
+                "mean": "Procurar."
+            },
+            {
+                "word": "知道",
+                "reading": "zhīdào",
+                "mean": "Saber."
+            },
+            {
+                "word": "桌子",
+                "reading": "zhuōzi",
+                "mean": "Mesa."
+            },
+            {
+                "word": "字",
+                "reading": "zì",
+                "mean": "Caractere."
+            },
+            {
+                "word": "昨天",
+                "reading": "zuótiān",
+                "mean": "Ontem."
+            },
+            {
+                "word": "做",
+                "reading": "zuò",
+                "mean": "Fazer."
+            },
+            {
+                "word": "坐",
+                "reading": "zuò",
+                "mean": "Sentar(-se)."
+            }
+        ]
+    }
+}

@@ -41,7 +41,7 @@ class _GameScreenState extends State<GameScreen> {
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     super.initState();
     _loadWords();
-    
+
     _startTimer();
     SharedPrefs().getCardFontSize().then((value) {
       setState(() {
@@ -56,8 +56,6 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   static const kanaKit = KanaKit();
-
-
 
   void _loadWords() {
     final Map<String, dynamic> data = widget.data;
@@ -84,7 +82,7 @@ class _GameScreenState extends State<GameScreen> {
           // Adiciona o mapa à lista de palavras
           _words.add(wordWithTags);
         }
-      }
+      } //diànyǐng
 
       // Verifica se há palavras carregadas
       if (_words.isEmpty) {
@@ -114,7 +112,6 @@ class _GameScreenState extends State<GameScreen> {
     });
     _loadWords(); // Recarrega e embaralha as palavras
     _startTimer();
-    
   }
 
   void _startTimer() {
@@ -154,13 +151,17 @@ class _GameScreenState extends State<GameScreen> {
       isCorrect = possibleReadings.contains(userAnswerInHiragana);
     } else {
       isCorrect = possibleReadings.contains(answer.trim());
-    }
+    } //diànyǐnɡ
+    //diànyǐnɡ
 
     // Processa a resposta
     setState(() {
       if (isCorrect) {
         _score++;
-        _borderColor = Colors.green;
+
+        setState(() {
+          _borderColor = Colors.green;
+        });
         correctItems.add(currentWord);
       } else {
         errorItems.add(currentWord);
@@ -239,7 +240,6 @@ class _GameScreenState extends State<GameScreen> {
       });
 
       _startTimer();
-      
     } else {
       showDialog(
         context: context,
@@ -435,7 +435,8 @@ class _GameScreenState extends State<GameScreen> {
       SharedPrefs().saveCardFontSize(fontSizeCard);
     });
   }
-  void toggleFontWeight() async{
+
+  void toggleFontWeight() async {
     setState(() {
       // Incrementa o valor do fontWeight
       FontWeightCard += 300;
@@ -447,6 +448,7 @@ class _GameScreenState extends State<GameScreen> {
       SharedPrefs().saveCardFontWeight(FontWeightCard);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     double fontSize = MediaQuery.of(context).size.width * 0.06;
@@ -507,10 +509,12 @@ class _GameScreenState extends State<GameScreen> {
                                             height: screenWidth.clamp(100.0,
                                                 230.0), // Usa o mesmo limite que o width
                                             constraints: BoxConstraints(
-                                              maxWidth: (fontSizeCard *
-                                                  4).clamp(136, 256), // Tamanho máximo do card
-                                              maxHeight: (fontSizeCard *
-                                                  4).clamp(136, 256), // Altura máxima do card
+                                              maxWidth: (fontSizeCard * 4).clamp(
+                                                  136,
+                                                  256), // Tamanho máximo do card
+                                              maxHeight: (fontSizeCard * 4).clamp(
+                                                  136,
+                                                  256), // Altura máxima do card
                                             ),
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -532,7 +536,6 @@ class _GameScreenState extends State<GameScreen> {
                                                             ? -2.0
                                                             : 2.0);
                                                   }
-                                                  
                                                 },
                                                 child: Card(
                                                   elevation: 4,
@@ -562,16 +565,7 @@ class _GameScreenState extends State<GameScreen> {
                                                                       "")
                                                                   .length >
                                                               5
-                                                          ? '${(_words[_currentIndex]
-                                                                          [
-                                                                          "word"] ??
-                                                                      "")
-                                                                  .substring(
-                                                                      0, 5)}\n${(_words[_currentIndex]
-                                                                          [
-                                                                          "word"] ??
-                                                                      "")
-                                                                  .substring(5)}'
+                                                          ? '${(_words[_currentIndex]["word"] ?? "").substring(0, 5)}\n${(_words[_currentIndex]["word"] ?? "").substring(5)}'
                                                           : (_words[_currentIndex]
                                                                   ["word"] ??
                                                               ""),
@@ -582,8 +576,11 @@ class _GameScreenState extends State<GameScreen> {
                                                                     ?.length ??
                                                                 0) *
                                                             2,
-                                                        fontWeight:
-                                                            FontWeight.values[FontWeightCard ~/ 100 - 1],
+                                                        fontWeight: FontWeight
+                                                                .values[
+                                                            FontWeightCard ~/
+                                                                    100 -
+                                                                1],
                                                       ),
                                                       textAlign:
                                                           TextAlign.center,
@@ -620,13 +617,28 @@ class _GameScreenState extends State<GameScreen> {
                                                 title: Text(
                                                   _kanjisRespondidos.last,
                                                   style: TextStyle(
-                                                    color: errorItems.any(
-                                                            (error) =>
-                                                                error["word"] ==
-                                                                _kanjisRespondidos
-                                                                    .last)
-                                                        ? Colors.redAccent
-                                                        : Colors.green,
+                                                    color: _kanjisRespondidos
+                                                            .isNotEmpty
+                                                        ? (correctItems.any((item) =>
+                                                                    item[
+                                                                        "word"] ==
+                                                                    _kanjisRespondidos
+                                                                        .last)
+                                                                ? Colors
+                                                                    .green // Kanji está em correctItems
+                                                                : errorItems.any((item) =>
+                                                                        item[
+                                                                            "word"] ==
+                                                                        _kanjisRespondidos
+                                                                            .last)
+                                                                    ? Colors
+                                                                        .redAccent // Kanji está em errorItems
+                                                                    : Colors
+                                                                        .grey // Caso o kanji não esteja em nenhuma das duas listas
+                                                            )
+                                                        : Colors
+                                                            .grey, // Caso _kanjisRespondidos esteja vazio
+
                                                     fontSize:
                                                         (screenWidth * 0.05)
                                                             .clamp(20.0, 21.0),
@@ -678,6 +690,25 @@ class _GameScreenState extends State<GameScreen> {
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8),
+                                            ),
+                                            prefixIcon: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Image.asset(
+                                                _getFlagPath(_words[
+                                                                _currentIndex]
+                                                            .isNotEmpty &&
+                                                        _words[_currentIndex]
+                                                                ['tags'] !=
+                                                            null
+                                                    ? _words[_currentIndex]
+                                                            ['tags']!
+                                                        .split(',')[0]
+                                                    : ''),
+                                                width:
+                                                    30, // Definindo o tamanho da imagem
+                                                height: 30,
+                                              ),
                                             ),
                                             suffixIcon: IconButton(
                                               icon: Icon(Icons.send,
@@ -752,5 +783,24 @@ class _GameScreenState extends State<GameScreen> {
         ),
       ),
     );
+  }
+}
+
+String _getFlagPath(String tags) {
+  switch (tags.toLowerCase()) {
+    case 'jp':
+      return 'assets/flags/japan.png';
+    case 'cn':
+      return 'assets/flags/china.png';
+    case 'pt':
+      return 'assets/flags/brazil.png';
+    case 'ko':
+      return 'assets/flags/southkorea.png';
+    case 'en':
+      return 'assets/flags/usa.png';
+    case 'es':
+      return 'assets/flags/spain.png';
+    default:
+      return 'assets/flags/default.png';
   }
 }
