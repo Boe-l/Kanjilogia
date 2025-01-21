@@ -20,10 +20,10 @@ class ManagerPage extends StatefulWidget {
   const ManagerPage({super.key});
 
   @override
-  _ManagerPageState createState() => _ManagerPageState();
+  ManagerPageState createState() => ManagerPageState();
 }
 
-class _ManagerPageState extends State<ManagerPage>
+class ManagerPageState extends State<ManagerPage>
     with SingleTickerProviderStateMixin {
   final List<String> _filenames = [];
   final List<Set<String>> _tags = [];
@@ -48,8 +48,7 @@ class _ManagerPageState extends State<ManagerPage>
   @override
   @override
   void initState() {
-    super.initState();
-
+    super.initState(); 
     // Carregando dados iniciais
     _loadInitialData();
 
@@ -137,7 +136,8 @@ class _ManagerPageState extends State<ManagerPage>
                           _getFlagPath(locale.toString()); // Emoji da bandeira
 
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 8),
                         child: Material(
                           color: const Color.fromARGB(255, 74, 32, 126),
                           borderRadius: BorderRadius.circular(16),
@@ -170,7 +170,7 @@ class _ManagerPageState extends State<ManagerPage>
                                         color: Colors.white, fontSize: 16),
                                   ),
                                 ],
-                              ),  
+                              ),
                             ),
                           ),
                         ),
@@ -297,7 +297,6 @@ class _ManagerPageState extends State<ManagerPage>
       files = _files;
       filteredFiles = List.from(files);
     } catch (e) {
-      print('Erro ao buscar os arquivos: $e');
       errorOccurred = true;
     }
     void filterFiles(String query) {
@@ -321,7 +320,7 @@ class _ManagerPageState extends State<ManagerPage>
 
     Future<void> fetchAndSetFileData(List<Map<String, dynamic>> files) async {
       List<Future<void>> fetchTasks = [];
-
+      final localization = AppLocalizations.of(context);
       for (var file in files) {
         final url = file['download_url'] ?? '';
 
@@ -337,9 +336,7 @@ class _ManagerPageState extends State<ManagerPage>
 
                 // Atualiza o fileData com tags, contagem de palavras e bandeira
                 fileData[file['name']] = {
-                  'tags': tags.isNotEmpty
-                      ? tags
-                      : [AppLocalizations.of(context)!.mp_no_tags],
+                  'tags': tags.isNotEmpty ? tags : [localization!.mp_no_tags],
                   'wordCount': wordCount(data['content']),
                   'flag': _getFlagPath(tags.isNotEmpty ? tags.first : ''),
                 };
@@ -413,7 +410,6 @@ class _ManagerPageState extends State<ManagerPage>
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: TextField(
                           onChanged: (value) {
-                            print('teste');
                             newController.add(counter + 1);
                             filterFiles(
                                 value); // Aplica o filtro enquanto o texto é digitado
@@ -497,7 +493,7 @@ class _ManagerPageState extends State<ManagerPage>
                                                 color: Colors.white),
                                           ),
                                           subtitle: Text(
-                                            '${fileData[file['name']]!['tags'].isNotEmpty && fileData[file['name']]!['tags'][0].isNotEmpty ? '${AppLocalizations.of(context)!.tags} ' + fileData[file['name']]!['tags'][0] + ',' : '${AppLocalizations.of(context)!.mp_error_file_load}'} ${fileData[file['name']]!['tags'].length > 1 && fileData[file['name']]!['tags'][1].isNotEmpty ? fileData[file['name']]!['tags'][1] + '.' : ''}\n'
+                                            '${fileData[file['name']]!['tags'].isNotEmpty && fileData[file['name']]!['tags'][0].isNotEmpty ? '${AppLocalizations.of(context)!.tags}: ${fileData[file['name']]!['tags'][0] + ','}' : AppLocalizations.of(context)!.mp_error_file_load} ${fileData[file['name']]!['tags'].length > 1 && fileData[file['name']]!['tags'][1].isNotEmpty ? fileData[file['name']]!['tags'][1] + '.' : ''}\n'
                                             '${"${fileData[file['name']]!['wordCount']} ${AppLocalizations.of(context)!.words}"}',
                                             style: const TextStyle(
                                                 color: Colors.white70),
@@ -536,6 +532,7 @@ class _ManagerPageState extends State<ManagerPage>
   }
 
   Future<void> _addFile(bool type, String? url) async {
+    final localization = AppLocalizations.of(context);
     String code = '';
     if (!type) {
       // Local file picker
@@ -563,22 +560,19 @@ class _ManagerPageState extends State<ManagerPage>
               }
             }
             if (code == '409') {
-              _showToast(AppLocalizations.of(context)!.mp_error_file_exists,
-                  Colors.red);
+              _showToast(localization!.mp_error_file_exists, Colors.red);
             } else if (code == '500') {
-              _showToast(
-                  AppLocalizations.of(context)!.mp_error_invalid_formatting,
-                  Colors.red);
+              _showToast(localization!.mp_error_invalid_formatting, Colors.red);
             } else if (code == '0') {
-              _showToast(
-                  AppLocalizations.of(context)!.mp_file_add_ok, Colors.green);
+              _showToast(localization!.mp_file_add_ok, Colors.green);
             } else {
-              _showToast(
-                  AppLocalizations.of(context)!.mp_error_file_add, Colors.red);
+              _showToast(localization!.mp_error_file_add, Colors.red);
             }
           }
           await _loadFilenames(); // Recarrega la lista sin duplicados
-        } catch (e) {}
+        } catch (e) {
+          debugPrint(e as String);
+        }
       }
     } else {
       if (url != null && url.isNotEmpty) {
@@ -589,33 +583,34 @@ class _ManagerPageState extends State<ManagerPage>
             final bytes = response.bodyBytes;
             code = await addJsonToDatabase(jsonBytes: bytes);
             await _loadFilenames();
-            print(code); // Recarrega a lista sem duplicatas
+            // Recarrega a lista sem duplicatas
             if (code == '409') {
-              _showToast(AppLocalizations.of(context)!.mp_error_file_exists,
+              _showToast(localization!.mp_error_file_exists,
                   Colors.red);
             } else if (code == '500') {
               _showToast(
-                  AppLocalizations.of(context)!.mp_error_invalid_formatting,
+                  localization!.mp_error_invalid_formatting,
                   Colors.red);
             } else if (code == '0') {
               _showToast(
-                  AppLocalizations.of(context)!.mp_file_add_ok, Colors.green);
+                  localization!.mp_file_add_ok, Colors.green);
             } else {
               _showToast(
-                  AppLocalizations.of(context)!.mp_error_file_add, Colors.red);
+                  localization!.mp_error_file_add, Colors.red);
             }
           } else {
             _showToast(
-                '${AppLocalizations.of(context)!.mp_error_download} ${response.statusCode}',
+                '${localization!.mp_error_download} ${response.statusCode}',
                 Colors.red);
           }
         } catch (e) {
-          _showToast('${AppLocalizations.of(context)!.mp_error_download} $e',
+          _showToast('${localization!.mp_error_download} $e',
               Colors.red);
         }
       }
     }
     if (type && (url == null || url.isEmpty)) {
+      if (!mounted) return;
       await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -668,34 +663,33 @@ class _ManagerPageState extends State<ManagerPage>
                         final bytes = response.bodyBytes;
                         code = await addJsonToDatabase(jsonBytes: bytes);
                         await _loadFilenames();
-                        print(code);
                         if (code == '409') {
                           _showToast(
-                              AppLocalizations.of(context)!
+                              localization!
                                   .mp_error_file_exists,
                               Colors.red);
                         } else if (code == '500') {
                           _showToast(
-                              AppLocalizations.of(context)!
+                              localization!
                                   .mp_error_invalid_formatting,
                               Colors.red);
                         } else if (code == '0') {
                           _showToast(
-                              AppLocalizations.of(context)!.mp_file_add_ok,
+                              localization!.mp_file_add_ok,
                               Colors.green);
                         } else {
                           _showToast(
-                              AppLocalizations.of(context)!.mp_error_file_add,
+                              localization!.mp_error_file_add,
                               Colors.red);
                         }
                       } else {
                         _showToast(
-                            '${AppLocalizations.of(context)!.mp_error_download} ${response.statusCode}',
+                            '${localization!.mp_error_download} ${response.statusCode}',
                             Colors.red);
                       }
                     } catch (e) {
                       _showToast(
-                          '${AppLocalizations.of(context)!.mp_error_download} $e',
+                          '${localization!.mp_error_download} $e',
                           Colors.red);
                     }
                   } else {
@@ -729,40 +723,35 @@ class _ManagerPageState extends State<ManagerPage>
   }
 
   Widget float1() {
-    return Container(
-      child: FloatingActionButton(
-        onPressed: () => _addFile(true, ''),
-        heroTag: "btn1",
-        tooltip: AppLocalizations.of(context)!.mp_url_tooltip,
-        child: Icon(Icons.add_link),
-      ),
+    return FloatingActionButton(
+      onPressed: () => _addFile(true, ''),
+      heroTag: "btn1",
+      tooltip: AppLocalizations.of(context)!.mp_url_tooltip,
+      child: Icon(Icons.add_link),
     );
   }
 
   Widget float2() {
-    return Container(
-      child: FloatingActionButton(
-        onPressed: () => _addFile(false, ''),
-        heroTag: "btn2",
-        tooltip: AppLocalizations.of(context)!.mp_local_file,
-        child: Icon(Icons.add),
-      ),
+    return FloatingActionButton(
+      onPressed: () => _addFile(false, ''),
+      heroTag: "btn2",
+      tooltip: AppLocalizations.of(context)!.mp_local_file,
+      child: Icon(Icons.add),
     );
   }
 
   Widget float3() {
-    return Container(
-      child: FloatingActionButton(
-        onPressed: () => showFilesPopup(context),
-        heroTag: "btn3",
-        tooltip: AppLocalizations.of(context)!.mp_github_file,
-        child: Icon(Icons.web),
-      ),
+    return FloatingActionButton(
+      onPressed: () => showFilesPopup(context),
+      heroTag: "btn3",
+      tooltip: AppLocalizations.of(context)!.mp_github_file,
+      child: Icon(Icons.web),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 56, 16, 115),
       body: SafeArea(
@@ -792,11 +781,11 @@ class _ManagerPageState extends State<ManagerPage>
                     child: Column(
                       children: [
                         Text(
-                          AppLocalizations.of(context)!.settings,
+                          localization!.settings,
                           style: TextStyle(color: Colors.white, fontSize: 30),
                         ),
                         Text(
-                          AppLocalizations.of(context)!.maxtimehint(_maxTime),
+                          localization.maxtimehint(_maxTime),
                           style: TextStyle(color: Colors.white),
                         ),
                         slider ?? SizedBox()
@@ -878,7 +867,7 @@ class _ManagerPageState extends State<ManagerPage>
                                                     color: Colors.white),
                                               ),
                                               subtitle: Text(
-                                                '${AppLocalizations.of(context)!.tags} ${tags.join(', ')}\n'
+                                                '${AppLocalizations.of(context)!.tags}: ${tags.join(', ')}.\n'
                                                 '${_wordCounts.containsKey(filename) ? "${_wordCounts[filename]} ${AppLocalizations.of(context)!.words}" : AppLocalizations.of(context)!.loading}',
                                                 style: const TextStyle(
                                                     color: Colors.white70),
@@ -998,7 +987,6 @@ class _ManagerPageState extends State<ManagerPage>
         return 'assets/flags/turkey.png';
       default:
         return 'assets/flags/default.png';
-      
     }
   }
 

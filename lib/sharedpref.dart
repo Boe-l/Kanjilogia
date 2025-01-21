@@ -1,13 +1,13 @@
 import 'dart:convert';
-import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
   static const String _tutorialCompleteKey = 'tutorial_complete';
   static const String _maxTimeKey = 'max_time';
-  static const String _CardFontSizeKey = 'card_font_size';
-  static const String _CardFontWeightKey = 'card_font_weight';
+  static const String _cardFontSizeKey = 'card_font_size';
+  static const String _cardFontWeightKey = 'card_font_weight';
 
   Future<void> saveTutorialComplete(bool isComplete) async {
     final prefs = await SharedPreferences.getInstance();
@@ -24,14 +24,14 @@ class SharedPrefs {
     await prefs.setInt(_maxTimeKey, maxTime);
   }
 
-  Future<void> saveCardFontSize(double card_font_size) async {
+  Future<void> saveCardFontSize(double cardFontSize) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble(_CardFontSizeKey, card_font_size);
+    await prefs.setDouble(_cardFontSizeKey, cardFontSize);
   }
 
   Future<double> getCardFontSize() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble(_CardFontSizeKey) ?? 30.0;
+    return prefs.getDouble(_cardFontSizeKey) ?? 30.0;
   }
   // Função para salvar o locale
   Future<void> saveLocale(Locale locale) async {
@@ -51,14 +51,14 @@ class SharedPrefs {
         languageCode); // Retorna o Locale com o código de idioma salvo
   }
 
-  Future<void> saveCardFontWeight(int card_font_weight) async {
+  Future<void> saveCardFontWeight(int cardFontWeight) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_CardFontWeightKey, card_font_weight);
+    await prefs.setInt(_cardFontWeightKey, cardFontWeight);
   }
 
   Future<int> getCardFontWeight() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_CardFontWeightKey) ?? 800;
+    return prefs.getInt(_cardFontWeightKey) ?? 800;
   }
 
   Future<int> getMaxTime() async {
@@ -83,12 +83,12 @@ class SharedPrefs {
         final currentTime = DateTime.now().millisecondsSinceEpoch;
         await prefs.setInt(_lastFetchTimeKey, currentTime);
 
-        print('Dados salvos no SharedPreferences.');
+        debugPrint('Dados salvos no SharedPreferences.');
       } else {
         throw Exception('Falha ao buscar arquivos');
       }
     } catch (e) {
-      print('Erro ao buscar ou salvar os arquivos: $e');
+     debugPrint('Erro ao buscar ou salvar os arquivos: $e');
     }
   }
 
@@ -109,7 +109,7 @@ class SharedPrefs {
     final currentTime = DateTime.now().millisecondsSinceEpoch;
 
     if (lastFetchTime != null && currentTime - lastFetchTime < 15 * 60 * 1000) {
-      print('Carregando dados do cache.');
+     debugPrint('Carregando dados do cache.');
       return await getCachedFiles();
     }
 

@@ -190,7 +190,6 @@ Future<String> addJsonToDatabase(
 
     return '0'; // Sucesso
   } catch (e) {
-    print('Erro ao processar o arquivo JSON: $e');
     return '500'; // Erro interno
   }
 }
@@ -299,7 +298,6 @@ Future<List<Word>> getWordsByFilenames(List<String> filenames) async {
       return results;
     }
   } catch (e) {
-    print('Erro ao buscar palavras para os filenames: $e');
     return [];
   }
 }
@@ -357,7 +355,6 @@ Future<String> exportWordsToJson(
     await file.writeAsString(jsonString);
     return "Dados exportados para $outputPath.";
   } catch (e) {
-    print('Erro ao exportar dados para JSON: $e');
     return '500'; // Erro interno ao exportar
   }
 }

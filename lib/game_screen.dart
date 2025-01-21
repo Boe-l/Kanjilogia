@@ -8,7 +8,6 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:kana_kit/kana_kit.dart';
 import 'sharedpref.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 class GameScreen extends StatefulWidget {
   // Recebe o jsonData como parâmetro no construtor do GameScreen
   final Map<String, dynamic> data;
@@ -16,10 +15,10 @@ class GameScreen extends StatefulWidget {
   const GameScreen({super.key, required this.data});
 
   @override
-  _GameScreenState createState() => _GameScreenState();
+  GameScreenState createState() => GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> {
+class GameScreenState extends State<GameScreen> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   List<Map<String, String>> _words = [];
@@ -35,7 +34,8 @@ class _GameScreenState extends State<GameScreen> {
   Color _borderColor = Colors.blueAccent; // Cor inicial da borda
   final double _borderWidth = 6;
   double fontSizeCard = 32.0;
-  int FontWeightCard = 100;
+  int fontWeightCard = 100;
+  
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(
@@ -51,16 +51,16 @@ class _GameScreenState extends State<GameScreen> {
     });
     SharedPrefs().getCardFontWeight().then((value) {
       setState(() {
-        FontWeightCard = value;
+        fontWeightCard = value;
       });
     });
   }
-
+  
   static const kanaKit = KanaKit();
 
   void _loadWords() {
-    final Map<String, dynamic> data = widget.data;
 
+    final Map<String, dynamic> data = widget.data;
     setState(() {
       // Recupera os dados passados para o widget
       final List<dynamic> finalJsonData = data['finalJsonData'] ?? [];
@@ -133,6 +133,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _processAnswer(String answer) {
+    final localization = AppLocalizations.of(context);
     // Verifica se o jogo terminou
     if (_currentIndex >= _words.length || _gameOver) {
       return; // Evita processar respostas após o término do jogo
@@ -178,9 +179,10 @@ class _GameScreenState extends State<GameScreen> {
       // Verifica se é a última palavra
       if (_currentIndex >= _words.length - 1) {
         _gameOver = true; // Marca o jogo como finalizado
-        _feedback = AppLocalizations.of(context)!.gs_game_ended1;
+        _feedback = localization!.gs_game_ended1;
         _controller.text = '';
         Future.microtask(() {
+          if (!mounted) return;
           _showGameOverDialog(context, _restartGame, () {
             Navigator.pop(context); // Voltar para o menu principal
           });
@@ -193,28 +195,29 @@ class _GameScreenState extends State<GameScreen> {
 
   void _showGameOverDialog(
       BuildContext context, VoidCallback onRestart, VoidCallback onMainMenu) {
+        final localization = AppLocalizations.of(context);
     showDialog(
       context: context,
       barrierDismissible:
           false, // Impede que o diálogo seja fechado ao clicar fora
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.gs_game_ended2(_score)),
-          content: Text(AppLocalizations.of(context)!.gs_game_ended3),
+          title: Text(localization!.gs_game_ended2(_score)),
+          content: Text(localization.gs_game_ended3),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Fecha o diálogo de "Game Over"
                 onRestart(); // Chama a função de reiniciar
               },
-              child: Text(AppLocalizations.of(context)!.gs_game_restart),
+              child: Text(localization.gs_game_restart),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Fecha o diálogo de "Game Over"
                 onMainMenu(); // Chama a função para ir ao menu principal
               },
-              child: Text(AppLocalizations.of(context)!.gs_go_main_menu),
+              child: Text(localization.gs_go_main_menu),
             ),
             TextButton(
               onPressed: () {
@@ -222,7 +225,7 @@ class _GameScreenState extends State<GameScreen> {
                 _viewHistory(context,
                     true); // Chama o histórico imediatamente após fechar o diálogo
               },
-              child: Text(AppLocalizations.of(context)!.gs_open_history),
+              child: Text(localization.gs_open_history),
             )
           ],
         );
@@ -244,20 +247,21 @@ class _GameScreenState extends State<GameScreen> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
+          final localization = AppLocalizations.of(context);
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.gs_game_ended1),
-            content: Text(AppLocalizations.of(context)!.gs_points(_score)),
+            title: Text(localization!.gs_game_ended1),
+            content: Text(localization.gs_points(_score)),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   _restartGame();
                 },
-                child: Text(AppLocalizations.of(context)!.gs_game_restart),
+                child: Text(localization.gs_game_restart),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(AppLocalizations.of(context)!.close),
+                child: Text(localization.close),
               ),
             ],
           );
@@ -268,6 +272,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _viewHistory(BuildContext context, bool gameOver) {
+    final localization = AppLocalizations.of(context);
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -284,9 +289,9 @@ class _GameScreenState extends State<GameScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title == AppLocalizations.of(context)!.gs_history_correct
-                    ? AppLocalizations.of(context)!.gs_history_correct
-                    : AppLocalizations.of(context)!.gs_history_mistake,
+                title == localization!.gs_history_correct
+                    ? localization.gs_history_correct
+                    : localization.gs_history_mistake,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               SizedBox(height: 8),
@@ -296,7 +301,7 @@ class _GameScreenState extends State<GameScreen> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       padding: EdgeInsets.all(8),
@@ -330,9 +335,9 @@ class _GameScreenState extends State<GameScreen> {
                       onPressed: onCopyAll,
                       icon: Icon(Icons.copy, size: 16),
                       label: Text(
-                        title == AppLocalizations.of(context)!.gs_history_correct
-                            ? AppLocalizations.of(context)!.gs_history_correct
-                            : AppLocalizations.of(context)!.gs_history_mistake,
+                        title == localization.gs_history_correct
+                            ? localization.gs_history_correct
+                            : localization.gs_history_mistake,
                         style: TextStyle(fontSize: 14),
                       ),
                     )
@@ -340,10 +345,10 @@ class _GameScreenState extends State<GameScreen> {
                 )
               else
                 Text(
-                    AppLocalizations.of(context)!.gs_score2(
-                      title == AppLocalizations.of(context)!.gs_history_correct
-                          ? AppLocalizations.of(context)!.gs_history_correct
-                          : AppLocalizations.of(context)!.gs_history_mistake,
+                    localization.gs_score2(
+                      title == localization.gs_history_correct
+                          ? localization.gs_history_correct
+                          : localization.gs_history_mistake,
                     ),
                     style:
                         TextStyle(fontSize: 16, fontStyle: FontStyle.italic)),
@@ -366,7 +371,7 @@ class _GameScreenState extends State<GameScreen> {
         return AlertDialog(
           title: Center(
             child: Text(
-              AppLocalizations.of(context)!.gs_history,
+              localization!.gs_history,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
@@ -375,34 +380,34 @@ class _GameScreenState extends State<GameScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildSection(
-                  AppLocalizations.of(context)!.gs_history_correct,
+                  localization.gs_history_correct,
                   correctItems,
                   Colors.green,
                   (entry) => copyToClipboard(
-                      entry, AppLocalizations.of(context)!.gs_history_copy_single),
+                      entry, localization.gs_history_copy_single),
                   () {
                     final text = correctItems
                         .map((word) =>
                             "${word['word']} - ${word['reading']} (${word['mean']})")
                         .join("\n");
                     copyToClipboard(text,
-                        AppLocalizations.of(context)!.gs_history_copy_all_correct);
+                        localization.gs_history_copy_all_correct);
                   },
                 ),
                 SizedBox(height: 16),
                 buildSection(
-                  AppLocalizations.of(context)!.gs_history_mistake,
+                  localization.gs_history_mistake,
                   errorItems,
                   Colors.red,
                   (entry) => copyToClipboard(
-                      entry, AppLocalizations.of(context)!.gs_history_copy_single),
+                      entry, localization.gs_history_copy_single),
                   () {
                     final text = errorItems
                         .map((word) =>
                             "${word['word']} - ${word['reading']} (${word['mean']})")
                         .join("\n");
                     copyToClipboard(text,
-                        AppLocalizations.of(context)!.gs_history_copy_all_mistake);
+                        localization.gs_history_copy_all_mistake);
                   },
                 ),
               ],
@@ -414,7 +419,7 @@ class _GameScreenState extends State<GameScreen> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(AppLocalizations.of(context)!.close, style: TextStyle(fontSize: 16)),
+                child: Text(localization.close, style: TextStyle(fontSize: 16)),
               ),
             if (gameOver)
               TextButton(
@@ -426,7 +431,7 @@ class _GameScreenState extends State<GameScreen> {
                     _goToMainMenu,
                   );
                 },
-                child: Text(AppLocalizations.of(context)!.go_back, style: TextStyle(fontSize: 16)),
+                child: Text(localization.go_back, style: TextStyle(fontSize: 16)),
               ),
           ],
         );
@@ -450,18 +455,19 @@ class _GameScreenState extends State<GameScreen> {
   void toggleFontWeight() async {
     setState(() {
       // Incrementa o valor do fontWeight
-      FontWeightCard += 300;
+      fontWeightCard += 300;
 
       // Se exceder 800, volta para 100
-      if (FontWeightCard > 900) {
-        FontWeightCard = 300;
+      if (fontWeightCard > 900) {
+        fontWeightCard = 300;
       }
-      SharedPrefs().saveCardFontWeight(FontWeightCard);
+      SharedPrefs().saveCardFontWeight(fontWeightCard);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     double fontSize = MediaQuery.of(context).size.width * 0.06;
     fontSize = fontSize.clamp(16.0, 30.0);
     return SafeArea(
@@ -589,7 +595,7 @@ class _GameScreenState extends State<GameScreen> {
                                                             2,
                                                         fontWeight: FontWeight
                                                                 .values[
-                                                            FontWeightCard ~/
+                                                            fontWeightCard ~/
                                                                     100 -
                                                                 1],
                                                       ),
@@ -657,8 +663,8 @@ class _GameScreenState extends State<GameScreen> {
                                                 ),
                                                 subtitle: Text(
                                                   "${_words.firstWhere((word) => word["word"] == _kanjisRespondidos.last, orElse: () => {
-                                                        "${AppLocalizations.of(context)!.gs_mean}": "N/A",
-                                                        "${AppLocalizations.of(context)!.gs_reading}": "N/A"
+                                                        localization!.gs_mean: "N/A",
+                                                        localization.gs_reading: "N/A"
                                                       })["mean"]} (${_words.firstWhere((word) => word["word"] == _kanjisRespondidos.last, orElse: () => {"reading": "N/A"})["reading"]})",
                                                   style: TextStyle(
                                                       fontSize:
@@ -681,7 +687,7 @@ class _GameScreenState extends State<GameScreen> {
                                                         _viewHistory(
                                                             context, _gameOver),
                                                     tooltip:
-                                                        AppLocalizations.of(context)!.gs_see_full_history,
+                                                        localization!.gs_see_full_history,
                                                   )
                                                 : null, // Deixa o espaço vazio, mas preservado
                                           ),
@@ -697,7 +703,7 @@ class _GameScreenState extends State<GameScreen> {
                                           onSubmitted: (value) =>
                                               _processAnswer(value),
                                           decoration: InputDecoration(
-                                            labelText: AppLocalizations.of(context)!.gs_search_tooltip,
+                                            labelText: localization!.gs_search_tooltip,
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8),
@@ -757,7 +763,7 @@ class _GameScreenState extends State<GameScreen> {
                             },
                           ),
                           Text(
-                            AppLocalizations.of(context)!.gs_points(_score),
+                            localization!.gs_points(_score),
                             style: TextStyle(
                               fontSize: fontSize,
                               fontWeight: FontWeight.bold,
@@ -768,7 +774,7 @@ class _GameScreenState extends State<GameScreen> {
                             onPressed: _restartGame,
                             icon: Icon(Icons.restart_alt,
                                 color: Colors.blueAccent),
-                            tooltip: AppLocalizations.of(context)!.gs_game_restart2,
+                            tooltip: localization.gs_game_restart2,
                           ),
                           SizedBox(
                             width: 50,

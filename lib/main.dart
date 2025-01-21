@@ -23,7 +23,7 @@ void main() {
 final GlobalKey<KanjilogiaState> kanjilogiaKey = GlobalKey<KanjilogiaState>();
 
 class Kanjilogia extends StatefulWidget {
-  const Kanjilogia({Key? key}) : super(key: key);
+  const Kanjilogia({super.key});
 
   @override
   KanjilogiaState createState() => KanjilogiaState();
@@ -37,10 +37,8 @@ class KanjilogiaState extends State<Kanjilogia> {
     locale ??= await SharedPrefs().getLocale();
 
     // Salva o locale nos SharedPreferences, se fornecido explicitamente.
-    if (locale != null) {
-      await SharedPrefs().saveLocale(locale);
-    }
-    // Atualiza o estado com o novo 'locale'.
+    await SharedPrefs().saveLocale(locale);
+      // Atualiza o estado com o novo 'locale'.
     setState(() {
       _locale = locale!;
     });
@@ -70,10 +68,10 @@ class MainMenu extends StatefulWidget {
   const MainMenu({super.key, required this.changeLanguage});
 
   @override
-  _MainMenuState createState() => _MainMenuState();
+  MainMenuState createState() => MainMenuState();
 }
 
-class _MainMenuState extends State<MainMenu>
+class MainMenuState extends State<MainMenu>
     with SingleTickerProviderStateMixin {
   Map<String, Set<String>> _jsonFiles =
       {}; // Para armazenar filenames e suas tags
@@ -124,28 +122,26 @@ class _MainMenuState extends State<MainMenu>
       targets.add(TargetFocus(identify: "1", keyTarget: grid3, contents: [
         TargetContent(
           align: ContentAlign.bottom,
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  AppLocalizations.of(context)!.tutorial1,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 20.0,
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                AppLocalizations.of(context)!.tutorial1,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 20.0,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    AppLocalizations.of(context)!.tutorial2,
-                    style: TextStyle(color: Colors.white),
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(
+                  AppLocalizations.of(context)!.tutorial2,
+                  style: TextStyle(color: Colors.white),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ]));
@@ -154,28 +150,26 @@ class _MainMenuState extends State<MainMenu>
           .add(TargetFocus(identify: "2", keyTarget: playButtonKey, contents: [
         TargetContent(
           align: ContentAlign.top,
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  AppLocalizations.of(context)!.tutorial3,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 20.0,
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                AppLocalizations.of(context)!.tutorial3,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 20.0,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    AppLocalizations.of(context)!.tutorial4,
-                    style: TextStyle(color: Colors.white),
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(
+                  AppLocalizations.of(context)!.tutorial4,
+                  style: TextStyle(color: Colors.white),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ]));
@@ -183,28 +177,26 @@ class _MainMenuState extends State<MainMenu>
       targets.add(TargetFocus(identify: "3", keyTarget: settingsKey, contents: [
         TargetContent(
           align: ContentAlign.top,
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  AppLocalizations.of(context)!.tutorial5,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 20.0,
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                AppLocalizations.of(context)!.tutorial5,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 20.0,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    AppLocalizations.of(context)!.tutorial6,
-                    style: TextStyle(color: Colors.white),
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(
+                  AppLocalizations.of(context)!.tutorial6,
+                  style: TextStyle(color: Colors.white),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ]));
@@ -257,7 +249,6 @@ class _MainMenuState extends State<MainMenu>
       });
     } catch (e) {
       // Tratar erros
-      print('Erro ao carregar arquivos JSON: $e');
     }
   }
 
@@ -284,8 +275,9 @@ class _MainMenuState extends State<MainMenu>
   } //Kanjilogia
 
   void _startGame(BuildContext context, selectedTime) async {
+    final localization = AppLocalizations.of(context);
     if (_selectedFiles.isEmpty) {
-      _showErrorDialog(AppLocalizations.of(context)!.dialogue1);
+      _showErrorDialog(localization!.dialogue1);
       return;
     }
 
@@ -296,7 +288,9 @@ class _MainMenuState extends State<MainMenu>
       List<dynamic> finalWords = await getWordsByFilenames(selectedFilesList);
 
       if (finalWords.isEmpty) {
-        _showErrorDialog(AppLocalizations.of(context)!.gs_words_empty);
+        if (mounted) {
+        _showErrorDialog(localization!.gs_words_empty);
+        }
         return;
       }
 
@@ -307,6 +301,7 @@ class _MainMenuState extends State<MainMenu>
       };
 
       // Navegar para a próxima tela passando os dados
+      
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -318,7 +313,7 @@ class _MainMenuState extends State<MainMenu>
       _selectedFiles.clear();
     } catch (e) {
       // Em caso de erro, exibe uma mensagem de erro
-      _showErrorDialog("${AppLocalizations.of(context)!.tutorial1} $e");
+      _showErrorDialog("${localization!.tutorial1} $e");
     }
   }
 
@@ -333,7 +328,7 @@ class _MainMenuState extends State<MainMenu>
       position: StyledToastPosition.center, // Centraliza na tela
       curve: Curves.elasticOut,
       reverseCurve: Curves.linear,
-      backgroundColor: Colors.red.withOpacity(0.8), // Cor do fundo (opcional)
+      backgroundColor: Colors.red.withValues(alpha: 0.8), // Cor do fundo (opcional)
       textStyle: TextStyle(
           color: Colors.white, fontSize: 16), // Estilo do texto (opcional)
     );
@@ -363,11 +358,11 @@ class _MainMenuState extends State<MainMenu>
 
     return SafeArea(
       top: false,
-      child: Main(screenWidth),
+      child: main(screenWidth),
     );
   }
 
-  AnimatedBuilder Main(double screenWidth) {
+  AnimatedBuilder main(double screenWidth) {
     return AnimatedBuilder(
       animation: _colorAnimation,
       builder: (context, child) {
@@ -500,7 +495,7 @@ class _MainMenuState extends State<MainMenu>
                                                       boxShadow: [
                                                         BoxShadow(
                                                           color: Colors.black
-                                                              .withOpacity(0.2),
+                                                              .withValues(alpha: 0.2),
                                                           spreadRadius: 2,
                                                           blurRadius: 10,
                                                           offset: const Offset(
@@ -516,7 +511,7 @@ class _MainMenuState extends State<MainMenu>
                                                                         80,
                                                                         36,
                                                                         133)
-                                                                    .withOpacity(
+                                                                    .withValues(alpha: 
                                                                         0.4),
                                                                 const Color
                                                                         .fromARGB(
@@ -524,7 +519,7 @@ class _MainMenuState extends State<MainMenu>
                                                                         80,
                                                                         36,
                                                                         133)
-                                                                    .withOpacity(
+                                                                    .withValues(alpha: 
                                                                         0.1),
                                                               ]
                                                             : [
@@ -540,7 +535,7 @@ class _MainMenuState extends State<MainMenu>
                                                                         80,
                                                                         36,
                                                                         133)
-                                                                    .withOpacity(
+                                                                    .withValues(alpha: 
                                                                         0.4),
                                                               ],
                                                         begin:
