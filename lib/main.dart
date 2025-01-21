@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'game_screen.dart';
@@ -10,30 +9,65 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'sharedpref.dart';
 import 'makehive.dart';
 import 'managepage.dart';
+import 'l10n/l10n.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  runApp(Kanjilogia());
+  runApp(Kanjilogia(key: kanjilogiaKey));
 }
 
-class Kanjilogia extends StatelessWidget {
-  const Kanjilogia({super.key});
+final GlobalKey<KanjilogiaState> kanjilogiaKey = GlobalKey<KanjilogiaState>();
+
+class Kanjilogia extends StatefulWidget {
+  const Kanjilogia({Key? key}) : super(key: key);
+
+  @override
+  KanjilogiaState createState() => KanjilogiaState();
+}
+
+class KanjilogiaState extends State<Kanjilogia> {
+  Locale _locale = Locale('en'); // Locale inicial
+
+  void changeLanguage([Locale? locale]) async {
+    // Verifica se o 'locale' é nulo. Caso seja, busca nos SharedPreferences.
+    locale ??= await SharedPrefs().getLocale();
+
+    // Salva o locale nos SharedPreferences, se fornecido explicitamente.
+    if (locale != null) {
+      await SharedPrefs().saveLocale(locale);
+    }
+    // Atualiza o estado com o novo 'locale'.
+    setState(() {
+      _locale = locale!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kanjilogia - 漢字ロギア',
       theme: ThemeData.dark(),
-      home: MainMenu(),
+      home: MainMenu(changeLanguage: changeLanguage),
       debugShowCheckedModeBanner: false,
+      supportedLocales: L10n.all,
+      locale: _locale, // Usando o _locale atualizado
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
     );
   }
 }
 
 class MainMenu extends StatefulWidget {
-  const MainMenu({super.key});
+  final Function([Locale?]) changeLanguage;
+  const MainMenu({super.key, required this.changeLanguage});
 
   @override
   _MainMenuState createState() => _MainMenuState();
@@ -67,6 +101,7 @@ class _MainMenuState extends State<MainMenu>
     super.initState();
     _loadJsonFiles();
     _searchController.addListener(_filterJsonFiles);
+    widget.changeLanguage();
     SharedPrefs().getMaxTime().then((time) {
       setState(() {
         selectedTime = time;
@@ -83,8 +118,11 @@ class _MainMenuState extends State<MainMenu>
       end: const Color.fromARGB(255, 56, 16, 115),
     ).animate(_backgroundController);
 
-    targets.add(TargetFocus(identify: "1", keyTarget: grid3, contents: [
-      TargetContent(
+    // Usando addPostFrameCallback para garantir que o contexto estará disponível
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Agora podemos usar o contexto com segurança
+      targets.add(TargetFocus(identify: "1", keyTarget: grid3, contents: [
+        TargetContent(
           align: ContentAlign.bottom,
           child: Container(
             child: Column(
@@ -92,85 +130,95 @@ class _MainMenuState extends State<MainMenu>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "Tutorial de jogo",
+                  AppLocalizations.of(context)!.tutorial1,
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20.0),
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Text(
-                    "Selecione um ou mais itens para jogar.",
+                    AppLocalizations.of(context)!.tutorial2,
                     style: TextStyle(color: Colors.white),
                   ),
-                )
-              ],
-            ),
-          ))
-    ]));
-    targets.add(TargetFocus(identify: "2", keyTarget: playButtonKey, contents: [
-      TargetContent(
-          align: ContentAlign.top,
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "Começar o jogo",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20.0),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    "Depois de selecionar os items para jogar, clique aqui para iniciar o jogo.",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
               ],
             ),
-          ))
-    ]));
-    targets.add(TargetFocus(identify: "3", keyTarget: settingsKey, contents: [
-      TargetContent(
-          align: ContentAlign.top,
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "Configurações do jogo",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20.0),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    "Clique aqui para alterar o tempo de resposta, adicionar mais arquivos ao jogo ou deletá-los.",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              ],
-            ),
-          ))
-    ]));
-  
+          ),
+        ),
+      ]));
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(Duration(seconds: 2));
-      bool isComplete = await SharedPrefs().isTutorialComplete();
-      if (isComplete == false) {
-        showTutorial();
-      }
-      await SharedPrefs().saveTutorialComplete(true);
+      targets
+          .add(TargetFocus(identify: "2", keyTarget: playButtonKey, contents: [
+        TargetContent(
+          align: ContentAlign.top,
+          child: Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  AppLocalizations.of(context)!.tutorial3,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    AppLocalizations.of(context)!.tutorial4,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ]));
+
+      targets.add(TargetFocus(identify: "3", keyTarget: settingsKey, contents: [
+        TargetContent(
+          align: ContentAlign.top,
+          child: Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  AppLocalizations.of(context)!.tutorial5,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    AppLocalizations.of(context)!.tutorial6,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ]));
+
+      // Verificar o tutorial e exibir conforme necessário
+      Future.delayed(Duration(seconds: 2), () async {
+        bool isComplete = await SharedPrefs().isTutorialComplete();
+        if (isComplete == false) {
+          showTutorial();
+        }
+        await SharedPrefs().saveTutorialComplete(true);
+      });
     });
+
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
@@ -186,9 +234,6 @@ class _MainMenuState extends State<MainMenu>
     });
   }
 
-  
-    
-
   @override
   void dispose() {
     _searchController.dispose();
@@ -198,15 +243,12 @@ class _MainMenuState extends State<MainMenu>
 
   // Variáveis para armazenar chaves e tags separadas
 
-  
-
   Future<void> _loadJsonFiles() async {
     try {
       // Obtendo os dados com os filenames e tags
       final jsonFiles = await listFilenamesWithTags();
 
       // Preenchendo as listas com os dados obtidos
-
 
       setState(() {
         // Aqui estamos atualizando a interface com as listas de dados
@@ -243,7 +285,7 @@ class _MainMenuState extends State<MainMenu>
 
   void _startGame(BuildContext context, selectedTime) async {
     if (_selectedFiles.isEmpty) {
-      _showErrorDialog("Selecione ao menos um item para jogar.");
+      _showErrorDialog(AppLocalizations.of(context)!.dialogue1);
       return;
     }
 
@@ -254,7 +296,7 @@ class _MainMenuState extends State<MainMenu>
       List<dynamic> finalWords = await getWordsByFilenames(selectedFilesList);
 
       if (finalWords.isEmpty) {
-        _showErrorDialog("Nenhuma palavra foi carregada.");
+        _showErrorDialog(AppLocalizations.of(context)!.gs_words_empty);
         return;
       }
 
@@ -276,7 +318,7 @@ class _MainMenuState extends State<MainMenu>
       _selectedFiles.clear();
     } catch (e) {
       // Em caso de erro, exibe uma mensagem de erro
-      _showErrorDialog("Erro ao carregar as palavras: $e");
+      _showErrorDialog("${AppLocalizations.of(context)!.tutorial1} $e");
     }
   }
 
@@ -297,13 +339,12 @@ class _MainMenuState extends State<MainMenu>
     );
   }
 
-
   void showTutorial() {
     TutorialCoachMark(
       targets: targets, // List<TargetFocus>
       colorShadow: Colors.red, // DEFAULT Colors.black
       // alignSkip: Alignment.bottomRight,
-      textSkip: "Pular",
+      textSkip: AppLocalizations.of(context)!.tutorial_skip,
       // paddingFocus: 10,
       // opacityShadow: 0.8,
       onClickTarget: (target) {},
@@ -369,26 +410,25 @@ class _MainMenuState extends State<MainMenu>
                         child: TextField(
                           controller: _searchController,
                           decoration: InputDecoration(
-                            hintText: "Buscar...",
+                            hintText: AppLocalizations.of(context)!
+                                .main_searchtooltip,
                             hintStyle: TextStyle(color: Colors.white),
-                            prefixIcon:
-                                Icon(Icons.search, color: Colors.white),
-                            filled: false, 
-                            fillColor: Colors.grey[800], 
+                            prefixIcon: Icon(Icons.search, color: Colors.white),
+                            filled: false,
+                            fillColor: Colors.grey[800],
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20), 
+                              borderRadius: BorderRadius.circular(20),
                               borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 109, 33, 223),
-                                  width: 2), 
+                                  color:
+                                      const Color.fromARGB(255, 109, 33, 223),
+                                  width: 2),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
                                   20), // Borda arredondada
                               borderSide: BorderSide(
                                   color: Color.fromARGB(255, 109, 33, 223),
-                                  width:
-                                      2), // Cor e largura da borda ao focar
+                                  width: 2), // Cor e largura da borda ao focar
                             ),
                           ),
                           style: TextStyle(color: Colors.white),
@@ -398,15 +438,16 @@ class _MainMenuState extends State<MainMenu>
                         child: _filteredJsonFiles.isEmpty
                             ? Center(
                                 child: Text(
-                                  'Nenhum arquivo encontrado.',
+                                  AppLocalizations.of(context)!
+                                      .main_files_empty,
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 18),
                                 ),
                               )
                             : AnimationLimiter(
                                 child: ScrollConfiguration(
-                                  behavior: ScrollConfiguration.of(context)
-                                      .copyWith(
+                                  behavior:
+                                      ScrollConfiguration.of(context).copyWith(
                                     dragDevices: {
                                       PointerDeviceKind.mouse,
                                       PointerDeviceKind.touch,
@@ -426,9 +467,7 @@ class _MainMenuState extends State<MainMenu>
                                       ),
                                       itemCount: _filteredJsonFiles.length,
                                       itemBuilder: (context, index) {
-                                        
-                                        final fileName = _filteredJsonFiles
-                                            .keys
+                                        final fileName = _filteredJsonFiles.keys
                                             .elementAt(index);
 
                                         final isSelected =
@@ -437,8 +476,7 @@ class _MainMenuState extends State<MainMenu>
                                           cursor: SystemMouseCursors.click,
                                           child: AnimationConfiguration
                                               .staggeredGrid(
-                                                key: index == 0 ? grid3 : null
-                                                ,
+                                            key: index == 0 ? grid3 : null,
                                             position: index,
                                             columnCount:
                                                 screenWidth < 320 ? 2 : 3,
@@ -451,81 +489,83 @@ class _MainMenuState extends State<MainMenu>
                                                 duration: const Duration(
                                                     milliseconds: 1000),
                                                 child: GestureDetector(
-                                                  onTap: () =>
-                                                      _toggleSelection(
-                                                          fileName),
-                                                  child:
-                                                      AnimatedContainer(
-                                                    duration:
-                                                        const Duration(
-                                                            milliseconds:
-                                                                250),
-                                                    curve: Curves
-                                                        .easeInOutQuint,
-                                                    decoration:
-                                                        BoxDecoration(
+                                                  onTap: () => _toggleSelection(
+                                                      fileName),
+                                                  child: AnimatedContainer(
+                                                    duration: const Duration(
+                                                        milliseconds: 250),
+                                                    curve:
+                                                        Curves.easeInOutQuint,
+                                                    decoration: BoxDecoration(
                                                       boxShadow: [
                                                         BoxShadow(
-                                                          color: Colors
-                                                              .black
-                                                              .withOpacity(
-                                                                  0.2),
-                                                          spreadRadius:
-                                                              2,
-                                                          blurRadius:
-                                                              10,
-                                                          offset:
-                                                              const Offset(
-                                                                  0, 3),
+                                                          color: Colors.black
+                                                              .withOpacity(0.2),
+                                                          spreadRadius: 2,
+                                                          blurRadius: 10,
+                                                          offset: const Offset(
+                                                              0, 3),
                                                         ),
                                                       ],
-                                                      gradient:
-                                                          LinearGradient(
-                                                        colors:
-                                                            isSelected
-                                                                ? [
-                                                                    const Color.fromARGB(255, 80, 36, 133).withOpacity(0.4),
-                                                                    const Color.fromARGB(255, 80, 36, 133).withOpacity(0.1),
-                                                                  ]
-                                                                : [
-                                                                    const Color.fromARGB(
+                                                      gradient: LinearGradient(
+                                                        colors: isSelected
+                                                            ? [
+                                                                const Color
+                                                                        .fromARGB(
                                                                         255,
                                                                         80,
                                                                         36,
-                                                                        133),
-                                                                    const Color.fromARGB(255, 80, 36, 133).withOpacity(0.4),
-                                                                  ],
-                                                        begin: Alignment
-                                                            .topLeft,
+                                                                        133)
+                                                                    .withOpacity(
+                                                                        0.4),
+                                                                const Color
+                                                                        .fromARGB(
+                                                                        255,
+                                                                        80,
+                                                                        36,
+                                                                        133)
+                                                                    .withOpacity(
+                                                                        0.1),
+                                                              ]
+                                                            : [
+                                                                const Color
+                                                                    .fromARGB(
+                                                                    255,
+                                                                    80,
+                                                                    36,
+                                                                    133),
+                                                                const Color
+                                                                        .fromARGB(
+                                                                        255,
+                                                                        80,
+                                                                        36,
+                                                                        133)
+                                                                    .withOpacity(
+                                                                        0.4),
+                                                              ],
+                                                        begin:
+                                                            Alignment.topLeft,
                                                         end: Alignment
                                                             .bottomRight,
                                                       ),
-                                                      border:
-                                                          Border.all(
+                                                      border: Border.all(
                                                         color: isSelected
                                                             ? const Color
                                                                 .fromARGB(
-                                                                255,
-                                                                47,
-                                                                3,
-                                                                68)
+                                                                255, 47, 3, 68)
                                                             : const Color
                                                                     .fromARGB(
                                                                     255,
                                                                     159,
                                                                     7,
                                                                     219)
-                                                                .withAlpha(
-                                                                    0),
+                                                                .withAlpha(0),
                                                         width:
-                                                            isSelected
-                                                                ? 3
-                                                                : 1,
+                                                            isSelected ? 3 : 1,
                                                       ),
                                                       borderRadius:
-                                                          BorderRadius
-                                                              .circular(
-                                                                  20),
+                                                          BorderRadius.circular(
+                                                              20),
                                                     ),
                                                     child: Column(
                                                       mainAxisAlignment:
@@ -535,32 +575,27 @@ class _MainMenuState extends State<MainMenu>
                                                           CrossAxisAlignment
                                                               .center,
                                                       children: [
-
                                                         Spacer(
                                                             flex:
                                                                 1), // Faz a bandeira não ficar tão próxima do topo
-                                                                                                
-                                                        
+
                                                         Expanded(
                                                           flex: 5,
-                                                          child: Image
-                                                              .asset(
+                                                          child: Image.asset(
                                                             _getFlagAssetPath(
-                                                                _filteredJsonFiles[fileName]!.first
-                                                                    ),
-                                                            fit: BoxFit
-                                                                .contain,
+                                                                _filteredJsonFiles[
+                                                                        fileName]!
+                                                                    .first),
+                                                            fit: BoxFit.contain,
                                                           ),
                                                         ),
                                                         Expanded(
                                                           flex: 2,
                                                           child: Text(
                                                             fileName,
-                                                            textAlign:
-                                                                TextAlign
-                                                                    .center,
-                                                            style:
-                                                                TextStyle(
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
                                                               color: isSelected
                                                                   ? const Color
                                                                       .fromARGB(
@@ -568,20 +603,21 @@ class _MainMenuState extends State<MainMenu>
                                                                       255,
                                                                       255,
                                                                       255)
-                                                                  : Colors
-                                                                      .white
-                                                                      .withAlpha(255),
-                                                              fontSize: screenWidth <
-                                                                      320
-                                                                  ? 14
-                                                                  : 16,
+                                                                  : Colors.white
+                                                                      .withAlpha(
+                                                                          255),
+                                                              fontSize:
+                                                                  screenWidth <
+                                                                          320
+                                                                      ? 14
+                                                                      : 16,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
                                                               shadows: [
                                                                 Shadow(
-                                                                  color:
-                                                                      Colors.blueAccent,
+                                                                  color: Colors
+                                                                      .blueAccent,
                                                                   blurRadius:
                                                                       10,
                                                                 ),
@@ -593,11 +629,8 @@ class _MainMenuState extends State<MainMenu>
                                                             maxLines: 2,
                                                           ),
                                                         ),
-                                                                                                
-                                                        
-                                                        Spacer(
-                                                            flex:
-                                                                1), 
+
+                                                        Spacer(flex: 1),
                                                       ],
                                                     ),
                                                   ),
@@ -640,7 +673,6 @@ class _MainMenuState extends State<MainMenu>
                           MaterialPageRoute(
                               builder: (context) => ManagerPage()),
                         ).then((_) {
-                          
                           _loadJsonFiles();
                         });
                       },
@@ -669,18 +701,36 @@ class _MainMenuState extends State<MainMenu>
 String _getFlagAssetPath(String language) {
   switch (language.toLowerCase()) {
     case 'jp':
-      return 'assets/flags/japan.png';
-    case 'cn':
-      return 'assets/flags/china.png';
-    case 'pt':
-      return 'assets/flags/brazil.png';
-    case 'ko':
-      return 'assets/flags/southkorea.png';
-    case 'en':
-      return 'assets/flags/usa.png';
-    case 'es':
-      return 'assets/flags/spain.png';
-    default:
-      return 'assets/flags/default.png'; // Bandeira padrão
+        return 'assets/flags/japan.png';
+      case 'ja':
+        return 'assets/flags/japan.png';
+      case 'cn':
+        return 'assets/flags/china.png';
+      case 'zh':
+        return 'assets/flags/china.png';
+      case 'pt':
+        return 'assets/flags/brazil.png';
+      case 'ko':
+        return 'assets/flags/southkorea.png';
+      case 'en':
+        return 'assets/flags/usa.png';
+      case 'es':
+        return 'assets/flags/spain.png';
+      case 'ar':
+        return 'assets/flags/uae.png';
+      case 'bn':
+        return 'assets/flags/bangladesh.png';
+      case 'de':
+        return 'assets/flags/germany.png';
+      case 'fr':
+        return 'assets/flags/france.png';
+      case 'it':
+        return 'assets/flags/italy.png';
+      case 'ru':
+        return 'assets/flags/russia.png';
+      case 'tr':
+        return 'assets/flags/turkey.png';
+      default:
+        return 'assets/flags/default.png';
   }
 }

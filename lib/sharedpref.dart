@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,34 +13,59 @@ class SharedPrefs {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_tutorialCompleteKey, isComplete);
   }
+
   Future<bool> isTutorialComplete() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_tutorialCompleteKey) ?? false;
   }
+
   Future<void> saveMaxTime(int maxTime) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_maxTimeKey, maxTime);
   }
+
   Future<void> saveCardFontSize(double card_font_size) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble(_CardFontSizeKey, card_font_size);
   }
+
   Future<double> getCardFontSize() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getDouble(_CardFontSizeKey) ?? 30.0;
   }
+  // Função para salvar o locale
+  Future<void> saveLocale(Locale locale) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        'locale',
+        locale
+            .languageCode); // Salva apenas o código de idioma, como 'en', 'ja', etc.
+  }
+
+// Função para carregar o locale
+  Future<Locale> getLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('locale') ??
+        'pt'; // Padrão 'en' caso não haja valor salvo
+    return Locale(
+        languageCode); // Retorna o Locale com o código de idioma salvo
+  }
+
   Future<void> saveCardFontWeight(int card_font_weight) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_CardFontWeightKey, card_font_weight);
   }
+
   Future<int> getCardFontWeight() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_CardFontWeightKey) ?? 800;
   }
+
   Future<int> getMaxTime() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_maxTimeKey) ?? 30;
   }
+
   static const String _apiUrl =
       'https://api.github.com/repos/Boe-l/Kanjilogia/contents/assets/json?ref=source';
   static const String _cachedFilesKey = 'cachedFiles';

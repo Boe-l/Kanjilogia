@@ -13,6 +13,8 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter/services.dart';
 import 'package:animated_floating_buttons/animated_floating_buttons.dart';
 import 'sharedpref.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'main.dart';
 
 class ManagerPage extends StatefulWidget {
   const ManagerPage({super.key});
@@ -40,24 +42,32 @@ class _ManagerPageState extends State<ManagerPage>
   List<Map<String, dynamic>> _files = [];
   Map<String, Map<String, dynamic>> fileData = {};
   final BehaviorSubject<int> counterSubject = BehaviorSubject<int>.seeded(0);
+
   // bool _isTutorialComplete = false;
   Slider? slider;
   @override
-  initState() {
+  @override
+  void initState() {
     super.initState();
+
+    // Carregando dados iniciais
     _loadInitialData();
-    updateslider();
+
+    // Configurando a barra de status
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent),
     );
 
+    // Carregando os arquivos
     _loadFilenames();
 
+    // Inicializando o controlador de animação
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
 
+    // Adicionando listener de rolagem
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
@@ -71,6 +81,109 @@ class _ManagerPageState extends State<ManagerPage>
         }
       }
     });
+
+    // Usando addPostFrameCallback para garantir que as dependências do contexto sejam acessadas após o build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Aqui você pode chamar qualquer coisa que depende do BuildContext, como AppLocalizations
+      // Exemplo:
+      // String tutorialText = AppLocalizations.of(context)!.tutorial1;
+      updateslider();
+    });
+  }
+
+  void _onLanguageSelected(Locale locale) async {
+    // Salva o idioma selecionado em SharedPreferences
+    await SharedPrefs().saveLocale(locale);
+    setState(() {
+      kanjilogiaKey.currentState?.changeLanguage(locale);
+    });
+  }
+
+  Future<void> showLanguageSelector(
+    BuildContext context,
+    List<Locale> supportedLocales,
+    Function(Locale) onLanguageSelected,
+  ) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Align(
+          alignment: Alignment.center, // Centraliza o conteúdo
+          child: SafeArea(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: 600), // Largura máxima ajustada para 550
+              child: Dialog(
+                backgroundColor: const Color.fromARGB(255, 56, 16, 115),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.mouse,
+                      PointerDeviceKind.touch,
+                    },
+                    scrollbars: false,
+                  ),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: supportedLocales.length,
+                    itemBuilder: (context, index) {
+                      final locale = supportedLocales[index];
+                      final languageName =
+                          _getLanguageName(locale); // Nome do idioma
+                      final flag =
+                          _getFlagPath(locale.toString()); // Emoji da bandeira
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+                        child: Material(
+                          color: const Color.fromARGB(255, 74, 32, 126),
+                          borderRadius: BorderRadius.circular(16),
+                          elevation: 5, // Efeito de "floating"
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(16),
+                            onTap: () {
+                              onLanguageSelected(
+                                  locale); // Chama a função ao selecionar
+                              Navigator.of(context).pop(); // Fecha o popup
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    flag,
+                                    width:
+                                        30, // Ajusta o tamanho da imagem da bandeira
+                                    height:
+                                        30, // Ajusta a altura da imagem da bandeira
+                                    fit: BoxFit
+                                        .cover, // Garante que a imagem se ajuste ao espaço
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Text(
+                                    languageName,
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  ),
+                                ],
+                              ),  
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _loadInitialData() async {
@@ -106,7 +219,7 @@ class _ManagerPageState extends State<ManagerPage>
       min: 10,
       max: 60,
       divisions: 5,
-      label: "$_maxTime Segundos",
+      label: AppLocalizations.of(context)!.mp_slider_text(_maxTime),
       thumbColor: const Color.fromARGB(255, 101, 55, 156),
       onChanged: (newTime) {
         setState(() {
@@ -198,9 +311,6 @@ class _ManagerPageState extends State<ManagerPage>
       setState(() {});
     }
 
-// Mapa global para armazenar as informações dos arquivos
-
-// Função para contar o número de palavras
     int wordCount(Map<String, dynamic> content) {
       // Verifica se a chave 'words' existe e se é uma lista, então retorna o tamanho dela
       if (content['words'] is List) {
@@ -227,7 +337,9 @@ class _ManagerPageState extends State<ManagerPage>
 
                 // Atualiza o fileData com tags, contagem de palavras e bandeira
                 fileData[file['name']] = {
-                  'tags': tags.isNotEmpty ? tags : ['Sem tags.'],
+                  'tags': tags.isNotEmpty
+                      ? tags
+                      : [AppLocalizations.of(context)!.mp_no_tags],
                   'wordCount': wordCount(data['content']),
                   'flag': _getFlagPath(tags.isNotEmpty ? tags.first : ''),
                 };
@@ -281,11 +393,11 @@ class _ManagerPageState extends State<ManagerPage>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.all(16.0),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              'Arquivos Disponíveis',
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.mp_available_files,
+                              style: const TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -306,10 +418,11 @@ class _ManagerPageState extends State<ManagerPage>
                             filterFiles(
                                 value); // Aplica o filtro enquanto o texto é digitado
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Pesquisar arquivos',
-                            prefixIcon: Icon(Icons.search),
-                            border: OutlineInputBorder(
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)!
+                                .main_searchtooltip,
+                            prefixIcon: const Icon(Icons.search),
+                            border: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                     Radius.elliptical(16, 16))),
                           ),
@@ -318,17 +431,18 @@ class _ManagerPageState extends State<ManagerPage>
                       const SizedBox(height: 8.0),
                       // Conteúdo do modal
                       if (errorOccurred)
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Text(
-                            'Erro ao carregar os arquivos.',
+                            AppLocalizations.of(context)!.mp_error_file_load,
                             style: TextStyle(color: Colors.red),
                           ),
                         )
                       else if (filteredFiles.isEmpty)
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.all(16.0),
-                          child: Text('Nenhum arquivo encontrado.'),
+                          child: Text(
+                              AppLocalizations.of(context)!.mp_file_not_found),
                         )
                       else
                         Expanded(
@@ -383,8 +497,8 @@ class _ManagerPageState extends State<ManagerPage>
                                                 color: Colors.white),
                                           ),
                                           subtitle: Text(
-                                            '${fileData[file['name']]!['tags'].isNotEmpty && fileData[file['name']]!['tags'][0].isNotEmpty ? 'Tags: ' + fileData[file['name']]!['tags'][0] + ',' : 'Sem tags.'} ${fileData[file['name']]!['tags'].length > 1 && fileData[file['name']]!['tags'][1].isNotEmpty ? fileData[file['name']]!['tags'][1] + '.' : ''}\n'
-                                            '${"${fileData[file['name']]!['wordCount']} palavras"}',
+                                            '${fileData[file['name']]!['tags'].isNotEmpty && fileData[file['name']]!['tags'][0].isNotEmpty ? '${AppLocalizations.of(context)!.tags} ' + fileData[file['name']]!['tags'][0] + ',' : '${AppLocalizations.of(context)!.mp_error_file_load}'} ${fileData[file['name']]!['tags'].length > 1 && fileData[file['name']]!['tags'][1].isNotEmpty ? fileData[file['name']]!['tags'][1] + '.' : ''}\n'
+                                            '${"${fileData[file['name']]!['wordCount']} ${AppLocalizations.of(context)!.words}"}',
                                             style: const TextStyle(
                                                 color: Colors.white70),
                                           ),
@@ -439,28 +553,32 @@ class _ManagerPageState extends State<ManagerPage>
               // En la web, usamos bytes
               final fileBytes = file.bytes;
               if (fileBytes != null) {
-                code = await addJsonToDatabase(jsonBytes: fileBytes); 
+                code = await addJsonToDatabase(jsonBytes: fileBytes);
               }
             } else {
               // En plataformas locales, usamos la ruta del archivo
               final filePath = file.path;
               if (filePath != null) {
                 code = await addJsonToDatabase(jsonFilePath: filePath);
-              
               }
             }
-                if (code == '409') {
-                  _showToast('Erro: Arquivo ja existente.', Colors.red);
-                } else if (code == '500') {
-                  _showToast(
-                      'Erro: Fomatação do arquivo inválida.', Colors.red);
-                }
-                else
-                  _showToast("Arquivo adicionado com sucesso!", Colors.green);
+            if (code == '409') {
+              _showToast(AppLocalizations.of(context)!.mp_error_file_exists,
+                  Colors.red);
+            } else if (code == '500') {
+              _showToast(
+                  AppLocalizations.of(context)!.mp_error_invalid_formatting,
+                  Colors.red);
+            } else if (code == '0') {
+              _showToast(
+                  AppLocalizations.of(context)!.mp_file_add_ok, Colors.green);
+            } else {
+              _showToast(
+                  AppLocalizations.of(context)!.mp_error_file_add, Colors.red);
+            }
           }
           await _loadFilenames(); // Recarrega la lista sin duplicados
-        } catch (e) {
-        }
+        } catch (e) {}
       }
     } else {
       if (url != null && url.isNotEmpty) {
@@ -473,18 +591,27 @@ class _ManagerPageState extends State<ManagerPage>
             await _loadFilenames();
             print(code); // Recarrega a lista sem duplicatas
             if (code == '409') {
-              _showToast('Erro: Arquivo ja existente.', Colors.red);
+              _showToast(AppLocalizations.of(context)!.mp_error_file_exists,
+                  Colors.red);
             } else if (code == '500') {
-              _showToast('Erro: Fomatação do arquivo inválida.', Colors.red);
-            } else
-              _showToast("Arquivo adicionado com sucesso!", Colors.green);
+              _showToast(
+                  AppLocalizations.of(context)!.mp_error_invalid_formatting,
+                  Colors.red);
+            } else if (code == '0') {
+              _showToast(
+                  AppLocalizations.of(context)!.mp_file_add_ok, Colors.green);
+            } else {
+              _showToast(
+                  AppLocalizations.of(context)!.mp_error_file_add, Colors.red);
+            }
           } else {
             _showToast(
-                'Erro ao baixar o arquivo. Código: ${response.statusCode}',
+                '${AppLocalizations.of(context)!.mp_error_download} ${response.statusCode}',
                 Colors.red);
           }
         } catch (e) {
-          _showToast('Erro ao processar o URL: $e', Colors.red);
+          _showToast('${AppLocalizations.of(context)!.mp_error_download} $e',
+              Colors.red);
         }
       }
     }
@@ -500,19 +627,18 @@ class _ManagerPageState extends State<ManagerPage>
           urlController.clear();
           return AlertDialog(
             backgroundColor: Color.fromARGB(255, 49, 19, 94),
-            title: const Text(
-              'Adicionar Arquivo por URL',
+            title: Text(
+              AppLocalizations.of(context)!.mp_url_tooltip,
               style: TextStyle(fontSize: 17),
             ),
             content: TextField(
               focusNode: textFieldFocus,
               controller: urlController,
               decoration: InputDecoration(
-                  labelText: 'Insira o URL do arquivo JSON',
-                  hintText: 'https://exemplo.com/arquivo.json',
+                  labelText: AppLocalizations.of(context)!.mp_url_label,
+                  hintText: AppLocalizations.of(context)!.mp_url_hint,
                   suffixIcon: IconButton(
                     icon: Icon(Icons.paste),
-                    tooltip: 'Colar do clipboard',
                     onPressed: () async {
                       // Obter texto do clipboard
                       final ClipboardData? clipboardData =
@@ -528,7 +654,7 @@ class _ManagerPageState extends State<ManagerPage>
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancelar'),
+                child: Text(AppLocalizations.of(context)!.go_cancel),
               ),
               TextButton(
                 onPressed: () async {
@@ -544,26 +670,40 @@ class _ManagerPageState extends State<ManagerPage>
                         await _loadFilenames();
                         print(code);
                         if (code == '409') {
-                          _showToast('Erro: Arquivo ja existente.', Colors.red);
-                        } else if (code == '500') {
-                          _showToast('Erro: Fomatação do arquivo inválida.',
-                              Colors.red);
-                        } else
                           _showToast(
-                              "Arquivo adicionado com sucesso!", Colors.green);
+                              AppLocalizations.of(context)!
+                                  .mp_error_file_exists,
+                              Colors.red);
+                        } else if (code == '500') {
+                          _showToast(
+                              AppLocalizations.of(context)!
+                                  .mp_error_invalid_formatting,
+                              Colors.red);
+                        } else if (code == '0') {
+                          _showToast(
+                              AppLocalizations.of(context)!.mp_file_add_ok,
+                              Colors.green);
+                        } else {
+                          _showToast(
+                              AppLocalizations.of(context)!.mp_error_file_add,
+                              Colors.red);
+                        }
                       } else {
                         _showToast(
-                            'Erro ao baixar o arquivo. Código: ${response.statusCode}',
+                            '${AppLocalizations.of(context)!.mp_error_download} ${response.statusCode}',
                             Colors.red);
                       }
                     } catch (e) {
-                      _showToast('Erro ao processar o URL: $e', Colors.red);
+                      _showToast(
+                          '${AppLocalizations.of(context)!.mp_error_download} $e',
+                          Colors.red);
                     }
                   } else {
-                    _showToast('URL inválido ou vazio!', Colors.red);
+                    _showToast(
+                        AppLocalizations.of(context)!.mp_url_empty, Colors.red);
                   }
                 },
-                child: const Text('Adicionar'),
+                child: Text(AppLocalizations.of(context)!.add),
               ),
             ],
           );
@@ -593,7 +733,7 @@ class _ManagerPageState extends State<ManagerPage>
       child: FloatingActionButton(
         onPressed: () => _addFile(true, ''),
         heroTag: "btn1",
-        tooltip: 'Adicionar arquivos por URL',
+        tooltip: AppLocalizations.of(context)!.mp_url_tooltip,
         child: Icon(Icons.add_link),
       ),
     );
@@ -604,7 +744,7 @@ class _ManagerPageState extends State<ManagerPage>
       child: FloatingActionButton(
         onPressed: () => _addFile(false, ''),
         heroTag: "btn2",
-        tooltip: 'Adicionar arquivos locais',
+        tooltip: AppLocalizations.of(context)!.mp_local_file,
         child: Icon(Icons.add),
       ),
     );
@@ -615,7 +755,7 @@ class _ManagerPageState extends State<ManagerPage>
       child: FloatingActionButton(
         onPressed: () => showFilesPopup(context),
         heroTag: "btn3",
-        tooltip: 'Baixar arquivos do GitHub',
+        tooltip: AppLocalizations.of(context)!.mp_github_file,
         child: Icon(Icons.web),
       ),
     );
@@ -651,12 +791,12 @@ class _ManagerPageState extends State<ManagerPage>
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        const Text(
-                          'Configurações',
+                        Text(
+                          AppLocalizations.of(context)!.settings,
                           style: TextStyle(color: Colors.white, fontSize: 30),
                         ),
                         Text(
-                          'Tempo de resposta: $_maxTime segundos',
+                          AppLocalizations.of(context)!.maxtimehint(_maxTime),
                           style: TextStyle(color: Colors.white),
                         ),
                         slider ?? SizedBox()
@@ -667,9 +807,9 @@ class _ManagerPageState extends State<ManagerPage>
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
                       child: _filenames.isEmpty
-                          ? const Center(
+                          ? Center(
                               child: Text(
-                                'Os arquivos adicionados aparecerão aqui...',
+                                AppLocalizations.of(context)!.mp_addedfiles,
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18),
                               ),
@@ -738,8 +878,8 @@ class _ManagerPageState extends State<ManagerPage>
                                                     color: Colors.white),
                                               ),
                                               subtitle: Text(
-                                                'Tags: ${tags.join(', ')}\n'
-                                                '${_wordCounts.containsKey(filename) ? "${_wordCounts[filename]} palavras" : "Carregando..."}',
+                                                '${AppLocalizations.of(context)!.tags} ${tags.join(', ')}\n'
+                                                '${_wordCounts.containsKey(filename) ? "${_wordCounts[filename]} ${AppLocalizations.of(context)!.words}" : AppLocalizations.of(context)!.loading}',
                                                 style: const TextStyle(
                                                     color: Colors.white70),
                                               ),
@@ -771,7 +911,7 @@ class _ManagerPageState extends State<ManagerPage>
                   child: IgnorePointer(
                     ignoring: !_showFloatingButtons,
                     child: AnimatedFloatingActionButton(
-                      tooltip: 'Menu de ações',
+                      tooltip: AppLocalizations.of(context)!.action_menu,
                       fabButtons: <Widget>[float1(), float3(), float2()],
                       key: key,
                       colorStartAnimation: const Color(0xFF6C5CE7),
@@ -781,6 +921,42 @@ class _ManagerPageState extends State<ManagerPage>
                   ),
                 ),
               ),
+              Positioned(
+                bottom: 16,
+                left: 16,
+                child: AnimatedOpacity(
+                  opacity: _showFloatingButtons ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: IgnorePointer(
+                    ignoring: !_showFloatingButtons,
+                    child: FloatingActionButton(
+                      heroTag: 'language',
+                      onPressed: () => showLanguageSelector(
+                        context,
+                        [
+                          Locale('ar'),
+                          Locale('bn'),
+                          Locale('de'),
+                          Locale('en'),
+                          Locale('es'),
+                          Locale('fr'),
+                          Locale('hi'),
+                          Locale('it'),
+                          Locale('ja'),
+                          Locale('ko'),
+                          Locale('pt'),
+                          Locale('ru'),
+                          Locale('tr'),
+                          Locale('zh'),
+                        ],
+                        _onLanguageSelected,
+                      ), //_startGame(context, selectedTime),
+                      backgroundColor: Color(0xFF6C5CE7),
+                      child: Icon(Icons.language),
+                    ),
+                  ),
+                ),
+              )
             ]),
           ),
         ),
@@ -792,7 +968,11 @@ class _ManagerPageState extends State<ManagerPage>
     switch (tags.toLowerCase()) {
       case 'jp':
         return 'assets/flags/japan.png';
+      case 'ja':
+        return 'assets/flags/japan.png';
       case 'cn':
+        return 'assets/flags/china.png';
+      case 'zh':
         return 'assets/flags/china.png';
       case 'pt':
         return 'assets/flags/brazil.png';
@@ -802,8 +982,61 @@ class _ManagerPageState extends State<ManagerPage>
         return 'assets/flags/usa.png';
       case 'es':
         return 'assets/flags/spain.png';
+      case 'ar':
+        return 'assets/flags/uae.png';
+      case 'bn':
+        return 'assets/flags/bangladesh.png';
+      case 'de':
+        return 'assets/flags/germany.png';
+      case 'fr':
+        return 'assets/flags/france.png';
+      case 'it':
+        return 'assets/flags/italy.png';
+      case 'ru':
+        return 'assets/flags/russia.png';
+      case 'tr':
+        return 'assets/flags/turkey.png';
       default:
         return 'assets/flags/default.png';
+      
+    }
+  }
+
+  String _getLanguageName(Locale locale) {
+    switch (locale.languageCode) {
+      case 'ar':
+        return 'العربية'; // Árabe
+      case 'bn':
+        return 'বাংলা'; // Bengali
+      case 'de':
+        return 'Deutsch'; // Alemão
+      case 'en':
+        return 'English'; // Inglês
+      case 'es':
+        return 'Español'; // Espanhol
+      case 'fr':
+        return 'Français'; // Francês
+      case 'hi':
+        return 'हिन्दी'; // Hindi
+      case 'it':
+        return 'Italiano'; // Italiano
+      case 'ja':
+        return '日本語'; // Japonês
+      case 'jp':
+        return '日本語'; // Japonês
+      case 'ko':
+        return '한국어'; // Coreano
+      case 'pt':
+        return 'Português'; // Português
+      case 'ru':
+        return 'Русский'; // Russo
+      case 'tr':
+        return 'Türkçe'; // Turco
+      case 'zh':
+        return '中文'; // Chinês
+      default:
+        return locale
+            .languageCode; // Se o idioma não estiver na lista, retorna o código do idioma
     }
   }
 

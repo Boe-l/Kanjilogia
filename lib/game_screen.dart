@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:kana_kit/kana_kit.dart';
 import 'sharedpref.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GameScreen extends StatefulWidget {
   // Recebe o jsonData como parâmetro no construtor do GameScreen
@@ -86,7 +87,7 @@ class _GameScreenState extends State<GameScreen> {
 
       // Verifica se há palavras carregadas
       if (_words.isEmpty) {
-        _feedback = "Nenhuma palavra disponível!";
+        _feedback = AppLocalizations.of(context)!.gs_words_empty;
       } else {
         // Se existirem palavras, embaralha e remove duplicatas
         _words.shuffle(Random()); // Embaralha as palavras
@@ -177,7 +178,7 @@ class _GameScreenState extends State<GameScreen> {
       // Verifica se é a última palavra
       if (_currentIndex >= _words.length - 1) {
         _gameOver = true; // Marca o jogo como finalizado
-        _feedback = "Jogo Finalizado!";
+        _feedback = AppLocalizations.of(context)!.gs_game_ended1;
         _controller.text = '';
         Future.microtask(() {
           _showGameOverDialog(context, _restartGame, () {
@@ -198,23 +199,22 @@ class _GameScreenState extends State<GameScreen> {
           false, // Impede que o diálogo seja fechado ao clicar fora
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Jogo Finalizado    \n$_score pontos"),
-          content:
-              Text("Parabéns por concluir o jogo! O que deseja fazer agora?"),
+          title: Text(AppLocalizations.of(context)!.gs_game_ended2(_score)),
+          content: Text(AppLocalizations.of(context)!.gs_game_ended3),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Fecha o diálogo de "Game Over"
                 onRestart(); // Chama a função de reiniciar
               },
-              child: Text("Reiniciar"),
+              child: Text(AppLocalizations.of(context)!.gs_game_restart),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Fecha o diálogo de "Game Over"
                 onMainMenu(); // Chama a função para ir ao menu principal
               },
-              child: Text("Voltar ao Menu Principal"),
+              child: Text(AppLocalizations.of(context)!.gs_go_main_menu),
             ),
             TextButton(
               onPressed: () {
@@ -222,7 +222,7 @@ class _GameScreenState extends State<GameScreen> {
                 _viewHistory(context,
                     true); // Chama o histórico imediatamente após fechar o diálogo
               },
-              child: Text("Ver Historico"),
+              child: Text(AppLocalizations.of(context)!.gs_open_history),
             )
           ],
         );
@@ -245,19 +245,19 @@ class _GameScreenState extends State<GameScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Jogo Finalizado!"),
-            content: Text("Você marcou $_score pontos."),
+            title: Text(AppLocalizations.of(context)!.gs_game_ended1),
+            content: Text(AppLocalizations.of(context)!.gs_points(_score)),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   _restartGame();
                 },
-                child: Text("Reiniciar"),
+                child: Text(AppLocalizations.of(context)!.gs_game_restart),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text("Fechar"),
+                child: Text(AppLocalizations.of(context)!.close),
               ),
             ],
           );
@@ -270,7 +270,7 @@ class _GameScreenState extends State<GameScreen> {
   void _viewHistory(BuildContext context, bool gameOver) {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         // Função auxiliar para criar blocos de acertos/erros
         Widget buildSection(
@@ -283,8 +283,12 @@ class _GameScreenState extends State<GameScreen> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              Text(
+                title == AppLocalizations.of(context)!.gs_history_correct
+                    ? AppLocalizations.of(context)!.gs_history_correct
+                    : AppLocalizations.of(context)!.gs_history_mistake,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
               SizedBox(height: 8),
               if (items.isNotEmpty)
                 Column(
@@ -326,14 +330,21 @@ class _GameScreenState extends State<GameScreen> {
                       onPressed: onCopyAll,
                       icon: Icon(Icons.copy, size: 16),
                       label: Text(
-                        "Copiar todos $title",
+                        title == AppLocalizations.of(context)!.gs_history_correct
+                            ? AppLocalizations.of(context)!.gs_history_correct
+                            : AppLocalizations.of(context)!.gs_history_mistake,
                         style: TextStyle(fontSize: 14),
                       ),
                     )
                   ],
                 )
               else
-                Text("Nenhum $title registrado.",
+                Text(
+                    AppLocalizations.of(context)!.gs_score2(
+                      title == AppLocalizations.of(context)!.gs_history_correct
+                          ? AppLocalizations.of(context)!.gs_history_correct
+                          : AppLocalizations.of(context)!.gs_history_mistake,
+                    ),
                     style:
                         TextStyle(fontSize: 16, fontStyle: FontStyle.italic)),
             ],
@@ -355,7 +366,7 @@ class _GameScreenState extends State<GameScreen> {
         return AlertDialog(
           title: Center(
             child: Text(
-              "Histórico de Respostas",
+              AppLocalizations.of(context)!.gs_history,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
@@ -364,34 +375,34 @@ class _GameScreenState extends State<GameScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildSection(
-                  "Acertos",
+                  AppLocalizations.of(context)!.gs_history_correct,
                   correctItems,
                   Colors.green,
                   (entry) => copyToClipboard(
-                      entry, "Entrada copiada para a área de transferência!"),
+                      entry, AppLocalizations.of(context)!.gs_history_copy_single),
                   () {
                     final text = correctItems
                         .map((word) =>
                             "${word['word']} - ${word['reading']} (${word['mean']})")
                         .join("\n");
                     copyToClipboard(text,
-                        "Todos os acertos copiados para a área de transferência!");
+                        AppLocalizations.of(context)!.gs_history_copy_all_correct);
                   },
                 ),
                 SizedBox(height: 16),
                 buildSection(
-                  "Erros",
+                  AppLocalizations.of(context)!.gs_history_mistake,
                   errorItems,
                   Colors.red,
                   (entry) => copyToClipboard(
-                      entry, "Entrada copiada para a área de transferência!"),
+                      entry, AppLocalizations.of(context)!.gs_history_copy_single),
                   () {
                     final text = errorItems
                         .map((word) =>
                             "${word['word']} - ${word['reading']} (${word['mean']})")
                         .join("\n");
                     copyToClipboard(text,
-                        "Todos os erros copiados para a área de transferência!");
+                        AppLocalizations.of(context)!.gs_history_copy_all_mistake);
                   },
                 ),
               ],
@@ -403,7 +414,7 @@ class _GameScreenState extends State<GameScreen> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("Fechar", style: TextStyle(fontSize: 16)),
+                child: Text(AppLocalizations.of(context)!.close, style: TextStyle(fontSize: 16)),
               ),
             if (gameOver)
               TextButton(
@@ -415,7 +426,7 @@ class _GameScreenState extends State<GameScreen> {
                     _goToMainMenu,
                   );
                 },
-                child: Text("Voltar", style: TextStyle(fontSize: 16)),
+                child: Text(AppLocalizations.of(context)!.go_back, style: TextStyle(fontSize: 16)),
               ),
           ],
         );
@@ -646,8 +657,8 @@ class _GameScreenState extends State<GameScreen> {
                                                 ),
                                                 subtitle: Text(
                                                   "${_words.firstWhere((word) => word["word"] == _kanjisRespondidos.last, orElse: () => {
-                                                        "significado": "N/A",
-                                                        "leitura": "N/A"
+                                                        "${AppLocalizations.of(context)!.gs_mean}": "N/A",
+                                                        "${AppLocalizations.of(context)!.gs_reading}": "N/A"
                                                       })["mean"]} (${_words.firstWhere((word) => word["word"] == _kanjisRespondidos.last, orElse: () => {"reading": "N/A"})["reading"]})",
                                                   style: TextStyle(
                                                       fontSize:
@@ -670,7 +681,7 @@ class _GameScreenState extends State<GameScreen> {
                                                         _viewHistory(
                                                             context, _gameOver),
                                                     tooltip:
-                                                        'Ver Histórico Completo',
+                                                        AppLocalizations.of(context)!.gs_see_full_history,
                                                   )
                                                 : null, // Deixa o espaço vazio, mas preservado
                                           ),
@@ -686,7 +697,7 @@ class _GameScreenState extends State<GameScreen> {
                                           onSubmitted: (value) =>
                                               _processAnswer(value),
                                           decoration: InputDecoration(
-                                            labelText: 'Escreva a leitura',
+                                            labelText: AppLocalizations.of(context)!.gs_search_tooltip,
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8),
@@ -746,7 +757,7 @@ class _GameScreenState extends State<GameScreen> {
                             },
                           ),
                           Text(
-                            "$_score Pontos",
+                            AppLocalizations.of(context)!.gs_points(_score),
                             style: TextStyle(
                               fontSize: fontSize,
                               fontWeight: FontWeight.bold,
@@ -757,7 +768,7 @@ class _GameScreenState extends State<GameScreen> {
                             onPressed: _restartGame,
                             icon: Icon(Icons.restart_alt,
                                 color: Colors.blueAccent),
-                            tooltip: 'Reiniciar Jogo',
+                            tooltip: AppLocalizations.of(context)!.gs_game_restart2,
                           ),
                           SizedBox(
                             width: 50,
