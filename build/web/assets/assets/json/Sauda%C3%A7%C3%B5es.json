@@ -1,0 +1,116 @@
+{
+    "filename": "Saudações",
+    "content": {
+        "tags": [
+            "jp",
+            "saudações"
+        ],
+        "words": [
+            {
+                "word": "こんにちは",
+                "reading": "こんにちは",
+                "mean": "Olá; boa tarde"
+            },
+            {
+                "word": "おはようございます",
+                "reading": "おはようございます",
+                "mean": "Bom dia (formal)"
+            },
+            {
+                "word": "おはよう",
+                "reading": "おはよう",
+                "mean": "Bom dia (informal)"
+            },
+            {
+                "word": "こんばんは",
+                "reading": "こんばんは",
+                "mean": "Boa noite (cumprimento)"
+            },
+            {
+                "word": "おやすみなさい",
+                "reading": "おやすみなさい",
+                "mean": "Boa noite (despedida)"
+            },
+            {
+                "word": "さようなら",
+                "reading": "さようなら",
+                "mean": "Adeus"
+            },
+            {
+                "word": "またね",
+                "reading": "またね",
+                "mean": "Até logo (casual)"
+            },
+            {
+                "word": "じゃあね",
+                "reading": "じゃあね",
+                "mean": "Tchau (casual)"
+            },
+            {
+                "word": "ありがとうございます",
+                "reading": "ありがとうございます",
+                "mean": "Muito obrigado(a) (formal)"
+            },
+            {
+                "word": "ありがとう",
+                "reading": "ありがとう",
+                "mean": "Obrigado(a) (informal)"
+            },
+            {
+                "word": "すみません",
+                "reading": "すみません",
+                "mean": "Com licença; desculpe"
+            },
+            {
+                "word": "ごめんなさい",
+                "reading": "ごめんなさい",
+                "mean": "Desculpe (formal)"
+            },
+            {
+                "word": "ごめん",
+                "reading": "ごめん",
+                "mean": "Desculpe (informal)"
+            },
+            {
+                "word": "よろしくお願いします",
+                "reading": "よろしくおねがいします",
+                "mean": "Conto com você; prazer em conhecê-lo (formal)"
+            },
+            {
+                "word": "よろしく",
+                "reading": "よろしく",
+                "mean": "Prazer (informal)"
+            },
+            {
+                "word": "いらっしゃいませ",
+                "reading": "いらっしゃいませ",
+                "mean": "Bem-vindo (usado em lojas e estabelecimentos)"
+            },
+            {
+                "word": "ただいま",
+                "reading": "ただいま",
+                "mean": "Estou de volta"
+            },
+            {
+                "word": "おかえりなさい",
+                "reading": "おかえりなさい",
+                "mean": "Bem-vindo de volta (formal)"
+            },
+            {
+                "word": "おかえり",
+                "reading": "おかえり",
+                "mean": "Bem-vindo de volta (informal)"
+            },
+            {
+                "word": "お疲れ様です",
+                "reading": "おつかれさまです",
+                "mean": "Bom trabalho; obrigado pelo esforço (formal)"
+            },
+            {
+                "word": "お疲れ",
+                "reading": "おつかれ",
+                "mean": "Bom trabalho; valeu (informal)"
+            }
+        ]
+    }
+}

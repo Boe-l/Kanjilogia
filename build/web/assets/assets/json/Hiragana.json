@@ -1,0 +1,531 @@
+{
+  "filename": "Hiragana",
+  "content": {
+    "tags": [
+      "jp",
+      "hiragana"
+    ],
+    "words": [
+      {
+        "word": "あ",
+        "reading": "あ",
+        "mean": ""
+      },
+      {
+        "word": "い",
+        "reading": "い",
+        "mean": ""
+      },
+      {
+        "word": "う",
+        "reading": "う",
+        "mean": ""
+      },
+      {
+        "word": "え",
+        "reading": "え",
+        "mean": ""
+      },
+      {
+        "word": "お",
+        "reading": "お",
+        "mean": ""
+      },
+      {
+        "word": "か",
+        "reading": "か",
+        "mean": ""
+      },
+      {
+        "word": "き",
+        "reading": "き",
+        "mean": ""
+      },
+      {
+        "word": "く",
+        "reading": "く",
+        "mean": ""
+      },
+      {
+        "word": "け",
+        "reading": "け",
+        "mean": ""
+      },
+      {
+        "word": "こ",
+        "reading": "こ",
+        "mean": ""
+      },
+      {
+        "word": "さ",
+        "reading": "さ",
+        "mean": ""
+      },
+      {
+        "word": "し",
+        "reading": "し",
+        "mean": ""
+      },
+      {
+        "word": "す",
+        "reading": "す",
+        "mean": ""
+      },
+      {
+        "word": "せ",
+        "reading": "せ",
+        "mean": ""
+      },
+      {
+        "word": "そ",
+        "reading": "そ",
+        "mean": ""
+      },
+      {
+        "word": "た",
+        "reading": "た",
+        "mean": ""
+      },
+      {
+        "word": "ち",
+        "reading": "ち",
+        "mean": ""
+      },
+      {
+        "word": "つ",
+        "reading": "つ",
+        "mean": ""
+      },
+      {
+        "word": "て",
+        "reading": "て",
+        "mean": ""
+      },
+      {
+        "word": "と",
+        "reading": "と",
+        "mean": ""
+      },
+      {
+        "word": "な",
+        "reading": "な",
+        "mean": ""
+      },
+      {
+        "word": "に",
+        "reading": "に",
+        "mean": ""
+      },
+      {
+        "word": "ぬ",
+        "reading": "ぬ",
+        "mean": ""
+      },
+      {
+        "word": "ね",
+        "reading": "ね",
+        "mean": ""
+      },
+      {
+        "word": "の",
+        "reading": "の",
+        "mean": ""
+      },
+      {
+        "word": "は",
+        "reading": "は",
+        "mean": ""
+      },
+      {
+        "word": "ひ",
+        "reading": "ひ",
+        "mean": ""
+      },
+      {
+        "word": "ふ",
+        "reading": "ふ",
+        "mean": ""
+      },
+      {
+        "word": "へ",
+        "reading": "へ",
+        "mean": ""
+      },
+      {
+        "word": "ほ",
+        "reading": "ほ",
+        "mean": ""
+      },
+      {
+        "word": "ま",
+        "reading": "ま",
+        "mean": ""
+      },
+      {
+        "word": "み",
+        "reading": "み",
+        "mean": ""
+      },
+      {
+        "word": "む",
+        "reading": "む",
+        "mean": ""
+      },
+      {
+        "word": "め",
+        "reading": "め",
+        "mean": ""
+      },
+      {
+        "word": "も",
+        "reading": "も",
+        "mean": ""
+      },
+      {
+        "word": "や",
+        "reading": "や",
+        "mean": ""
+      },
+      {
+        "word": "ゆ",
+        "reading": "ゆ",
+        "mean": ""
+      },
+      {
+        "word": "よ",
+        "reading": "よ",
+        "mean": ""
+      },
+      {
+        "word": "ら",
+        "reading": "ら",
+        "mean": ""
+      },
+      {
+        "word": "り",
+        "reading": "り",
+        "mean": ""
+      },
+      {
+        "word": "る",
+        "reading": "る",
+        "mean": ""
+      },
+      {
+        "word": "れ",
+        "reading": "れ",
+        "mean": ""
+      },
+      {
+        "word": "ろ",
+        "reading": "ろ",
+        "mean": ""
+      },
+      {
+        "word": "わ",
+        "reading": "わ",
+        "mean": ""
+      },
+      {
+        "word": "を",
+        "reading": "を",
+        "mean": ""
+      },
+      {
+        "word": "ん",
+        "reading": "ん",
+        "mean": ""
+      },
+      {
+        "word": "が",
+        "reading": "が",
+        "mean": ""
+      },
+      {
+        "word": "ぎ",
+        "reading": "ぎ",
+        "mean": ""
+      },
+      {
+        "word": "ぐ",
+        "reading": "ぐ",
+        "mean": ""
+      },
+      {
+        "word": "げ",
+        "reading": "げ",
+        "mean": ""
+      },
+      {
+        "word": "ご",
+        "reading": "ご",
+        "mean": ""
+      },
+      {
+        "word": "ざ",
+        "reading": "ざ",
+        "mean": ""
+      },
+      {
+        "word": "じ",
+        "reading": "じ",
+        "mean": ""
+      },
+      {
+        "word": "ず",
+        "reading": "ず",
+        "mean": ""
+      },
+      {
+        "word": "ぜ",
+        "reading": "ぜ",
+        "mean": ""
+      },
+      {
+        "word": "ぞ",
+        "reading": "ぞ",
+        "mean": ""
+      },
+      {
+        "word": "だ",
+        "reading": "だ",
+        "mean": ""
+      },
+      {
+        "word": "ぢ",
+        "reading": "ぢ",
+        "mean": ""
+      },
+      {
+        "word": "づ",
+        "reading": "づ",
+        "mean": ""
+      },
+      {
+        "word": "で",
+        "reading": "で",
+        "mean": ""
+      },
+      {
+        "word": "ど",
+        "reading": "ど",
+        "mean": ""
+      },
+      {
+        "word": "ば",
+        "reading": "ば",
+        "mean": ""
+      },
+      {
+        "word": "び",
+        "reading": "び",
+        "mean": ""
+      },
+      {
+        "word": "ぶ",
+        "reading": "ぶ",
+        "mean": ""
+      },
+      {
+        "word": "べ",
+        "reading": "べ",
+        "mean": ""
+      },
+      {
+        "word": "ぼ",
+        "reading": "ぼ",
+        "mean": ""
+      },
+      {
+        "word": "ぱ",
+        "reading": "ぱ",
+        "mean": ""
+      },
+      {
+        "word": "ぴ",
+        "reading": "ぴ",
+        "mean": ""
+      },
+      {
+        "word": "ぷ",
+        "reading": "ぷ",
+        "mean": ""
+      },
+      {
+        "word": "ぺ",
+        "reading": "ぺ",
+        "mean": ""
+      },
+      {
+        "word": "ぽ",
+        "reading": "ぽ",
+        "mean": ""
+      },
+      {
+        "word": "きゃ",
+        "reading": "きゃ",
+        "mean": ""
+      },
+      {
+        "word": "きゅ",
+        "reading": "きゅ",
+        "mean": ""
+      },
+      {
+        "word": "きょ",
+        "reading": "きょ",
+        "mean": ""
+      },
+      {
+        "word": "しゃ",
+        "reading": "しゃ",
+        "mean": ""
+      },
+      {
+        "word": "しゅ",
+        "reading": "しゅ",
+        "mean": ""
+      },
+      {
+        "word": "しょ",
+        "reading": "しょ",
+        "mean": ""
+      },
+      {
+        "word": "ちゃ",
+        "reading": "ちゃ",
+        "mean": ""
+      },
+      {
+        "word": "ちゅ",
+        "reading": "ちゅ",
+        "mean": ""
+      },
+      {
+        "word": "ちょ",
+        "reading": "ちょ",
+        "mean": ""
+      },
+      {
+        "word": "にゃ",
+        "reading": "にゃ",
+        "mean": ""
+      },
+      {
+        "word": "にゅ",
+        "reading": "にゅ",
+        "mean": ""
+      },
+      {
+        "word": "にょ",
+        "reading": "にょ",
+        "mean": ""
+      },
+      {
+        "word": "ひゃ",
+        "reading": "ひゃ",
+        "mean": ""
+      },
+      {
+        "word": "ひゅ",
+        "reading": "ひゅ",
+        "mean": ""
+      },
+      {
+        "word": "ひょ",
+        "reading": "ひょ",
+        "mean": ""
+      },
+      {
+        "word": "みゃ",
+        "reading": "みゃ",
+        "mean": ""
+      },
+      {
+        "word": "みゅ",
+        "reading": "みゅ",
+        "mean": ""
+      },
+      {
+        "word": "みょ",
+        "reading": "みょ",
+        "mean": ""
+      },
+      {
+        "word": "りゃ",
+        "reading": "りゃ",
+        "mean": ""
+      },
+      {
+        "word": "りゅ",
+        "reading": "りゅ",
+        "mean": ""
+      },
+      {
+        "word": "りょ",
+        "reading": "りょ",
+        "mean": ""
+      },
+      {
+        "word": "ぎゃ",
+        "reading": "ぎゃ",
+        "mean": ""
+      },
+      {
+        "word": "ぎゅ",
+        "reading": "ぎゅ",
+        "mean": ""
+      },
+      {
+        "word": "ぎょ",
+        "reading": "ぎょ",
+        "mean": ""
+      },
+      {
+        "word": "じゃ",
+        "reading": "じゃ",
+        "mean": ""
+      },
+      {
+        "word": "じゅ",
+        "reading": "じゅ",
+        "mean": ""
+      },
+      {
+        "word": "じょ",
+        "reading": "じょ",
+        "mean": ""
+      },
+      {
+        "word": "びゃ",
+        "reading": "びゃ",
+        "mean": ""
+      },
+      {
+        "word": "びゅ",
+        "reading": "びゅ",
+        "mean": ""
+      },
+      {
+        "word": "びょ",
+        "reading": "びょ",
+        "mean": ""
+      },
+      {
+        "word": "ぴゃ",
+        "reading": "ぴゃ",
+        "mean": ""
+      },
+      {
+        "word": "ぴゅ",
+        "reading": "ぴゅ",
+        "mean": ""
+      },
+      {
+        "word": "ぴょ",
+        "reading": "ぴょ",
+        "mean": ""
+      }
+    ]
+  }
+}
