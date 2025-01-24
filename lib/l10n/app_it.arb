@@ -60,5 +60,17 @@
   "loading": "Caricamento...",
   "action_menu": "Menu azioni",
   "words": "Parole",
-  "tags": "Etichette"
+  "select_language": "Seleziona una lingua",
+  "tags": "Etichette",
+  "fonts_count": "{fontscount} Fonti disponibili",
+  "play": "Gioca",
+  "files": "File",
+  "manage_files": "Gestisci File",
+  "fonts_not_available": "Impossibile caricare i font locali",
+  "fonts_permission_web_error": "Permesso di accesso ai font locali negato.",
+  "fonts_permission_web_ok": "Font caricati con successo",
+  "go_to_github_page": "Vai alla pagina GitHub",
+  "reset_all": "Cancella tutti i dati",
+  "reset_all_questioning": "Sei sicuro di voler cancellare tutti i dati? Questo include file installati, impostazioni e tutta la cache.",
+  "go_confirm": "Conferma"
 }

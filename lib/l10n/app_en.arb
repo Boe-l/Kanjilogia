@@ -60,5 +60,17 @@
   "loading": "Loading...",
   "action_menu": "Action Menu",
   "words": "Words",
-  "tags": "Tags"
+  "select_language": "Select a language",
+  "tags": "Tags",
+  "fonts_count": "{fontscount} Fonts available",
+    "play": "Play",
+    "files": "Files",
+    "manage_files": "Manage Files",
+    "fonts_not_available": "Unable to load local fonts",
+    "fonts_permission_web_error": "Permission to access local fonts denied.",
+    "fonts_permission_web_ok": "Fonts loaded successfully",
+    "go_to_github_page": "Go to GitHub page",
+    "reset_all": "Delete all data",
+    "reset_all_questioning": "Are you sure you want to delete all data? This includes installed files, settings, and all cache.",
+    "go_confirm": "Confirm"
 }

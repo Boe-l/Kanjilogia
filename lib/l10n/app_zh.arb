@@ -60,5 +60,17 @@
   "loading": "加载中...",
   "action_menu": "操作菜单",
   "words": "单词",
-  "tags": "标签"
+  "select_language": "选择一种语言",
+  "tags": "标签",
+  "fonts_count": "{fontscount} 个字体可用",
+  "play": "播放",
+  "files": "文件",
+  "manage_files": "管理文件",
+  "fonts_not_available": "无法加载本地字体",
+  "fonts_permission_web_error": "访问本地字体的权限被拒绝。",
+  "fonts_permission_web_ok": "字体加载成功",
+  "go_to_github_page": "前往 GitHub 页面",
+  "reset_all": "删除所有数据",
+  "reset_all_questioning": "您确定要删除所有数据吗？这包括已安装的文件、设置和所有缓存。",
+  "go_confirm": "确认"
 }

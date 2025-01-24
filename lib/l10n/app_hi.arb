@@ -60,5 +60,17 @@
   "loading": "लोड हो रहा है...",
   "action_menu": "क्रिया मेनू",
   "words": "शब्द",
-  "tags": "टैग"
+  "select_language": "एक भाषा चुनें",
+  "tags": "टैग",
+  "fonts_count": "{fontscount} फ़ॉन्ट उपलब्ध हैं",
+  "play": "खेलें",
+  "files": "फ़ाइलें",
+  "manage_files": "फ़ाइलें प्रबंधित करें",
+  "fonts_not_available": "स्थानीय फ़ॉन्ट लोड नहीं किया जा सका",
+  "fonts_permission_web_error": "स्थानीय फ़ॉन्ट तक पहुंच की अनुमति अस्वीकृत।",
+  "fonts_permission_web_ok": "फ़ॉन्ट सफलतापूर्वक लोड किए गए",
+  "go_to_github_page": "GitHub पेज पर जाएं",
+  "reset_all": "सभी डेटा हटाएं",
+  "reset_all_questioning": "क्या आप सभी डेटा हटाना चाहते हैं? इसमें स्थापित फाइलें, सेटिंग्स और सभी कैश शामिल हैं।",
+  "go_confirm": "पुष्टि करें"
 }

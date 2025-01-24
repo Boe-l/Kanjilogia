@@ -60,5 +60,17 @@
   "loading": "Lädt...",
   "action_menu": "Aktionsmenü",
   "words": "Wörter",
-  "tags": "Tags"
+  "select_language": "Wähle eine Sprache aus",
+  "tags": "Tags",
+  "fonts_count": "{fontscount} Schriftarten verfügbar",
+  "play": "Spielen",
+  "files": "Dateien",
+  "manage_files": "Dateien verwalten",
+  "fonts_not_available": "Lokale Schriftarten konnten nicht geladen werden",
+  "fonts_permission_web_error": "Zugriff auf lokale Schriftarten verweigert.",
+  "fonts_permission_web_ok": "Schriftarten erfolgreich geladen",
+  "go_to_github_page": "Zur GitHub-Seite gehen",
+  "reset_all": "Alle Daten löschen",
+  "reset_all_questioning": "Sind Sie sicher, dass Sie alle Daten löschen möchten? Dies umfasst installierte Dateien, Einstellungen und den gesamten Cache.",
+  "go_confirm": "Bestätigen"
 }

@@ -1,17 +1,22 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'game_screen.dart';
+import 'package:kanjilogia/pages/settings.dart';
+import 'pages/game_screen.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'sharedpref.dart';
-import 'makehive.dart';
-import 'managepage.dart';
+import 'common/sharedpref.dart';
+import 'common/database.dart';
+import 'pages/managepage.dart';
 import 'l10n/l10n.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'common/langstuff.dart';
+import 'common/debg.dart';
+import 'utils/fontsweb.dart' if (dart.library.io) 'utils/fonts_stub.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,29 +35,68 @@ class Kanjilogia extends StatefulWidget {
 }
 
 class KanjilogiaState extends State<Kanjilogia> {
-  Locale _locale = Locale('en'); // Locale inicial
+  Locale _locale = Locale('en');
 
   void changeLanguage([Locale? locale]) async {
-    // Verifica se o 'locale' é nulo. Caso seja, busca nos SharedPreferences.
     locale ??= await SharedPrefs().getLocale();
 
-    // Salva o locale nos SharedPreferences, se fornecido explicitamente.
     await SharedPrefs().saveLocale(locale);
-      // Atualiza o estado com o novo 'locale'.
+
     setState(() {
       _locale = locale!;
     });
+    Debg().info('locale: "$locale"');
+  }
+
+  String _fontFamily = '';
+
+  Future<void> loadFont(String fontname) async {
+    try {
+      await LocalFonts().loadFont(fontname);
+
+      setState(() {
+        _fontFamily = fontname;
+      });
+    } catch (e) {
+      Debg().error('Error changing font: "$e"');
+      setState(() {
+        _fontFamily = '';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final fontStyle =
+        _fontFamily.isNotEmpty ? TextStyle(fontFamily: _fontFamily) : null;
     return MaterialApp(
       title: 'Kanjilogia - 漢字ロギア',
-      theme: ThemeData.dark(),
-      home: MainMenu(changeLanguage: changeLanguage),
+      theme: ThemeData(
+          brightness: Brightness.dark,
+          textTheme: TextTheme(
+            bodyLarge: fontStyle,
+            bodyMedium: fontStyle,
+            bodySmall: fontStyle,
+            displayLarge: fontStyle,
+            displayMedium: fontStyle,
+            displaySmall: fontStyle,
+            headlineLarge: fontStyle,
+            headlineMedium: fontStyle,
+            headlineSmall: fontStyle,
+            labelLarge: fontStyle,
+            labelMedium: fontStyle,
+            labelSmall: fontStyle,
+            titleLarge: fontStyle,
+            titleMedium: fontStyle,
+            titleSmall: fontStyle,
+          )),
+      home: MainMenu(
+        changeLanguage: changeLanguage,
+        loadFont: loadFont,
+      ),
       debugShowCheckedModeBanner: false,
       supportedLocales: L10n.all,
-      locale: _locale, // Usando o _locale atualizado
+      locale: _locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -65,23 +109,26 @@ class KanjilogiaState extends State<Kanjilogia> {
 
 class MainMenu extends StatefulWidget {
   final Function([Locale?]) changeLanguage;
-  const MainMenu({super.key, required this.changeLanguage});
+  final Future<void> Function(String) loadFont;
+  const MainMenu({
+    super.key,
+    required this.changeLanguage,
+    required this.loadFont,
+  });
 
   @override
   MainMenuState createState() => MainMenuState();
 }
 
-class MainMenuState extends State<MainMenu>
-    with SingleTickerProviderStateMixin {
-  Map<String, Set<String>> _jsonFiles =
-      {}; // Para armazenar filenames e suas tags
+class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
+  Map<String, Set<String>> _jsonFiles = {};
   Map<String, Set<String>> _filteredJsonFiles = {};
   final List<String> _selectedFiles = [];
   final TextEditingController _searchController = TextEditingController();
   late int selectedTime = 30;
   late AnimationController _backgroundController;
   late Animation<Color?> _colorAnimation;
-
+  late TabController _tabController;
   Map<String, dynamic> data = {
     'selectedTime': 1,
     'finalJsonData': [],
@@ -92,11 +139,19 @@ class MainMenuState extends State<MainMenu>
   final GlobalKey settingsKey = GlobalKey();
   final ScrollController _scrollController = ScrollController();
   bool _showFloatingButtons = true;
-  // Branco puro
-
   @override
   void initState() {
     super.initState();
+    kDebugMode
+        ? Debg().setLoggingEnabled(true)
+        : Debg().setLoggingEnabled(false);
+    //widget.loadFont('851zatsu');
+    //testing load local fonts on web
+    // List<FontMetadata> fonts = await LocalFonts().listFonts();
+    //  for (var font in fonts) {
+    //    print('Fonte: ${font.postscriptName}'); list fonts
+    //  }
+    _tabController = TabController(length: 3, vsync: this);
     _loadJsonFiles();
     _searchController.addListener(_filterJsonFiles);
     widget.changeLanguage();
@@ -105,7 +160,14 @@ class MainMenuState extends State<MainMenu>
         selectedTime = time;
       });
     });
-    // Configurando animação de fundo
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        if (_tabController.index == 0) {
+          _loadJsonFiles();
+        }
+      }
+    });
+
     _backgroundController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 10),
@@ -116,9 +178,7 @@ class MainMenuState extends State<MainMenu>
       end: const Color.fromARGB(255, 56, 16, 115),
     ).animate(_backgroundController);
 
-    // Usando addPostFrameCallback para garantir que o contexto estará disponível
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Agora podemos usar o contexto com segurança
       targets.add(TargetFocus(identify: "1", keyTarget: grid3, contents: [
         TargetContent(
           align: ContentAlign.bottom,
@@ -201,13 +261,11 @@ class MainMenuState extends State<MainMenu>
         ),
       ]));
 
-      // Verificar o tutorial e exibir conforme necessário
       Future.delayed(Duration(seconds: 2), () async {
         bool isComplete = await SharedPrefs().isTutorialComplete();
         if (isComplete == false) {
           showTutorial();
         }
-        await SharedPrefs().saveTutorialComplete(true);
       });
     });
 
@@ -230,32 +288,26 @@ class MainMenuState extends State<MainMenu>
   void dispose() {
     _searchController.dispose();
     _backgroundController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
-  // Variáveis para armazenar chaves e tags separadas
-
   Future<void> _loadJsonFiles() async {
     try {
-      // Obtendo os dados com os filenames e tags
       final jsonFiles = await listFilenamesWithTags();
 
-      // Preenchendo as listas com os dados obtidos
-
       setState(() {
-        // Aqui estamos atualizando a interface com as listas de dados
         _jsonFiles = jsonFiles;
         _filteredJsonFiles = jsonFiles;
       });
     } catch (e) {
-      // Tratar erros
+      Debg().error(e as String);
     }
   }
 
   void _filterJsonFiles() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      // Filtrando o mapa de _jsonFiles com base no filename
       _filteredJsonFiles = Map.fromEntries(
         _jsonFiles.entries.where((entry) {
           return entry.key.toLowerCase().contains(query);
@@ -272,7 +324,7 @@ class MainMenuState extends State<MainMenu>
         _selectedFiles.add(fileName);
       }
     });
-  } //Kanjilogia
+  }
 
   void _startGame(BuildContext context, selectedTime) async {
     final localization = AppLocalizations.of(context);
@@ -282,38 +334,34 @@ class MainMenuState extends State<MainMenu>
     }
 
     try {
-      // Chamar a função getWordsByFilenames com os arquivos selecionados
-      List<String> selectedFilesList =
-          _selectedFiles; // Ou qualquer outro critério para os nomes de arquivos
+      List<String> selectedFilesList = _selectedFiles;
       List<dynamic> finalWords = await getWordsByFilenames(selectedFilesList);
 
       if (finalWords.isEmpty) {
         if (mounted) {
-        _showErrorDialog(localization!.gs_words_empty);
+          _showErrorDialog(localization!.gs_words_empty);
+          Debg().warning(localization.gs_words_empty);
         }
         return;
       }
 
-      // Preparando os dados para serem enviados para a próxima tela
       final data = {
         'selectedTime': selectedTime,
-        'finalJsonData': finalWords, // Dados das palavras retornadas
+        'finalJsonData': finalWords,
       };
 
-      // Navegar para a próxima tela passando os dados
-      
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => GameScreen(data: data),
-        ),
-      );
+      if (context.mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GameScreen(data: data),
+          ),
+        );
+      }
 
-      // Limpar a lista de arquivos selecionados
       _selectedFiles.clear();
     } catch (e) {
-      // Em caso de erro, exibe uma mensagem de erro
-      _showErrorDialog("${localization!.tutorial1} $e");
+      Debg().error(e as String);
     }
   }
 
@@ -324,32 +372,36 @@ class MainMenuState extends State<MainMenu>
       animation: StyledToastAnimation.scale,
       reverseAnimation: StyledToastAnimation.scale,
       animDuration: Duration(milliseconds: 600),
-      duration: Duration(seconds: 2), // Tempo para exibição
-      position: StyledToastPosition.center, // Centraliza na tela
+      duration: Duration(seconds: 2),
+      position: StyledToastPosition.center,
       curve: Curves.elasticOut,
       reverseCurve: Curves.linear,
-      backgroundColor: Colors.red.withValues(alpha: 0.8), // Cor do fundo (opcional)
-      textStyle: TextStyle(
-          color: Colors.white, fontSize: 16), // Estilo do texto (opcional)
+      backgroundColor: Colors.red.withValues(alpha: 0.8),
+      textStyle: TextStyle(color: Colors.white, fontSize: 16),
     );
+    Debg().warning(message);
   }
 
   void showTutorial() {
-    TutorialCoachMark(
-      targets: targets, // List<TargetFocus>
-      colorShadow: Colors.red, // DEFAULT Colors.black
-      // alignSkip: Alignment.bottomRight,
-      textSkip: AppLocalizations.of(context)!.tutorial_skip,
-      // paddingFocus: 10,
-      // opacityShadow: 0.8,
-      onClickTarget: (target) {},
-      onClickTargetWithTapPosition: (target, tapDetails) {},
-      onClickOverlay: (target) {},
-      onSkip: () {
-        return true;
-      },
-      onFinish: () {},
-    ).show(context: context);
+    try {
+      TutorialCoachMark(
+        targets: targets,
+        colorShadow: Colors.red,
+        textSkip: AppLocalizations.of(context)!.tutorial_skip,
+        onClickTarget: (target) {},
+        onClickTargetWithTapPosition: (target, tapDetails) {},
+        onClickOverlay: (target) {},
+        onSkip: () {
+          SharedPrefs().saveTutorialComplete(true);
+          return true;
+        },
+        onFinish: () async {
+          await SharedPrefs().saveTutorialComplete(true);
+        },
+      ).show(context: context);
+    } catch (e) {
+      Debg().error(e as String);
+    }
   }
 
   @override
@@ -358,7 +410,52 @@ class MainMenuState extends State<MainMenu>
 
     return SafeArea(
       top: false,
-      child: main(screenWidth),
+      child: Scaffold(
+        body: Column(
+          children: [
+            // Conteúdo da página
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  main(screenWidth),
+                  ManagerPage(),
+                  SettingsPage(),
+                ],
+              ),
+            ),
+            // Abas na parte inferior
+            Container(
+              color: Color.fromARGB(255, 74, 32, 126),
+              child: Align(
+                alignment: Alignment.center,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 600),
+                  child: TabBar(
+                    controller: _tabController,
+                    indicatorColor: Colors.white,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.white70,
+                    tabs: [
+                      Tab(
+                          icon: Icon(Icons.play_arrow),
+                          text: AppLocalizations.of(context)!.play),
+                      Tab(
+                          icon: Icon(Icons.file_copy_sharp),
+                          text: AppLocalizations.of(context)!.files
+                          // AppLocalizations.of(context)!.files
+                          ),
+                      Tab(
+                          icon: Icon(Icons.settings_suggest_outlined),
+                          text: AppLocalizations.of(context)!.settings),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -419,11 +516,10 @@ class MainMenuState extends State<MainMenu>
                                   width: 2),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20), // Borda arredondada
+                              borderRadius: BorderRadius.circular(20),
                               borderSide: BorderSide(
                                   color: Color.fromARGB(255, 109, 33, 223),
-                                  width: 2), // Cor e largura da borda ao focar
+                                  width: 2),
                             ),
                           ),
                           style: TextStyle(color: Colors.white),
@@ -495,7 +591,8 @@ class MainMenuState extends State<MainMenu>
                                                       boxShadow: [
                                                         BoxShadow(
                                                           color: Colors.black
-                                                              .withValues(alpha: 0.2),
+                                                              .withValues(
+                                                                  alpha: 0.2),
                                                           spreadRadius: 2,
                                                           blurRadius: 10,
                                                           offset: const Offset(
@@ -511,16 +608,18 @@ class MainMenuState extends State<MainMenu>
                                                                         80,
                                                                         36,
                                                                         133)
-                                                                    .withValues(alpha: 
-                                                                        0.4),
+                                                                    .withValues(
+                                                                        alpha:
+                                                                            0.4),
                                                                 const Color
                                                                         .fromARGB(
                                                                         255,
                                                                         80,
                                                                         36,
                                                                         133)
-                                                                    .withValues(alpha: 
-                                                                        0.1),
+                                                                    .withValues(
+                                                                        alpha:
+                                                                            0.1),
                                                               ]
                                                             : [
                                                                 const Color
@@ -535,8 +634,9 @@ class MainMenuState extends State<MainMenu>
                                                                         80,
                                                                         36,
                                                                         133)
-                                                                    .withValues(alpha: 
-                                                                        0.4),
+                                                                    .withValues(
+                                                                        alpha:
+                                                                            0.4),
                                                               ],
                                                         begin:
                                                             Alignment.topLeft,
@@ -570,14 +670,11 @@ class MainMenuState extends State<MainMenu>
                                                           CrossAxisAlignment
                                                               .center,
                                                       children: [
-                                                        Spacer(
-                                                            flex:
-                                                                1), // Faz a bandeira não ficar tão próxima do topo
-
+                                                        Spacer(flex: 1),
                                                         Expanded(
                                                           flex: 5,
                                                           child: Image.asset(
-                                                            _getFlagAssetPath(
+                                                            LocaleUtils.getFlagPath(
                                                                 _filteredJsonFiles[
                                                                         fileName]!
                                                                     .first),
@@ -624,7 +721,6 @@ class MainMenuState extends State<MainMenu>
                                                             maxLines: 2,
                                                           ),
                                                         ),
-
                                                         Spacer(flex: 1),
                                                       ],
                                                     ),
@@ -645,87 +741,34 @@ class MainMenuState extends State<MainMenu>
                 ),
               ),
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             floatingActionButton: AnimatedOpacity(
               opacity: _showFloatingButtons ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 300),
               child: IgnorePointer(
                 ignoring:
                     !_showFloatingButtons, // Ignora interações quando invisível
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Botão de configurações à esquerda
-                    FloatingActionButton(
-                      key: settingsKey,
-                      heroTag: 'settings',
-                      onPressed: () {
-                        // Ação do botão de configurações
-                        //_settings(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ManagerPage()),
-                        ).then((_) {
-                          _loadJsonFiles();
-                        });
-                      },
-                      backgroundColor: const Color(0xFF6C5CE7),
-                      child: Icon(Icons.settings),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 540),
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 16, bottom: 16),
+                        child: FloatingActionButton(
+                          key: playButtonKey,
+                          heroTag: 'play',
+                          onPressed: () => _startGame(context, selectedTime),
+                          backgroundColor: Color(0xFF6C5CE7),
+                          child: Icon(Icons.play_arrow),
+                        ),
+                      ),
                     ),
-                    SizedBox(
-                      width: screenWidth * 0.186, // Espaço entre os botões
-                    ),
-                    FloatingActionButton(
-                      key: playButtonKey,
-                      heroTag: 'play',
-                      onPressed: () => _startGame(context, selectedTime),
-                      backgroundColor: Color(0xFF6C5CE7),
-                      child: Icon(Icons.play_arrow),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ));
       },
     );
-  }
-}
-
-String _getFlagAssetPath(String language) {
-  switch (language.toLowerCase()) {
-    case 'jp':
-        return 'assets/flags/japan.png';
-      case 'ja':
-        return 'assets/flags/japan.png';
-      case 'cn':
-        return 'assets/flags/china.png';
-      case 'zh':
-        return 'assets/flags/china.png';
-      case 'pt':
-        return 'assets/flags/brazil.png';
-      case 'ko':
-        return 'assets/flags/southkorea.png';
-      case 'en':
-        return 'assets/flags/usa.png';
-      case 'es':
-        return 'assets/flags/spain.png';
-      case 'ar':
-        return 'assets/flags/uae.png';
-      case 'bn':
-        return 'assets/flags/bangladesh.png';
-      case 'de':
-        return 'assets/flags/germany.png';
-      case 'fr':
-        return 'assets/flags/france.png';
-      case 'it':
-        return 'assets/flags/italy.png';
-      case 'ru':
-        return 'assets/flags/russia.png';
-      case 'tr':
-        return 'assets/flags/turkey.png';
-      default:
-        return 'assets/flags/default.png';
   }
 }

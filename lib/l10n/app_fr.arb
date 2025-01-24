@@ -60,5 +60,17 @@
   "loading": "Chargement...",
   "action_menu": "Menu des actions",
   "words": "Mots",
-  "tags": "Étiquettes"
+  "select_language": "Sélectionnez une langue",
+  "tags": "Étiquettes",
+  "fonts_count": "{fontscount} Polices disponibles",
+  "play": "Jouer",
+  "files": "Fichiers",
+  "manage_files": "Gérer les fichiers",
+  "fonts_not_available": "Impossible de charger les polices locales",
+  "fonts_permission_web_error": "Permission d'accès aux polices locales refusée.",
+  "fonts_permission_web_ok": "Polices chargées avec succès",
+  "go_to_github_page": "Aller à la page GitHub",
+  "reset_all": "Supprimer toutes les données",
+  "reset_all_questioning": "Êtes-vous sûr de vouloir supprimer toutes les données ? Cela inclut les fichiers installés, les paramètres et tout le cache.",
+  "go_confirm": "Confirmer"
 }

@@ -60,5 +60,17 @@
   "loading": "読み込み中...",
   "action_menu": "アクションメニュー",
   "words": "単語",
-  "tags": "タグ"
+  "select_language": "言語を選択してください",
+  "tags": "タグ",
+  "fonts_count": "{fontscount} フォントが利用可能",
+  "play": "プレイ",
+  "files": "ファイル",
+  "manage_files": "ファイルを管理",
+  "fonts_not_available": "ローカルフォントを読み込めませんでした",
+  "fonts_permission_web_error": "ローカルフォントへのアクセス権が拒否されました。",
+  "fonts_permission_web_ok": "フォントが正常に読み込まれました",
+  "go_to_github_page": "GitHubページに移動",
+  "reset_all": "すべてのデータを削除",
+  "reset_all_questioning": "すべてのデータを削除してもよろしいですか？これには、インストール済みファイル、設定、およびすべてのキャッシュが含まれます。",
+  "go_confirm": "確認"
 }

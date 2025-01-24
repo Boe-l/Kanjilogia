@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'debg.dart';
 class SharedPrefs {
   static const String _tutorialCompleteKey = 'tutorial_complete';
   static const String _maxTimeKey = 'max_time';
@@ -83,12 +83,13 @@ class SharedPrefs {
         final currentTime = DateTime.now().millisecondsSinceEpoch;
         await prefs.setInt(_lastFetchTimeKey, currentTime);
 
-        debugPrint('Dados salvos no SharedPreferences.');
+        Debg().info('Dados salvos no SharedPreferences.');
       } else {
-        throw Exception('Falha ao buscar arquivos');
+
+        Debg().exception('Falha ao buscar arquivos');
       }
     } catch (e) {
-     debugPrint('Erro ao buscar ou salvar os arquivos: $e');
+     Debg().error('Erro ao buscar ou salvar os arquivos: $e');
     }
   }
 
@@ -109,7 +110,7 @@ class SharedPrefs {
     final currentTime = DateTime.now().millisecondsSinceEpoch;
 
     if (lastFetchTime != null && currentTime - lastFetchTime < 15 * 60 * 1000) {
-     debugPrint('Carregando dados do cache.');
+     Debg().info('Carregando dados do cache.');
       return await getCachedFiles();
     }
 

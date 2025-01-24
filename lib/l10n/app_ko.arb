@@ -60,5 +60,17 @@
   "loading": "로딩 중...",
   "action_menu": "작업 메뉴",
   "words": "단어",
-  "tags": "태그"
+  "select_language": "언어를 선택하세요",
+  "tags": "태그",
+  "fonts_count": "{fontscount}개의 글꼴 사용 가능",
+  "play": "재생",
+  "files": "파일",
+  "manage_files": "파일 관리",
+  "fonts_not_available": "로컬 글꼴을 로드할 수 없습니다",
+  "fonts_permission_web_error": "로컬 글꼴에 대한 액세스 권한이 거부되었습니다.",
+  "fonts_permission_web_ok": "글꼴이 성공적으로 로드되었습니다",
+  "go_to_github_page": "GitHub 페이지로 이동",
+  "reset_all": "모든 데이터 삭제",
+  "reset_all_questioning": "모든 데이터를 삭제하시겠습니까? 여기에는 설치된 파일, 설정 및 모든 캐시가 포함됩니다.",
+  "go_confirm": "확인"
 }

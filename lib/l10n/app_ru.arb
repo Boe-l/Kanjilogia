@@ -60,5 +60,17 @@
   "loading": "Загрузка...",
   "action_menu": "Меню действий",
   "words": "Слова",
-  "tags": "Теги"
+  "select_language": "Выберите язык",
+  "tags": "Теги",
+  "fonts_count": "{fontscount} доступных шрифтов",
+  "play": "Играть",
+  "files": "Файлы",
+  "manage_files": "Управление файлами",
+  "fonts_not_available": "Не удалось загрузить локальные шрифты",
+  "fonts_permission_web_error": "Доступ к локальным шрифтам запрещен.",
+  "fonts_permission_web_ok": "Шрифты успешно загружены",
+  "go_to_github_page": "Перейти на страницу GitHub",
+  "reset_all": "Удалить все данные",
+  "reset_all_questioning": "Вы уверены, что хотите удалить все данные? Это включает установленные файлы, настройки и весь кеш.",
+  "go_confirm": "Подтвердить"
 }

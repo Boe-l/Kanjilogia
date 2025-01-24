@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'makehive.dart';
+part of 'database.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator

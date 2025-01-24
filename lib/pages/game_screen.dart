@@ -1,13 +1,15 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:kana_kit/kana_kit.dart';
-import 'sharedpref.dart';
+import 'package:kanjilogia/common/langstuff.dart';
+import '../common/sharedpref.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kanjilogia/common/debg.dart';
+
 class GameScreen extends StatefulWidget {
   // Recebe o jsonData como parâmetro no construtor do GameScreen
   final Map<String, dynamic> data;
@@ -20,7 +22,6 @@ class GameScreen extends StatefulWidget {
 
 class GameScreenState extends State<GameScreen> {
   final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
   List<Map<String, String>> _words = [];
   final List<String> _kanjisRespondidos = [];
   final List<Map<String, String>> correctItems = [];
@@ -35,7 +36,7 @@ class GameScreenState extends State<GameScreen> {
   final double _borderWidth = 6;
   double fontSizeCard = 32.0;
   int fontWeightCard = 100;
-  
+  FocusNode focusNode = FocusNode();
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(
@@ -55,11 +56,10 @@ class GameScreenState extends State<GameScreen> {
       });
     });
   }
-  
+
   static const kanaKit = KanaKit();
 
   void _loadWords() {
-
     final Map<String, dynamic> data = widget.data;
     setState(() {
       // Recupera os dados passados para o widget
@@ -88,6 +88,7 @@ class GameScreenState extends State<GameScreen> {
       // Verifica se há palavras carregadas
       if (_words.isEmpty) {
         _feedback = AppLocalizations.of(context)!.gs_words_empty;
+        Debg().warning(_feedback);
       } else {
         // Se existirem palavras, embaralha e remove duplicatas
         _words.shuffle(Random()); // Embaralha as palavras
@@ -109,7 +110,7 @@ class GameScreenState extends State<GameScreen> {
       _kanjisRespondidos.clear();
       _feedback = "";
 
-      // Recarrega as palavras
+      Debg().info('Game restarted');
     });
     _loadWords(); // Recarrega e embaralha as palavras
     _startTimer();
@@ -134,6 +135,7 @@ class GameScreenState extends State<GameScreen> {
 
   void _processAnswer(String answer) {
     final localization = AppLocalizations.of(context);
+
     // Verifica se o jogo terminou
     if (_currentIndex >= _words.length || _gameOver) {
       return; // Evita processar respostas após o término do jogo
@@ -146,15 +148,29 @@ class GameScreenState extends State<GameScreen> {
     final List<String> possibleReadings =
         (currentWord["reading"] ?? "").split('；').map((e) => e.trim()).toList();
 
-    final userAnswerInHiragana = kanaKit.toHiragana(answer.trim());
-    bool isCorrect; // Declarar a variável fora do bloco if-else
+    // Função para tratar o "nn" e normalizar o input
+    String normalizeInput(String input) {
+      String processed = input.replaceAll('nn', 'n-');
+
+      String converted = kanaKit.toHiragana(processed);
+
+      return converted.replaceAll('ー', '');
+    }
+
+    //(金色)きんいろ kanaKit.toHiragana('kiniro') returns 'きにろ', and kanaKit.toHiragana('kinniro') returns きんにろ ❌
+    //there are probably better ways to do this 😂
+    final userAnswerNormalized = normalizeInput(answer.trim());
+    bool isCorrect;
 
     if (currentWord["tags"]!.contains('jp')) {
-      isCorrect = possibleReadings.contains(userAnswerInHiragana);
+      isCorrect = possibleReadings.contains(userAnswerNormalized);
     } else {
       isCorrect = possibleReadings.contains(answer.trim());
-    } //diànyǐnɡ
-    //diànyǐnɡ
+    }
+
+    Debg().info('correct answers: $possibleReadings');
+    Debg().info('User answer: $userAnswerNormalized');
+    Debg().info('Answer is correct: $isCorrect');
 
     // Processa a resposta
     setState(() {
@@ -186,6 +202,7 @@ class GameScreenState extends State<GameScreen> {
           _showGameOverDialog(context, _restartGame, () {
             Navigator.pop(context); // Voltar para o menu principal
           });
+          Debg().info('Game over');
         });
       } else {
         _moveToNextWord();
@@ -195,7 +212,7 @@ class GameScreenState extends State<GameScreen> {
 
   void _showGameOverDialog(
       BuildContext context, VoidCallback onRestart, VoidCallback onMainMenu) {
-        final localization = AppLocalizations.of(context);
+    final localization = AppLocalizations.of(context);
     showDialog(
       context: context,
       barrierDismissible:
@@ -390,8 +407,8 @@ class GameScreenState extends State<GameScreen> {
                         .map((word) =>
                             "${word['word']} - ${word['reading']} (${word['mean']})")
                         .join("\n");
-                    copyToClipboard(text,
-                        localization.gs_history_copy_all_correct);
+                    copyToClipboard(
+                        text, localization.gs_history_copy_all_correct);
                   },
                 ),
                 SizedBox(height: 16),
@@ -406,8 +423,8 @@ class GameScreenState extends State<GameScreen> {
                         .map((word) =>
                             "${word['word']} - ${word['reading']} (${word['mean']})")
                         .join("\n");
-                    copyToClipboard(text,
-                        localization.gs_history_copy_all_mistake);
+                    copyToClipboard(
+                        text, localization.gs_history_copy_all_mistake);
                   },
                 ),
               ],
@@ -431,7 +448,8 @@ class GameScreenState extends State<GameScreen> {
                     _goToMainMenu,
                   );
                 },
-                child: Text(localization.go_back, style: TextStyle(fontSize: 16)),
+                child:
+                    Text(localization.go_back, style: TextStyle(fontSize: 16)),
               ),
           ],
         );
@@ -450,6 +468,7 @@ class GameScreenState extends State<GameScreen> {
           (fontSizeCard + delta).clamp(24.0, 64.0); // Limita entre 16 e 64
       SharedPrefs().saveCardFontSize(fontSizeCard);
     });
+    Debg().info('Changed "word" font size: $fontSizeCard');
   }
 
   void toggleFontWeight() async {
@@ -462,7 +481,14 @@ class GameScreenState extends State<GameScreen> {
         fontWeightCard = 300;
       }
       SharedPrefs().saveCardFontWeight(fontWeightCard);
+      Debg().info('Changed "word" font weight: $fontWeightCard');
     });
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -663,8 +689,10 @@ class GameScreenState extends State<GameScreen> {
                                                 ),
                                                 subtitle: Text(
                                                   "${_words.firstWhere((word) => word["word"] == _kanjisRespondidos.last, orElse: () => {
-                                                        localization!.gs_mean: "N/A",
-                                                        localization.gs_reading: "N/A"
+                                                        localization!.gs_mean:
+                                                            "N/A",
+                                                        localization.gs_reading:
+                                                            "N/A"
                                                       })["mean"]} (${_words.firstWhere((word) => word["word"] == _kanjisRespondidos.last, orElse: () => {"reading": "N/A"})["reading"]})",
                                                   style: TextStyle(
                                                       fontSize:
@@ -686,8 +714,8 @@ class GameScreenState extends State<GameScreen> {
                                                     onPressed: () =>
                                                         _viewHistory(
                                                             context, _gameOver),
-                                                    tooltip:
-                                                        localization!.gs_see_full_history,
+                                                    tooltip: localization!
+                                                        .gs_see_full_history,
                                                   )
                                                 : null, // Deixa o espaço vazio, mas preservado
                                           ),
@@ -696,14 +724,16 @@ class GameScreenState extends State<GameScreen> {
                                       Align(
                                         alignment: Alignment.bottomCenter,
                                         child: TextField(
-                                          autofocus: true,
-                                          textInputAction: TextInputAction.none,
+                                          focusNode: focusNode,
+                                          textInputAction: TextInputAction
+                                              .none, // targetElement == domElement "The targeted input element must be the active input element"
                                           controller: _controller,
-                                          focusNode: _focusNode,
-                                          onSubmitted: (value) =>
-                                              _processAnswer(value),
+                                          onSubmitted: (value) {
+                                            _processAnswer(value);
+                                          },
                                           decoration: InputDecoration(
-                                            labelText: localization!.gs_search_tooltip,
+                                            labelText:
+                                                localization!.gs_search_tooltip,
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8),
@@ -712,7 +742,7 @@ class GameScreenState extends State<GameScreen> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Image.asset(
-                                                _getFlagPath(_words[
+                                                LocaleUtils.getFlagPath(_words[
                                                                 _currentIndex]
                                                             .isNotEmpty &&
                                                         _words[_currentIndex]
@@ -738,7 +768,7 @@ class GameScreenState extends State<GameScreen> {
                                       ),
                                     ],
                                   ),
-                                  // Outros widgets do Stack podem ser adicionados aqui
+                                  
                                 ],
                               )
                             ],
@@ -803,21 +833,3 @@ class GameScreenState extends State<GameScreen> {
   }
 }
 
-String _getFlagPath(String tags) {
-  switch (tags.toLowerCase()) {
-    case 'jp':
-      return 'assets/flags/japan.png';
-    case 'cn':
-      return 'assets/flags/china.png';
-    case 'pt':
-      return 'assets/flags/brazil.png';
-    case 'ko':
-      return 'assets/flags/southkorea.png';
-    case 'en':
-      return 'assets/flags/usa.png';
-    case 'es':
-      return 'assets/flags/spain.png';
-    default:
-      return 'assets/flags/default.png';
-  }
-}

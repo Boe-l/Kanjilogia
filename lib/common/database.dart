@@ -7,7 +7,7 @@ import 'package:idb_shim/idb_browser.dart'; // Para a Web
 
 import 'package:isar/isar.dart'; // Para dispositivos móveis e desktop
 
-part 'makehive.g.dart'; // Certifique-se de que o arquivo gerado estará aqui
+part 'database.g.dart'; // Certifique-se de que o arquivo gerado estará aqui
 
 const String _objectStoreName = 'words';
 

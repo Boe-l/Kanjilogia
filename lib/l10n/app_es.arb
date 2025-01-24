@@ -60,5 +60,17 @@
   "loading": "Cargando...",
   "action_menu": "Menú de acciones",
   "words": "Palabras",
-  "tags": "Etiquetas"
+  "select_language": "Selecciona un idioma",
+  "tags": "Etiquetas",
+  "fonts_count": "{fontscount} Fuentes disponibles",
+  "play": "Jugar",
+  "files": "Archivos",
+  "manage_files": "Gestionar Archivos",
+  "fonts_not_available": "No se pudieron cargar las fuentes locales",
+  "fonts_permission_web_error": "Permiso para acceder a las fuentes locales denegado.",
+  "fonts_permission_web_ok": "Fuentes cargadas con éxito",
+  "go_to_github_page": "Ir a la página de GitHub",
+  "reset_all": "Borrar todos los datos",
+  "reset_all_questioning": "¿Estás seguro de que deseas borrar todos los datos? Esto incluye archivos instalados, configuraciones y todo el caché.",
+  "go_confirm": "Confirmar"
 }
