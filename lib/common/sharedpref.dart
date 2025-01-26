@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'debg.dart';
+
 class SharedPrefs {
   static const String _tutorialCompleteKey = 'tutorial_complete';
   static const String _maxTimeKey = 'max_time';
   static const String _cardFontSizeKey = 'card_font_size';
   static const String _cardFontWeightKey = 'card_font_weight';
+  static const String _apiUrl =
+  'https://api.github.com/repos/Boe-l/Kanjilogia/contents/assets/json?ref=source';
+  static const String _cachedFilesKey = 'cachedFiles';
+  static const String _lastFetchTimeKey = 'lastFetchTime';
+
 
   Future<void> saveTutorialComplete(bool isComplete) async {
     final prefs = await SharedPreferences.getInstance();
@@ -33,20 +39,29 @@ class SharedPrefs {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getDouble(_cardFontSizeKey) ?? 30.0;
   }
+
   // Função para salvar o locale
   Future<void> saveLocale(Locale locale) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
-        'locale',
-        locale
-            .languageCode); // Salva apenas o código de idioma, como 'en', 'ja', etc.
+        'locale',locale .languageCode); // Salva apenas o código de idioma, como 'en', 'ja', etc.
   }
-
+  Future<void> saveFontName(String fontname) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        'fontname',fontname); 
+  }
+  Future<String?> getFontName() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? fontname = prefs.getString('fontname') ??
+        'default'; // Padrão 'en' caso não haja valor salvo
+    return fontname; // Retorna o Locale com o código de idioma salvo
+  }
 // Função para carregar o locale
   Future<Locale> getLocale() async {
     final prefs = await SharedPreferences.getInstance();
     String? languageCode = prefs.getString('locale') ??
-        'pt'; // Padrão 'en' caso não haja valor salvo
+        'en'; // Padrão 'en' caso não haja valor salvo
     return Locale(
         languageCode); // Retorna o Locale com o código de idioma salvo
   }
@@ -66,11 +81,6 @@ class SharedPrefs {
     return prefs.getInt(_maxTimeKey) ?? 30;
   }
 
-  static const String _apiUrl =
-      'https://api.github.com/repos/Boe-l/Kanjilogia/contents/assets/json?ref=source';
-  static const String _cachedFilesKey = 'cachedFiles';
-  static const String _lastFetchTimeKey = 'lastFetchTime';
-
   Future<void> fetchAndSaveFiles() async {
     try {
       final response = await http.get(Uri.parse(_apiUrl));
@@ -85,11 +95,10 @@ class SharedPrefs {
 
         Debg().info('Dados salvos no SharedPreferences.');
       } else {
-
         Debg().exception('Falha ao buscar arquivos');
       }
     } catch (e) {
-     Debg().error('Erro ao buscar ou salvar os arquivos: $e');
+      Debg().error('Erro ao buscar ou salvar os arquivos: $e');
     }
   }
 
@@ -110,7 +119,7 @@ class SharedPrefs {
     final currentTime = DateTime.now().millisecondsSinceEpoch;
 
     if (lastFetchTime != null && currentTime - lastFetchTime < 15 * 60 * 1000) {
-     Debg().info('Carregando dados do cache.');
+      Debg().info('Carregando dados do cache.');
       return await getCachedFiles();
     }
 

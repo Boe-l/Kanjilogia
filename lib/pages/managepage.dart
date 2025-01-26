@@ -75,33 +75,27 @@ class ManagerPageState extends State<ManagerPage>
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   Future<void> _loadInitialData() async {
-    // Carrega o status do tutorial, tempo máximo e arquivos
-    // final tutorialComplete = await _sharedPrefs.isTutorialComplete();
     
+    
+
     final files = await _sharedPrefs.getFiles();
     setState(() {
-      // _isTutorialComplete = tutorialComplete;
+      
 
       _files = files;
     });
   }
 
-  // Future<void> _toggleTutorialComplete() async {
-  //   setState(() {
-  //     _isTutorialComplete = !_isTutorialComplete;
-  //   });
-  //   await _sharedPrefs.saveTutorialComplete(_isTutorialComplete);
-  // }
-
-
-
-
+  
+  
+  
+  
+  
+  
 
   Future<void> _refreshFiles() async {
     final files = await _sharedPrefs.getFiles();
@@ -111,10 +105,10 @@ class ManagerPageState extends State<ManagerPage>
   }
 
   Future<void> _loadFilenames() async {
-    // Carrega os novos filenames e tags do banco de dados ou serviço
+    
     final filenamesWithTags = await listFilenamesWithTags();
 
-    // Evita duplicação limpando os dados antes de adicionar novos
+    
     final newFilenames =
         filenamesWithTags.keys.toSet().difference(_filenames.toSet()).toList();
     final newTags =
@@ -122,46 +116,45 @@ class ManagerPageState extends State<ManagerPage>
 
     final oldLength = _filenames.length;
 
-    // Adiciona somente novos itens às listas locais
+    
     _filenames.addAll(newFilenames);
     _tags.addAll(newTags);
 
-    // Atualiza contagem de palavras para os novos arquivos
+    
     for (String filename in newFilenames) {
       final words = await getWordsByFilenames([filename]);
       _wordCounts[filename] = words.length;
     }
 
-    // Atualiza a AnimatedList apenas para os novos itens
+    
     for (var i = oldLength; i < _filenames.length; i++) {
       _listKey.currentState?.insertItem(i);
     }
 
-    // Notifica a interface sobre as mudanças
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   Future<void> _deleteFile(String filename) async {
-  final index = _filenames.indexOf(filename);
-  if (index != -1) {
-    // Remove o item da AnimatedList com animação
-    _listKey.currentState?.removeItem(index, (context, animation) => Container());
-    
-    // Remove o item da lista interna após a animação
-    _filenames.removeAt(index);
-    _tags.removeAt(index);
+    final index = _filenames.indexOf(filename);
+    if (index != -1) {
+      
+      _listKey.currentState
+          ?.removeItem(index, (context, animation) => Container());
 
-    // Se o número de itens na lista for menor que 5, força a exibição dos ícones
-    if (_filenames.length < 6 && !_showFloatingButtons) {
-      setState(() {
-        _showFloatingButtons = true; // Exibe os ícones flutuantes
-      });
+      
+      _filenames.removeAt(index);
+      _tags.removeAt(index);
+
+      
+      if (_filenames.length < 6 && !_showFloatingButtons) {
+        setState(() {
+          _showFloatingButtons = true; 
+        });
+      }
+      
+      await deleteFilename(filename);
     }
-    // Atualiza a base de dados
-    await deleteFilename(filename);
   }
-}
-
 
   Future<void> showFilesPopup(BuildContext context) async {
     await _refreshFiles();
@@ -169,7 +162,7 @@ class ManagerPageState extends State<ManagerPage>
     List<Map<String, dynamic>> filteredFiles = [];
     bool errorOccurred = false;
 
-    // Buscar os arquivos usando getFiles()
+    
     try {
       files = _files;
       filteredFiles = List.from(files);
@@ -183,16 +176,16 @@ class ManagerPageState extends State<ManagerPage>
               false)
           .toList();
 
-      // Atualiza a AnimatedList com animações
+      
       setState(() {});
     }
 
     int wordCount(Map<String, dynamic> content) {
-      // Verifica se a chave 'words' existe e se é uma lista, então retorna o tamanho dela
+      
       if (content['words'] is List) {
         return (content['words'] as List).length;
       }
-      return 0; // Caso não exista a chave ou não seja uma lista, retorna 0
+      return 0; 
     }
 
     Future<void> fetchAndSetFileData(List<Map<String, dynamic>> files) async {
@@ -202,7 +195,7 @@ class ManagerPageState extends State<ManagerPage>
         final url = file['download_url'] ?? '';
 
         fetchTasks.add(
-          // Requisição para pegar os dados de cada arquivo
+          
           http.get(Uri.parse(url)).then((response) async {
             if (response.statusCode == 200) {
               final data = jsonDecode(response.body);
@@ -211,7 +204,7 @@ class ManagerPageState extends State<ManagerPage>
                 List<String> tags =
                     (data['content']['tags'] as List).cast<String>();
 
-                // Atualiza o fileData com tags, contagem de palavras e bandeira
+                
                 fileData[file['name']] = {
                   'tags': tags.isNotEmpty ? tags : [localization!.mp_no_tags],
                   'wordCount': wordCount(data['content']),
@@ -224,12 +217,12 @@ class ManagerPageState extends State<ManagerPage>
         );
       }
 
-      // Espera todas as requisições terminarem
+      
       await Future.wait(fetchTasks);
     }
 
     if (counterSubject.hasListener) {
-      counterSubject.close(); // Feche o controlador existente
+      counterSubject.close(); 
     }
     final StreamController<int> newController = StreamController<int>();
     counterSubject.addStream(newController.stream);
@@ -264,7 +257,7 @@ class ManagerPageState extends State<ManagerPage>
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      // Barra de título com botão de fechar
+                      
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -283,14 +276,14 @@ class ManagerPageState extends State<ManagerPage>
                         ],
                       ),
 
-                      // Barra de pesquisa
+                      
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: TextField(
                           onChanged: (value) {
                             newController.add(counter + 1);
                             filterFiles(
-                                value); // Aplica o filtro enquanto o texto é digitado
+                                value); 
                           },
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)!
@@ -303,7 +296,7 @@ class ManagerPageState extends State<ManagerPage>
                         ),
                       ),
                       const SizedBox(height: 8.0),
-                      // Conteúdo do modal
+                      
                       if (errorOccurred)
                         Padding(
                           padding: EdgeInsets.all(16.0),
@@ -333,7 +326,7 @@ class ManagerPageState extends State<ManagerPage>
                                   position: index >= 0 &&
                                           index < filteredFiles.length
                                       ? index
-                                      : -1, // Passa o índice para o configurador da animação
+                                      : -1, 
                                   duration: const Duration(milliseconds: 450),
                                   child: ScaleAnimation(
                                     duration: Duration(milliseconds: 400),
@@ -357,7 +350,7 @@ class ManagerPageState extends State<ManagerPage>
                                             child: Image.asset(
                                               flagPath.isNotEmpty
                                                   ? flagPath
-                                                  : 'default', // Placeholder
+                                                  : 'default', 
                                               width: 40,
                                               height: 40,
                                               fit: BoxFit.cover,
@@ -412,25 +405,25 @@ class ManagerPageState extends State<ManagerPage>
     final localization = AppLocalizations.of(context);
     String code = '';
     if (!type) {
-      // Local file picker
+      
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
         allowMultiple: true,
-        withData: kIsWeb, // Incluye datos en la selección si estamos en la web
+        withData: kIsWeb, 
       );
 
       if (result != null && result.files.isNotEmpty) {
         try {
           for (final file in result.files) {
             if (kIsWeb) {
-              // En la web, usamos bytes
+              
               final fileBytes = file.bytes;
               if (fileBytes != null) {
                 code = await addJsonToDatabase(jsonBytes: fileBytes);
               }
             } else {
-              // En plataformas locales, usamos la ruta del archivo
+              
               final filePath = file.path;
               if (filePath != null) {
                 code = await addJsonToDatabase(jsonFilePath: filePath);
@@ -446,21 +439,21 @@ class ManagerPageState extends State<ManagerPage>
               _showToast(localization!.mp_error_file_add, Colors.red);
             }
           }
-          await _loadFilenames(); // Recarrega la lista sin duplicados
+          await _loadFilenames(); 
         } catch (e) {
           debugPrint(e as String);
         }
       }
     } else {
       if (url != null && url.isNotEmpty) {
-        // Processar diretamente o URL fornecido
+        
         try {
           final response = await http.get(Uri.parse(url));
           if (response.statusCode == 200) {
             final bytes = response.bodyBytes;
             code = await addJsonToDatabase(jsonBytes: bytes);
             await _loadFilenames();
-            // Recarrega a lista sem duplicatas
+            
             if (code == '409') {
               _showToast(localization!.mp_error_file_exists, Colors.red);
             } else if (code == '500') {
@@ -506,12 +499,12 @@ class ManagerPageState extends State<ManagerPage>
                   suffixIcon: IconButton(
                     icon: Icon(Icons.paste),
                     onPressed: () async {
-                      // Obter texto do clipboard
+                      
                       final ClipboardData? clipboardData =
                           await Clipboard.getData(Clipboard.kTextPlain);
 
                       if (clipboardData != null) {
-                        // Atualizar o controlador com o texto colado
+                        
                         urlController.text = clipboardData.text!;
                       }
                     },
@@ -525,10 +518,10 @@ class ManagerPageState extends State<ManagerPage>
               TextButton(
                 onPressed: () async {
                   final url = urlController.text.trim();
-                  Navigator.of(context).pop(); // Fecha o diálogo
+                  Navigator.of(context).pop(); 
                   if (url.isNotEmpty) {
                     try {
-                      // Baixar arquivo a partir do URL
+                      
                       final response = await http.get(Uri.parse(url));
                       if (response.statusCode == 200) {
                         final bytes = response.bodyBytes;
@@ -593,24 +586,24 @@ class ManagerPageState extends State<ManagerPage>
         Container(
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
           margin: const EdgeInsets.only(
-              right: 8.0), // Espaçamento entre o texto e o botão
+              right: 8.0), 
           decoration: BoxDecoration(
             color:
-                Color.fromARGB(255, 79, 55, 139), // Fundo escuro para contraste
+                Color.fromARGB(255, 79, 55, 139), 
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Text(
             AppLocalizations.of(context)!.mp_url_tooltip,
             style: const TextStyle(
               fontSize: 14,
-              color: Colors.white, // Texto branco
+              color: Colors.white, 
             ),
           ),
         ),
         FloatingActionButton(
           onPressed: () => _addFile(true, ''),
           heroTag: "btn1",
-         // tooltip: AppLocalizations.of(context)!.mp_url_tooltip,
+          
           child: const Icon(Icons.add_link),
         ),
       ],
@@ -620,26 +613,26 @@ class ManagerPageState extends State<ManagerPage>
   Widget float2() {
     return Row(children: [
       Container(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-          margin: const EdgeInsets.only(
-              right: 8.0), // Espaçamento entre o texto e o botão
-          decoration: BoxDecoration(
-            color:
-                Color.fromARGB(255, 79, 55, 139), // Fundo escuro para contraste
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: Text(
-            AppLocalizations.of(context)!.mp_local_file,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white, // Texto branco
-            ),
+        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+        margin: const EdgeInsets.only(
+            right: 8.0), 
+        decoration: BoxDecoration(
+          color:
+              Color.fromARGB(255, 79, 55, 139), 
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Text(
+          AppLocalizations.of(context)!.mp_local_file,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.white, 
           ),
         ),
+      ),
       FloatingActionButton(
         onPressed: () => _addFile(false, ''),
         heroTag: "btn2",
-        //tooltip: AppLocalizations.of(context)!.mp_local_file,
+        
         child: Icon(Icons.add),
       ),
     ]);
@@ -651,24 +644,24 @@ class ManagerPageState extends State<ManagerPage>
         Container(
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
           margin: const EdgeInsets.only(
-              right: 8.0), // Espaçamento entre o texto e o botão
+              right: 8.0), 
           decoration: BoxDecoration(
             color:
-                Color.fromARGB(255, 79, 55, 139), // Fundo escuro para contraste
+                Color.fromARGB(255, 79, 55, 139), 
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Text(
             AppLocalizations.of(context)!.mp_github_file,
             style: const TextStyle(
               fontSize: 14,
-              color: Colors.white, // Texto branco
+              color: Colors.white, 
             ),
           ),
         ),
         FloatingActionButton(
           onPressed: () => showFilesPopup(context),
           heroTag: "btn3",
-         // tooltip: AppLocalizations.of(context)!.mp_github_file,
+          
           child: Icon(Icons.web),
         ),
       ],
@@ -701,25 +694,25 @@ class ManagerPageState extends State<ManagerPage>
                         ),
                         Text(
                           AppLocalizations.of(context)!
-                          .manage_files, //localization!.settings'',
+                              .manage_files, 
                           style: const TextStyle(
                               color: Colors.white, fontSize: 30),
                         ),
                       ],
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  //   child: Column(
-                  //     children: [
-                  //       Text(
-                  //         localization.maxtimehint(_maxTime),
-                  //         style: TextStyle(color: Colors.white),
-                  //       ),
-                  //       slider ?? SizedBox()
-                  //     ],
-                  //   ),
-                  // ),
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -749,9 +742,9 @@ class ManagerPageState extends State<ManagerPage>
                                     if (index < 0 ||
                                         index >= _filenames.length ||
                                         index >= _tags.length) {
-                                      return const SizedBox(); // Evita crashes ao acessar índices inválidos
+                                      return const SizedBox(); 
                                     }
-        
+
                                     final filename = _filenames[index];
                                     final tags = _tags[index].toList();
 
@@ -770,7 +763,7 @@ class ManagerPageState extends State<ManagerPage>
                                             margin: const EdgeInsets.symmetric(
                                                 horizontal: 8, vertical: 4),
                                             color: const Color.fromARGB(
-                                                255, 74, 32, 126),
+                                                255, 67, 19, 138),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(16),
@@ -840,24 +833,24 @@ class ManagerPageState extends State<ManagerPage>
                 ),
               ),
 
-              // Positioned(
-              //   bottom: 16,
-              //   left: 16,
-              //   child: AnimatedOpacity(
-              //     opacity: _showFloatingButtons ? 1.0 : 0.0,
-              //     duration: const Duration(milliseconds: 300),
-              //     child: IgnorePointer(
-              //       ignoring: !_showFloatingButtons,
-              //       child: FloatingActionButton(
-              //         heroTag: 'language',
-              //         onPressed: () => LocaleUtils().showLanguageSelector(
-              //             context), //_startGame(context, selectedTime),
-              //         backgroundColor: Color(0xFF6C5CE7),
-              //         child: Icon(Icons.language),
-              //       ),
-              //     ),
-              //   ),
-              // )
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
             ]),
           ),
         ),
