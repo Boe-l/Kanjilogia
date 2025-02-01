@@ -3,13 +3,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kanjilogia/common/debg.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class LocalFonts {
   
   static const _channel = MethodChannel('kanjilogia/fonts');
 
   Future<List<String>> listFonts() async {
+    if (!Platform.isWindows) return [];
     try {
+      
       final fonts = await _channel.invokeMethod<List<dynamic>>('fonts');
 
       return fonts
@@ -73,7 +75,8 @@ class LocalFonts {
                       TextField(
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'Pesquise uma fonte...',
+                          hintText: AppLocalizations.of(context)!
+                            .main_searchtooltip,
                           hintStyle: const TextStyle(color: Colors.white70),
                           prefixIcon:
                               const Icon(Icons.search, color: Colors.white),
@@ -102,15 +105,7 @@ class LocalFonts {
                       ),
                       const SizedBox(height: 16),
                       filteredFonts.isEmpty
-                          ? const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text(
-                                  'Nenhuma fonte encontrada.',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            )
+                          ? SizedBox.shrink()
                           : Expanded(
                               child: ScrollConfiguration(
                                 behavior:

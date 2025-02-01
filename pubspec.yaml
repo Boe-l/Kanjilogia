@@ -53,6 +53,8 @@ dependencies:
   animated_floating_buttons: ^0.0.1
   rxdart:
   idb_shim: ^2.6.1+7
+  google_fonts:
+  page_route_animator: ^1.0.4 
 flutter_icons:
   android: true
   ios: true

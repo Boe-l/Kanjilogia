@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:kanjilogia/common/debg.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 /// Extension type for `Window`
 extension type Window(JSObject _) implements JSObject {}
 
@@ -81,11 +82,11 @@ class LocalFonts {
 
       final jsArray = await promiseToFuture(jsPromise);
 
-      if (jsArray is! JSArray) {
+      if (!jsArray.isA<JSArray>()) {
         throw Exception('Result is not a JSArray.');
       }
 
-      final fontsArray = jsArray.toDart;
+      final fontsArray = jsArray as List;
       List<FontMetadata> fonts = [];
 
       for (var i = 0; i < fontsArray.length; i++) {
@@ -111,14 +112,14 @@ class LocalFonts {
   }
 
   Future<List<String>> listFonts() async {
-  try {
-    final fonts = await listFontsmain();
-    return fonts.map((font) => font.postscriptName).toList();
-  } catch (e) {
-    Debg().error("Erro ao carregar as fontes: $e");
-    return []; // Retorna uma lista vazia em caso de erro
+    try {
+      final fonts = await listFontsmain();
+      return fonts.map((font) => font.postscriptName).toList();
+    } catch (e) {
+      Debg().error("Erro ao carregar as fontes: $e");
+      return []; // Retorna uma lista vazia em caso de erro
+    }
   }
-}
 
   Future<void> loadFont(String fontname) async {
     if (!kIsWeb) {
@@ -144,7 +145,7 @@ class LocalFonts {
         Debg().info('Font "$fontname" loaded!');
       } else {
         Debg().info('Font "$fontname" not found.');
-        return null;
+        return;
       }
     } catch (e) {
       Debg().error('Could not load font: $e');
@@ -174,7 +175,7 @@ class LocalFonts {
     List<String> fonts = [];
 
     try {
-     fonts = await LocalFonts().listFonts();
+      fonts = await LocalFonts().listFonts();
     } catch (e) {
       Debg().error("Erro ao carregar fontes: $e");
     }
@@ -215,7 +216,8 @@ class LocalFonts {
                       TextField(
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!.main_searchtooltip,
+                          hintText:
+                              AppLocalizations.of(context)!.main_searchtooltip,
                           hintStyle: const TextStyle(color: Colors.white70),
                           prefixIcon:
                               const Icon(Icons.search, color: Colors.white),
@@ -244,11 +246,11 @@ class LocalFonts {
                       ),
                       const SizedBox(height: 16),
                       filteredFonts.isEmpty
-                          ? const Center(
+                          ?  Center(
                               child: Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
-                                  'Nenhuma fonte encontrada.',
+                                  AppLocalizations.of(context)!.fonts_not_available,
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
@@ -304,20 +306,6 @@ class LocalFonts {
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                            // Texto de exemplo ajustado com FittedBox
-                                            Flexible(
-                                              child: FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Text(
-                                                  '夢は見るものではなく、\n叶えるものだ。',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontFamily: fontName,
-                                                    fontSize: 18,
-                                                  ),
                                                 ),
                                               ),
                                             ),

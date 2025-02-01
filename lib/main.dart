@@ -1,20 +1,23 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kanjilogia/pages/custom_widgets/bg_painter.dart';
 import 'package:kanjilogia/pages/game_main.dart';
-import 'package:kanjilogia/pages/settings.dart';
+import 'package:kanjilogia/pages/settings_page.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'common/sharedpref.dart';
-import 'pages/managepage.dart';
+import 'pages/files_page.dart';
 import 'l10n/l10n.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'common/debg.dart';
-//import 'package:kanjilogia/utils/fonts_windows.dart'; //FORWINDOWS, MAKE SURE TO ALSO CHANGE IT ON MAIN.DART
-import 'package:kanjilogia/utils/fonts_web.dart'; // FORWEB, MAKE SURE TO ALSO CHANGE IT ON MAIN.DART
+import 'package:kanjilogia/utils/fonts_windows.dart'; 
+// import 'package:kanjilogia/utils/fonts_web.dart'; 
+
 
 void main() {
-  
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent));
@@ -48,14 +51,14 @@ class KanjilogiaState extends State<Kanjilogia> {
     if (!kIsWeb) {
       try {
         setState(() {
-          fontFamily = fontname ?? ''; // Garante que nunca seja nulo
+          fontFamily = fontname ?? ''; 
         });
 
         if (fontname?.isNotEmpty ?? false) {
           await SharedPrefs().saveFontName(fontname!);
         }
       } catch (e) {
-        // Em caso de erro, redefine a fonte para uma string vazia
+        
         Debg().error('Error changing font: "$e"');
         setState(() {
           fontFamily = '';
@@ -64,7 +67,7 @@ class KanjilogiaState extends State<Kanjilogia> {
     }
     if (kIsWeb) {
       try {
-        await LocalFonts().loadFont(fontname.toString());
+        LocalFonts().loadFont(fontname.toString());
 
         setState(() {
           fontFamily = fontname;
@@ -153,100 +156,6 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
     }
 
     onstart();
-    //testing load local fonts on web
-    // List<FontMetadata> fonts = await LocalFonts().listFonts();
-    //  for (var font in fonts) {
-    //    print('Fonte: ${font.postscriptName}'); list fonts
-    //  }
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   targets.add(TargetFocus(identify: "1", keyTarget: null, contents: [
-    //     TargetContent(
-    //       align: ContentAlign.bottom,
-    //       child: Column(
-    //         mainAxisSize: MainAxisSize.min,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: <Widget>[
-    //           Text(
-    //             AppLocalizations.of(context)!.tutorial1,
-    //             style: TextStyle(
-    //               fontWeight: FontWeight.bold,
-    //               color: Colors.white,
-    //               fontSize: 20.0,
-    //             ),
-    //           ),
-    //           Padding(
-    //             padding: const EdgeInsets.only(top: 10.0),
-    //             child: Text(
-    //               AppLocalizations.of(context)!.tutorial2,
-    //               style: TextStyle(color: Colors.white),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ]));
-
-    //   targets.add(TargetFocus(identify: "2", keyTarget: null, contents: [
-    //     TargetContent(
-    //       align: ContentAlign.top,
-    //       child: Column(
-    //         mainAxisSize: MainAxisSize.min,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: <Widget>[
-    //           Text(
-    //             AppLocalizations.of(context)!.tutorial3,
-    //             style: TextStyle(
-    //               fontWeight: FontWeight.bold,
-    //               color: Colors.white,
-    //               fontSize: 20.0,
-    //             ),
-    //           ),
-    //           Padding(
-    //             padding: const EdgeInsets.only(top: 10.0),
-    //             child: Text(
-    //               AppLocalizations.of(context)!.tutorial4,
-    //               style: TextStyle(color: Colors.white),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ]));
-
-    //   targets.add(TargetFocus(identify: "3", keyTarget: null, contents: [
-    //     TargetContent(
-    //       align: ContentAlign.top,
-    //       child: Column(
-    //         mainAxisSize: MainAxisSize.min,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: <Widget>[
-    //           Text(
-    //             AppLocalizations.of(context)!.tutorial5,
-    //             style: TextStyle(
-    //               fontWeight: FontWeight.bold,
-    //               color: Colors.white,
-    //               fontSize: 20.0,
-    //             ),
-    //           ),
-    //           Padding(
-    //             padding: const EdgeInsets.only(top: 10.0),
-    //             child: Text(
-    //               AppLocalizations.of(context)!.tutorial6,
-    //               style: TextStyle(color: Colors.white),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ]));
-
-    //   Future.delayed(Duration(seconds: 2), () async {
-    //     bool isComplete = await SharedPrefs().isTutorialComplete();
-    //     if (isComplete == false) {
-    //       showTutorial();
-    //     }
-    //   });
-    // });
   }
 
   @override
@@ -277,52 +186,96 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
     }
   }
 
+  final Map<String, dynamic> bgparameters = {
+    "seed": 11234236,
+    "flip": true,
+    "rotation": true,
+    "minFontSize": 16.0,
+    "maxFontSize": 60.0
+  };
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
       child: Scaffold(
-        body: Column(
+        body: Stack(
           children: [
-            // Conteúdo da página
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  GameMain(),
-                  ManagerPage(),
-                  SettingsPage(),
-                ],
-              ),
-            ),
-            // Abas na parte inferior
-            Container(
-              color: Color.fromARGB(255, 74, 32, 126),
-              child: Align(
-                alignment: Alignment.center,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 600),
-                  child: TabBar(
-                    controller: _tabController,
-                    indicatorColor: Colors.white,
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.white70,
-                    tabs: [
-                      Tab(
-                          icon: Icon(Icons.play_arrow),
-                          text: AppLocalizations.of(context)!.play),
-                      Tab(
-                          icon: Icon(Icons.file_copy_sharp),
-                          text: AppLocalizations.of(context)!.files
-                          // AppLocalizations.of(context)!.files
-                          ),
-                      Tab(
-                          icon: Icon(Icons.settings_suggest_outlined),
-                          text: AppLocalizations.of(context)!.settings),
-                    ],
-                  ),
+            Positioned.fill(
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  painter: CharacterBackgroundPainter(
+                    seed: bgparameters['seed'],
+                    enableFlip: bgparameters['flip'],
+                    enableRotation: bgparameters['rotation'],
+                    minFontSize: bgparameters['minFontSize'],
+                    maxFontSize: bgparameters['maxFontSize'],
+                  ), 
+                  child: Container(),
                 ),
               ),
+            ),
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0), 
+                child: Container(
+                  color: const Color.fromARGB(255, 56, 16, 115)
+                      .withValues(alpha: 0.4), 
+                ),
+              ),
+            ),
+            Column(
+              children: [
+                
+                Expanded(
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context).copyWith(
+                      dragDevices: {
+                        PointerDeviceKind.mouse,
+                        PointerDeviceKind.touch,
+                      },
+                      scrollbars: false,
+                    ),
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        GameMain(),
+                        ManagerPage(),
+                        SettingsPage(),
+                      ],
+                    ),
+                  ),
+                ),
+                
+                Container(
+                  color: Color.fromARGB(255, 74, 32, 126),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 600),
+                      child: TabBar(
+                        controller: _tabController,
+                        indicatorColor: Colors.white,
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.white70,
+                        tabs: [
+                          Tab(
+                              icon: Icon(Icons.play_arrow),
+                              text: AppLocalizations.of(context)!.play),
+                          Tab(
+                              icon: Icon(Icons.file_copy_sharp),
+                              text: AppLocalizations.of(context)!.files
+                              
+                              ),
+                          Tab(
+                              icon: Icon(Icons.settings_suggest_outlined),
+                              text: AppLocalizations.of(context)!.settings),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

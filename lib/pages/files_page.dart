@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:rxdart/rxdart.dart';
@@ -79,23 +80,11 @@ class ManagerPageState extends State<ManagerPage>
   }
 
   Future<void> _loadInitialData() async {
-    
-    
-
     final files = await _sharedPrefs.getFiles();
     setState(() {
-      
-
       _files = files;
     });
   }
-
-  
-  
-  
-  
-  
-  
 
   Future<void> _refreshFiles() async {
     final files = await _sharedPrefs.getFiles();
@@ -105,10 +94,8 @@ class ManagerPageState extends State<ManagerPage>
   }
 
   Future<void> _loadFilenames() async {
-    
     final filenamesWithTags = await listFilenamesWithTags();
 
-    
     final newFilenames =
         filenamesWithTags.keys.toSet().difference(_filenames.toSet()).toList();
     final newTags =
@@ -116,17 +103,14 @@ class ManagerPageState extends State<ManagerPage>
 
     final oldLength = _filenames.length;
 
-    
     _filenames.addAll(newFilenames);
     _tags.addAll(newTags);
 
-    
     for (String filename in newFilenames) {
       final words = await getWordsByFilenames([filename]);
       _wordCounts[filename] = words.length;
     }
 
-    
     for (var i = oldLength; i < _filenames.length; i++) {
       _listKey.currentState?.insertItem(i);
     }
@@ -137,21 +121,18 @@ class ManagerPageState extends State<ManagerPage>
   Future<void> _deleteFile(String filename) async {
     final index = _filenames.indexOf(filename);
     if (index != -1) {
-      
       _listKey.currentState
           ?.removeItem(index, (context, animation) => Container());
 
-      
       _filenames.removeAt(index);
       _tags.removeAt(index);
 
-      
       if (_filenames.length < 6 && !_showFloatingButtons) {
         setState(() {
-          _showFloatingButtons = true; 
+          _showFloatingButtons = true;
         });
       }
-      
+
       await deleteFilename(filename);
     }
   }
@@ -162,7 +143,6 @@ class ManagerPageState extends State<ManagerPage>
     List<Map<String, dynamic>> filteredFiles = [];
     bool errorOccurred = false;
 
-    
     try {
       files = _files;
       filteredFiles = List.from(files);
@@ -176,16 +156,14 @@ class ManagerPageState extends State<ManagerPage>
               false)
           .toList();
 
-      
       setState(() {});
     }
 
     int wordCount(Map<String, dynamic> content) {
-      
       if (content['words'] is List) {
         return (content['words'] as List).length;
       }
-      return 0; 
+      return 0;
     }
 
     Future<void> fetchAndSetFileData(List<Map<String, dynamic>> files) async {
@@ -195,7 +173,6 @@ class ManagerPageState extends State<ManagerPage>
         final url = file['download_url'] ?? '';
 
         fetchTasks.add(
-          
           http.get(Uri.parse(url)).then((response) async {
             if (response.statusCode == 200) {
               final data = jsonDecode(response.body);
@@ -204,7 +181,6 @@ class ManagerPageState extends State<ManagerPage>
                 List<String> tags =
                     (data['content']['tags'] as List).cast<String>();
 
-                
                 fileData[file['name']] = {
                   'tags': tags.isNotEmpty ? tags : [localization!.mp_no_tags],
                   'wordCount': wordCount(data['content']),
@@ -217,12 +193,11 @@ class ManagerPageState extends State<ManagerPage>
         );
       }
 
-      
       await Future.wait(fetchTasks);
     }
 
     if (counterSubject.hasListener) {
-      counterSubject.close(); 
+      counterSubject.close();
     }
     final StreamController<int> newController = StreamController<int>();
     counterSubject.addStream(newController.stream);
@@ -257,7 +232,6 @@ class ManagerPageState extends State<ManagerPage>
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -275,15 +249,12 @@ class ManagerPageState extends State<ManagerPage>
                           ),
                         ],
                       ),
-
-                      
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: TextField(
                           onChanged: (value) {
                             newController.add(counter + 1);
-                            filterFiles(
-                                value); 
+                            filterFiles(value);
                           },
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)!
@@ -296,7 +267,6 @@ class ManagerPageState extends State<ManagerPage>
                         ),
                       ),
                       const SizedBox(height: 8.0),
-                      
                       if (errorOccurred)
                         Padding(
                           padding: EdgeInsets.all(16.0),
@@ -323,10 +293,10 @@ class ManagerPageState extends State<ManagerPage>
                                     fileData[file['name']]!['flag'] ?? '';
 
                                 return AnimationConfiguration.staggeredList(
-                                  position: index >= 0 &&
-                                          index < filteredFiles.length
-                                      ? index
-                                      : -1, 
+                                  position:
+                                      index >= 0 && index < filteredFiles.length
+                                          ? index
+                                          : -1,
                                   duration: const Duration(milliseconds: 450),
                                   child: ScaleAnimation(
                                     duration: Duration(milliseconds: 400),
@@ -350,7 +320,7 @@ class ManagerPageState extends State<ManagerPage>
                                             child: Image.asset(
                                               flagPath.isNotEmpty
                                                   ? flagPath
-                                                  : 'default', 
+                                                  : 'default',
                                               width: 40,
                                               height: 40,
                                               fit: BoxFit.cover,
@@ -405,25 +375,22 @@ class ManagerPageState extends State<ManagerPage>
     final localization = AppLocalizations.of(context);
     String code = '';
     if (!type) {
-      
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
         allowMultiple: true,
-        withData: kIsWeb, 
+        withData: kIsWeb,
       );
 
       if (result != null && result.files.isNotEmpty) {
         try {
           for (final file in result.files) {
             if (kIsWeb) {
-              
               final fileBytes = file.bytes;
               if (fileBytes != null) {
                 code = await addJsonToDatabase(jsonBytes: fileBytes);
               }
             } else {
-              
               final filePath = file.path;
               if (filePath != null) {
                 code = await addJsonToDatabase(jsonFilePath: filePath);
@@ -439,21 +406,20 @@ class ManagerPageState extends State<ManagerPage>
               _showToast(localization!.mp_error_file_add, Colors.red);
             }
           }
-          await _loadFilenames(); 
+          await _loadFilenames();
         } catch (e) {
           debugPrint(e as String);
         }
       }
     } else {
       if (url != null && url.isNotEmpty) {
-        
         try {
           final response = await http.get(Uri.parse(url));
           if (response.statusCode == 200) {
             final bytes = response.bodyBytes;
             code = await addJsonToDatabase(jsonBytes: bytes);
             await _loadFilenames();
-            
+
             if (code == '409') {
               _showToast(localization!.mp_error_file_exists, Colors.red);
             } else if (code == '500') {
@@ -499,12 +465,10 @@ class ManagerPageState extends State<ManagerPage>
                   suffixIcon: IconButton(
                     icon: Icon(Icons.paste),
                     onPressed: () async {
-                      
                       final ClipboardData? clipboardData =
                           await Clipboard.getData(Clipboard.kTextPlain);
 
                       if (clipboardData != null) {
-                        
                         urlController.text = clipboardData.text!;
                       }
                     },
@@ -518,10 +482,9 @@ class ManagerPageState extends State<ManagerPage>
               TextButton(
                 onPressed: () async {
                   final url = urlController.text.trim();
-                  Navigator.of(context).pop(); 
+                  Navigator.of(context).pop();
                   if (url.isNotEmpty) {
                     try {
-                      
                       final response = await http.get(Uri.parse(url));
                       if (response.statusCode == 200) {
                         final bytes = response.bodyBytes;
@@ -585,25 +548,22 @@ class ManagerPageState extends State<ManagerPage>
       children: [
         Container(
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-          margin: const EdgeInsets.only(
-              right: 8.0), 
+          margin: const EdgeInsets.only(right: 8.0),
           decoration: BoxDecoration(
-            color:
-                Color.fromARGB(255, 79, 55, 139), 
+            color: Color.fromARGB(255, 79, 55, 139),
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Text(
             AppLocalizations.of(context)!.mp_url_tooltip,
             style: const TextStyle(
               fontSize: 14,
-              color: Colors.white, 
+              color: Colors.white,
             ),
           ),
         ),
         FloatingActionButton(
           onPressed: () => _addFile(true, ''),
           heroTag: "btn1",
-          
           child: const Icon(Icons.add_link),
         ),
       ],
@@ -614,25 +574,22 @@ class ManagerPageState extends State<ManagerPage>
     return Row(children: [
       Container(
         padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-        margin: const EdgeInsets.only(
-            right: 8.0), 
+        margin: const EdgeInsets.only(right: 8.0),
         decoration: BoxDecoration(
-          color:
-              Color.fromARGB(255, 79, 55, 139), 
+          color: Color.fromARGB(255, 79, 55, 139),
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Text(
           AppLocalizations.of(context)!.mp_local_file,
           style: const TextStyle(
             fontSize: 14,
-            color: Colors.white, 
+            color: Colors.white,
           ),
         ),
       ),
       FloatingActionButton(
         onPressed: () => _addFile(false, ''),
         heroTag: "btn2",
-        
         child: Icon(Icons.add),
       ),
     ]);
@@ -643,25 +600,22 @@ class ManagerPageState extends State<ManagerPage>
       children: [
         Container(
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-          margin: const EdgeInsets.only(
-              right: 8.0), 
+          margin: const EdgeInsets.only(right: 8.0),
           decoration: BoxDecoration(
-            color:
-                Color.fromARGB(255, 79, 55, 139), 
+            color: Color.fromARGB(255, 79, 55, 139),
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Text(
             AppLocalizations.of(context)!.mp_github_file,
             style: const TextStyle(
               fontSize: 14,
-              color: Colors.white, 
+              color: Colors.white,
             ),
           ),
         ),
         FloatingActionButton(
           onPressed: () => showFilesPopup(context),
           heroTag: "btn3",
-          
           child: Icon(Icons.web),
         ),
       ],
@@ -674,45 +628,38 @@ class ManagerPageState extends State<ManagerPage>
     return files(context, localization);
   }
 
-  Scaffold files(BuildContext context, AppLocalizations? localization) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 56, 16, 115),
-      body: SafeArea(
-        child: Center(
+  Widget files(BuildContext context, AppLocalizations? localization) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(0, 56, 16, 115),
+        body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 550),
             child: Stack(children: [
               Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.fromLTRB(8, 1, 8, 8),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        Row(
-                          children: [],
-                        ),
                         Text(
-                          AppLocalizations.of(context)!
-                              .manage_files, 
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 30),
+                          AppLocalizations.of(context)!.manage_files,
+                          style: GoogleFonts.rampartOne(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(
+                                color: Colors.blueAccent,
+                                blurRadius: 10,
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -742,12 +689,12 @@ class ManagerPageState extends State<ManagerPage>
                                     if (index < 0 ||
                                         index >= _filenames.length ||
                                         index >= _tags.length) {
-                                      return const SizedBox(); 
+                                      return const SizedBox();
                                     }
-
+        
                                     final filename = _filenames[index];
                                     final tags = _tags[index].toList();
-
+        
                                     return AnimationConfiguration.staggeredList(
                                       position: index,
                                       duration:
@@ -832,25 +779,6 @@ class ManagerPageState extends State<ManagerPage>
                   ),
                 ),
               ),
-
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
             ]),
           ),
         ),

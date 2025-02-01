@@ -3,15 +3,19 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:kana_kit/kana_kit.dart';
 import 'package:kanjilogia/common/langstuff.dart';
+import 'package:kanjilogia/pages/custom_widgets/gs_card.dart';
+import 'package:kanjilogia/pages/history_page.dart';
 import '../common/sharedpref.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kanjilogia/common/debg.dart';
+import 'package:kanjilogia/common/transition.dart';
+
+final GlobalKey<GameScreenState> gameScreenKey = GlobalKey<GameScreenState>();
 
 class GameScreen extends StatefulWidget {
-  // Recebe o jsonData como parâmetro no construtor do GameScreen
+  
   final Map<String, dynamic> data;
 
   const GameScreen({super.key, required this.data});
@@ -24,16 +28,17 @@ class GameScreenState extends State<GameScreen> {
   final TextEditingController _controller = TextEditingController();
   List<Map<String, String>> _words = [];
   final List<String> _kanjisRespondidos = [];
-  final List<Map<String, String>> correctItems = [];
-  final List<Map<String, String>> errorItems = [];
+  final Map<String, List<String>> correctItems = {};
+  final Map<String, List<String>> errorItems = {};
   int _currentIndex = 0;
   int _score = 0;
-  String _feedback = "";
   Timer? _timer;
   int _timeLeft = 60;
   bool _gameOver = false;
-  Color _borderColor = Colors.blueAccent; // Cor inicial da borda
-  final double _borderWidth = 6;
+  List<String> answers = [];
+  String attemptsString = '';
+  final GlobalKey<CustomCardState> _customCardKey =
+      GlobalKey<CustomCardState>();
   double fontSizeCard = 32.0;
   int fontWeightCard = 100;
   FocusNode focusNode = FocusNode();
@@ -44,7 +49,7 @@ class GameScreenState extends State<GameScreen> {
     super.initState();
     _loadWords();
 
-    _startTimer();
+    startTimer();
     SharedPrefs().getCardFontSize().then((value) {
       setState(() {
         fontSizeCard = value;
@@ -61,41 +66,42 @@ class GameScreenState extends State<GameScreen> {
 
   void _loadWords() {
     final Map<String, dynamic> data = widget.data;
+
     setState(() {
-      // Recupera os dados passados para o widget
+      
       final List<dynamic> finalJsonData = data['finalJsonData'] ?? [];
 
-      _words = []; // Inicializa a lista de palavras
+      _words = []; 
 
-      // Itera pelos dados JSON para combinar as palavras com suas tags
+      
       for (var item in finalJsonData) {
         if (item.word.isNotEmpty) {
-          // Verifica se o item é do tipo Word
-          // Cria um mapa para associar os valores e as tags
+          
+          
           var wordWithTags = <String, String>{
+            'filename': item.filename,
             'word': item.word,
             'reading': item.reading,
-            'mean': item.mean ?? '', // Usa uma string vazia se mean for nulo
+            'mean': item.mean ?? '', 
             'tags': item.tags
-                .join(', '), // Converte a lista de tags para uma string
+                .join(', '), 
           };
 
-          // Adiciona o mapa à lista de palavras
+          
           _words.add(wordWithTags);
         }
-      } //diànyǐng
+      } 
 
-      // Verifica se há palavras carregadas
+      
       if (_words.isEmpty) {
-        _feedback = AppLocalizations.of(context)!.gs_words_empty;
-        Debg().warning(_feedback);
+        Debg().warning('Words is empty????');
       } else {
-        // Se existirem palavras, embaralha e remove duplicatas
-        _words.shuffle(Random()); // Embaralha as palavras
+        
+        _words.shuffle(Random()); 
         _words = _words
             .toSet()
-            .toList(); // Remove duplicatas convertendo para Set e de volta para lista
-        _currentIndex = 0; // Reseta o índice atual
+            .toList(); 
+        _currentIndex = 0; 
       }
     });
   }
@@ -108,47 +114,41 @@ class GameScreenState extends State<GameScreen> {
       errorItems.clear();
       correctItems.clear();
       _kanjisRespondidos.clear();
-      _feedback = "";
-
+      _timer?.cancel();
       Debg().info('Game restarted');
     });
-    _loadWords(); // Recarrega e embaralha as palavras
-    _startTimer();
+    _loadWords(); 
+    startTimer();
   }
 
-  void _startTimer() {
-    _timer?.cancel();
+  void startTimer() {
     SharedPrefs().getMaxTime().then((value) {
       setState(() {
         _timeLeft = value;
       });
     });
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (!mounted) return;
       if (_timeLeft > 0) {
         setState(() => _timeLeft--);
       } else {
-        _processAnswer(""); // Timeout
+        _processAnswer(""); 
       }
     });
   }
 
   void _processAnswer(String answer) {
-    final localization = AppLocalizations.of(context);
-
-    // Verifica se o jogo terminou
+    
     if (_currentIndex >= _words.length || _gameOver) {
-      return; // Evita processar respostas após o término do jogo
+      return; 
     }
 
-    _timer?.cancel();
     final currentWord = _words[_currentIndex];
 
-    // Divide as pronúncias em uma lista
+    
     final List<String> possibleReadings =
         (currentWord["reading"] ?? "").split('；').map((e) => e.trim()).toList();
 
-    // Função para tratar o "nn" e normalizar o input
+    
     String normalizeInput(String input) {
       String processed = input.replaceAll('nn', 'n-');
 
@@ -157,10 +157,21 @@ class GameScreenState extends State<GameScreen> {
       return converted.replaceAll('ー', '');
     }
 
-    //(金色)きんいろ kanaKit.toHiragana('kiniro') returns 'きにろ', and kanaKit.toHiragana('kinniro') returns きんにろ ❌
-    //there are probably better ways to do this 😂
+    
+    
     final userAnswerNormalized = normalizeInput(answer.trim());
     bool isCorrect;
+
+    void handleIncorrectAnswer() {
+      _controller.clear();
+      setState(() {
+        _customCardKey.currentState?.triggerErrorAnimation();
+      });
+
+      
+
+      Debg().info('Resposta errada, aguardando nova tentativa...');
+    }
 
     if (currentWord["tags"]!.contains('jp')) {
       isCorrect = possibleReadings.contains(userAnswerNormalized);
@@ -172,40 +183,52 @@ class GameScreenState extends State<GameScreen> {
     Debg().info('User answer: $userAnswerNormalized');
     Debg().info('Answer is correct: $isCorrect');
 
-    // Processa a resposta
+    answers.add(answer);
+    attemptsString = answers.join(", ");
+    
     setState(() {
-      if (isCorrect) {
-        _score++;
-
-        setState(() {
-          _borderColor = Colors.green;
-        });
-        correctItems.add(currentWord);
-      } else {
-        errorItems.add(currentWord);
-        _borderColor = Colors.redAccent;
-      }
-      _kanjisRespondidos.add(currentWord["word"] ?? "");
-      Future.delayed(Duration(seconds: 1), () {
-        setState(() {
-          _borderColor = Colors.blueAccent; // Reseta a cor da borda para azul
-        });
-      });
-
-      // Verifica se é a última palavra
+      
       if (_currentIndex >= _words.length - 1) {
-        _gameOver = true; // Marca o jogo como finalizado
-        _feedback = localization!.gs_game_ended1;
+        _gameOver = true; 
         _controller.text = '';
         Future.microtask(() {
           if (!mounted) return;
           _showGameOverDialog(context, _restartGame, () {
-            Navigator.pop(context); // Voltar para o menu principal
+            Navigator.pop(context); 
           });
           Debg().info('Game over');
         });
       } else {
-        _moveToNextWord();
+        if (isCorrect) {
+          _score++;
+          _timer?.cancel();
+          setState(() {});
+
+          correctItems[currentWord["word"]!] = [
+            currentWord["reading"]!,
+            currentWord["mean"]!,
+            currentWord["tags"]!,
+            currentWord["filename"]!,
+            attemptsString.isNotEmpty ? attemptsString : answer
+          ];
+          _kanjisRespondidos.add(currentWord["word"] ?? "");
+          answers.clear();
+          _moveToNextWord();
+        }
+        if (!isCorrect && answer.isNotEmpty) handleIncorrectAnswer();
+        if (answer.isEmpty) {
+          errorItems[currentWord["word"]!] = [
+            currentWord["reading"]!,
+            currentWord["mean"]!,
+            currentWord["tags"]!,
+            currentWord["filename"]!,
+            attemptsString.isNotEmpty ? attemptsString : answer
+          ];
+          _kanjisRespondidos.add(currentWord["word"] ?? "");
+          _timer?.cancel();
+          answers.clear();
+          _moveToNextWord();
+        }
       }
     });
   }
@@ -215,8 +238,7 @@ class GameScreenState extends State<GameScreen> {
     final localization = AppLocalizations.of(context);
     showDialog(
       context: context,
-      barrierDismissible:
-          false, // Impede que o diálogo seja fechado ao clicar fora
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(localization!.gs_game_ended2(_score)),
@@ -224,23 +246,30 @@ class GameScreenState extends State<GameScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Fecha o diálogo de "Game Over"
-                onRestart(); // Chama a função de reiniciar
+                Navigator.of(context).pop(); 
+                onRestart(); 
               },
               child: Text(localization.gs_game_restart),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Fecha o diálogo de "Game Over"
-                onMainMenu(); // Chama a função para ir ao menu principal
+                Navigator.of(context).pop(); 
+                onMainMenu(); 
               },
               child: Text(localization.gs_go_main_menu),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Fecha o diálogo de "Game Over"
-                _viewHistory(context,
-                    true); // Chama o histórico imediatamente após fechar o diálogo
+                navigateWithCircularAnimation(
+                  context,
+                  History(
+                    correctItems: correctItems,
+                    incorrectItems: errorItems,
+                  ),
+                );
+                
+                
+                
               },
               child: Text(localization.gs_open_history),
             )
@@ -255,11 +284,10 @@ class GameScreenState extends State<GameScreen> {
 
     if (_currentIndex < _words.length - 1) {
       setState(() {
-        _currentIndex++; // Avança para a próxima palavra
-        _feedback = ""; // Limpa o feedback
+        _currentIndex++; 
       });
 
-      _startTimer();
+      startTimer();
     } else {
       showDialog(
         context: context,
@@ -284,188 +312,14 @@ class GameScreenState extends State<GameScreen> {
           );
         },
       );
-      _timer?.cancel(); // Cancela o timer quando o jogo termina
+      _timer?.cancel(); 
     }
-  }
-
-  void _viewHistory(BuildContext context, bool gameOver) {
-    final localization = AppLocalizations.of(context);
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        // Função auxiliar para criar blocos de acertos/erros
-        Widget buildSection(
-          String title,
-          List<Map<String, String>> items,
-          Color color,
-          Function(String) onCopyIndividual,
-          Function() onCopyAll,
-        ) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title == localization!.gs_history_correct
-                    ? localization.gs_history_correct
-                    : localization.gs_history_mistake,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              SizedBox(height: 8),
-              if (items.isNotEmpty)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: color.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: items.map((word) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: Text(
-                                    "${word['word']} - ${word['reading']} (${word['mean']})",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.copy, size: 20),
-                                onPressed: () => onCopyIndividual(
-                                    "${word['word']} - ${word['reading']} (${word['mean']})"),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    TextButton.icon(
-                      onPressed: onCopyAll,
-                      icon: Icon(Icons.copy, size: 16),
-                      label: Text(
-                        title == localization.gs_history_correct
-                            ? localization.gs_history_correct
-                            : localization.gs_history_mistake,
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    )
-                  ],
-                )
-              else
-                Text(
-                    localization.gs_score2(
-                      title == localization.gs_history_correct
-                          ? localization.gs_history_correct
-                          : localization.gs_history_mistake,
-                    ),
-                    style:
-                        TextStyle(fontSize: 16, fontStyle: FontStyle.italic)),
-            ],
-          );
-        }
-
-        // Funções de cópia
-        void copyToClipboard(String text, String message) {
-          Clipboard.setData(ClipboardData(text: text));
-          showToast(message,
-              context: context,
-              animation: StyledToastAnimation.scale,
-              reverseAnimation: StyledToastAnimation.scale,
-              animDuration: Duration(milliseconds: 600),
-              curve: Curves.elasticOut,
-              reverseCurve: Curves.linear);
-        }
-
-        return AlertDialog(
-          title: Center(
-            child: Text(
-              localization!.gs_history,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildSection(
-                  localization.gs_history_correct,
-                  correctItems,
-                  Colors.green,
-                  (entry) => copyToClipboard(
-                      entry, localization.gs_history_copy_single),
-                  () {
-                    final text = correctItems
-                        .map((word) =>
-                            "${word['word']} - ${word['reading']} (${word['mean']})")
-                        .join("\n");
-                    copyToClipboard(
-                        text, localization.gs_history_copy_all_correct);
-                  },
-                ),
-                SizedBox(height: 16),
-                buildSection(
-                  localization.gs_history_mistake,
-                  errorItems,
-                  Colors.red,
-                  (entry) => copyToClipboard(
-                      entry, localization.gs_history_copy_single),
-                  () {
-                    final text = errorItems
-                        .map((word) =>
-                            "${word['word']} - ${word['reading']} (${word['mean']})")
-                        .join("\n");
-                    copyToClipboard(
-                        text, localization.gs_history_copy_all_mistake);
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            if (!gameOver)
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(localization.close, style: TextStyle(fontSize: 16)),
-              ),
-            if (gameOver)
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _showGameOverDialog(
-                    context,
-                    _restartGame,
-                    _goToMainMenu,
-                  );
-                },
-                child:
-                    Text(localization.go_back, style: TextStyle(fontSize: 16)),
-              ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _goToMainMenu() {
-    Navigator.of(context)
-        .pushReplacementNamed('/'); // Navega para o menu principal
   }
 
   void _adjustFontSize(double delta) async {
     setState(() {
       fontSizeCard =
-          (fontSizeCard + delta).clamp(24.0, 64.0); // Limita entre 16 e 64
+          (fontSizeCard + delta).clamp(24.0, 128.0); 
       SharedPrefs().saveCardFontSize(fontSizeCard);
     });
     Debg().info('Changed "word" font size: $fontSizeCard');
@@ -473,10 +327,10 @@ class GameScreenState extends State<GameScreen> {
 
   void toggleFontWeight() async {
     setState(() {
-      // Incrementa o valor do fontWeight
+      
       fontWeightCard += 300;
 
-      // Se exceder 800, volta para 100
+      
       if (fontWeightCard > 900) {
         fontWeightCard = 300;
       }
@@ -485,9 +339,16 @@ class GameScreenState extends State<GameScreen> {
     });
   }
 
+  void pauseTimer() {
+    if (_timer != null && _timer!.isActive) {
+      _timer!.cancel(); 
+    }
+  }
+
   @override
   void dispose() {
     focusNode.dispose();
+
     super.dispose();
   }
 
@@ -501,7 +362,7 @@ class GameScreenState extends State<GameScreen> {
       bottom: false,
       child: GestureDetector(
         onScaleUpdate: (details) {
-          // Ajuste de tamanho da fonte via gestos de pinça no celular
+          
           if (details.scale > 1) {
             _adjustFontSize(0.2);
           } else if (details.scale < 1) {
@@ -515,140 +376,73 @@ class GameScreenState extends State<GameScreen> {
               child: GestureDetector(
                 child: Stack(
                   children: [
-                    // Conteúdo principal do jogo
+                    
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           double screenWidth = constraints.maxWidth;
 
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.end,
+                          return Stack(
                             children: [
-                              // Corpo do jogo
-                              ScrollConfiguration(
-                                  behavior:
-                                      ScrollConfiguration.of(context).copyWith(
-                                    dragDevices: {
-                                      PointerDeviceKind.mouse,
-                                      PointerDeviceKind.touch,
-                                    },
-                                    scrollbars: false,
-                                  ),
-                                  child: SingleChildScrollView(
-                                    reverse: true,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        if (_words.isNotEmpty)
-                                          AnimatedContainer(
-                                            duration:
-                                                Duration(milliseconds: 300),
-                                            curve: Curves.easeInOut,
-                                            width: screenWidth.clamp(100.0,
-                                                230.0), // Limita o tamanho entre 100 e 230
-                                            height: screenWidth.clamp(100.0,
-                                                230.0), // Usa o mesmo limite que o width
-                                            constraints: BoxConstraints(
-                                              maxWidth: (fontSizeCard * 4).clamp(
-                                                  136,
-                                                  256), // Tamanho máximo do card
-                                              maxHeight: (fontSizeCard * 4).clamp(
-                                                  136,
-                                                  256), // Altura máxima do card
-                                            ),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(90),
-                                              border: Border.all(
-                                                color: _borderColor,
-                                                width: _borderWidth,
-                                              ),
-                                            ),
-                                            child: GestureDetector(
-                                              onTap: () => toggleFontWeight(),
-                                              child: Listener(
-                                                onPointerSignal: (event) {
-                                                  if (event
-                                                      is PointerScrollEvent) {
-                                                    // Ajuste com base no scroll do mouse
-                                                    _adjustFontSize(
-                                                        event.scrollDelta.dy > 0
-                                                            ? -2.0
-                                                            : 2.0);
-                                                  }
-                                                },
-                                                child: Card(
-                                                  elevation: 4,
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide(
-                                                      color:
-                                                          const Color.fromARGB(
-                                                              0, 180, 18, 18),
-                                                      width: 0,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            90),
-                                                  ),
-                                                  surfaceTintColor:
-                                                      Color.fromARGB(
-                                                          0, 0, 0, 0),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            16.0),
-                                                    child: Center(
-                                                        child: Text(
-                                                      // Adiciona a quebra de linha automaticamente após 5 caracteres
-                                                      (_words[_currentIndex][
-                                                                          "word"] ??
-                                                                      "")
-                                                                  .length >
-                                                              5
-                                                          ? '${(_words[_currentIndex]["word"] ?? "").substring(0, 5)}\n${(_words[_currentIndex]["word"] ?? "").substring(5)}'
-                                                          : (_words[_currentIndex]
-                                                                  ["word"] ??
-                                                              ""),
-                                                      style: TextStyle(
-                                                        fontSize: fontSizeCard /
-                                                            (_words[_currentIndex]
-                                                                        ["word"]
-                                                                    ?.length ??
-                                                                0) *
-                                                            2,
-                                                        fontWeight: FontWeight
-                                                                .values[
-                                                            fontWeightCard ~/
-                                                                    100 -
-                                                                1],
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    )),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  
+                                  ScrollConfiguration(
+                                      behavior: ScrollConfiguration.of(context)
+                                          .copyWith(
+                                        dragDevices: {
+                                          PointerDeviceKind.mouse,
+                                          PointerDeviceKind.touch,
+                                        },
+                                        scrollbars: false,
+                                      ),
+                                      child: SingleChildScrollView(
+                                        reverse: true,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            if (_words.isNotEmpty)
+                                              GestureDetector(
+                                                onTap: () => toggleFontWeight(),
+                                                child: Listener(
+                                                  onPointerSignal: (event) {
+                                                    if (event
+                                                        is PointerScrollEvent) {
+                                                      
+                                                      _adjustFontSize(
+                                                          event.scrollDelta.dy >
+                                                                  0
+                                                              ? -2.0
+                                                              : 2.0);
+                                                    }
+                                                  },
+                                                  child: CustomCard(
+                                                    key: _customCardKey,
+                                                    text: _words[_currentIndex]
+                                                            ["word"] ??
+                                                        '',
+                                                    fontSize: fontSizeCard,
+                                                    fontWeight: fontWeightCard,
+                                                    style: CardStyle.minimal,
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                        Text(
-                                          _feedback,
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.red,
-                                          ),
+                                            SizedBox(height: 10),
+                                          ],
                                         ),
-                                        SizedBox(height: 10),
-                                      ],
-                                    ),
-                                  )),
+                                      )),
 
-                              // Controles de interação com o jogo
+                                  
+                                ],
+                              ),
                               Stack(
                                 children: [
                                   Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -656,68 +450,73 @@ class GameScreenState extends State<GameScreen> {
                                         children: [
                                           if (_kanjisRespondidos.isNotEmpty)
                                             Expanded(
-                                              child: ListTile(
-                                                title: Text(
-                                                  _kanjisRespondidos.last,
-                                                  style: TextStyle(
-                                                    color: _kanjisRespondidos
-                                                            .isNotEmpty
-                                                        ? (correctItems.any((item) =>
-                                                                    item[
-                                                                        "word"] ==
-                                                                    _kanjisRespondidos
-                                                                        .last)
-                                                                ? Colors
-                                                                    .green // Kanji está em correctItems
-                                                                : errorItems.any((item) =>
-                                                                        item[
-                                                                            "word"] ==
-                                                                        _kanjisRespondidos
-                                                                            .last)
-                                                                    ? Colors
-                                                                        .redAccent // Kanji está em errorItems
-                                                                    : Colors
-                                                                        .grey // Caso o kanji não esteja em nenhuma das duas listas
-                                                            )
-                                                        : Colors
-                                                            .grey, // Caso _kanjisRespondidos esteja vazio
-
-                                                    fontSize:
-                                                        (screenWidth * 0.05)
-                                                            .clamp(20.0, 21.0),
-                                                  ),
-                                                ),
-                                                subtitle: Text(
-                                                  "${_words.firstWhere((word) => word["word"] == _kanjisRespondidos.last, orElse: () => {
-                                                        localization!.gs_mean:
-                                                            "N/A",
-                                                        localization.gs_reading:
-                                                            "N/A"
-                                                      })["mean"]} (${_words.firstWhere((word) => word["word"] == _kanjisRespondidos.last, orElse: () => {"reading": "N/A"})["reading"]})",
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          (screenWidth * 0.05)
-                                                              .clamp(5.0, 15.0),
-                                                      color: Colors.grey),
+                                                child: ListTile(
+                                              title: Text(
+                                                _kanjisRespondidos.last,
+                                                style: TextStyle(
+                                                  color: _kanjisRespondidos
+                                                          .isNotEmpty 
+                                                      ? (correctItems.containsKey(
+                                                                  _kanjisRespondidos
+                                                                      .last) 
+                                                              ? Colors
+                                                                  .green 
+                                                              : errorItems.containsKey(
+                                                                      _kanjisRespondidos
+                                                                          .last) 
+                                                                  ? Colors
+                                                                      .redAccent 
+                                                                  : Colors
+                                                                      .grey 
+                                                          )
+                                                      : Colors
+                                                          .grey, 
+                                                  fontSize: (screenWidth * 0.05)
+                                                      .clamp(20.0,
+                                                          21.0), 
                                                 ),
                                               ),
-                                            ),
+                                              subtitle: Text(
+                                                "${_words.firstWhere((word) => word["word"] == _kanjisRespondidos.last, orElse: () => {
+                                                      localization!.gs_mean:
+                                                          "N/A",
+                                                      localization.gs_reading:
+                                                          "N/A"
+                                                    })["mean"]} (${_words.firstWhere((word) => word["word"] == _kanjisRespondidos.last, orElse: () => {"reading": "N/A"})["reading"]})",
+                                                style: TextStyle(
+                                                  fontSize: (screenWidth * 0.05)
+                                                      .clamp(5.0, 15.0),
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            )),
                                           SizedBox(
                                             height:
-                                                65, // Define uma altura fixa para o espaço do botão
+                                                65, 
                                             child: _kanjisRespondidos.isNotEmpty
                                                 ? IconButton(
                                                     icon: Icon(
                                                       Icons.history,
                                                       color: Colors.blueAccent,
                                                     ),
-                                                    onPressed: () =>
-                                                        _viewHistory(
-                                                            context, _gameOver),
+                                                    onPressed: () {
+                                                      pauseTimer();
+                                                      navigateWithCircularAnimation(
+                                                        context,
+                                                        History(
+                                                          correctItems:
+                                                              correctItems,
+                                                          incorrectItems:
+                                                              errorItems,
+                                                        ),
+                                                      );
+                                                    },
+                                                    
+                                                    
                                                     tooltip: localization!
                                                         .gs_see_full_history,
                                                   )
-                                                : null, // Deixa o espaço vazio, mas preservado
+                                                : null, 
                                           ),
                                         ],
                                       ),
@@ -726,7 +525,7 @@ class GameScreenState extends State<GameScreen> {
                                         child: TextField(
                                           focusNode: focusNode,
                                           textInputAction: TextInputAction
-                                              .none, // targetElement == domElement "The targeted input element must be the active input element"
+                                              .none, 
                                           controller: _controller,
                                           onSubmitted: (value) {
                                             _processAnswer(value);
@@ -753,7 +552,7 @@ class GameScreenState extends State<GameScreen> {
                                                         .split(',')[0]
                                                     : ''),
                                                 width:
-                                                    30, // Definindo o tamanho da imagem
+                                                    30, 
                                                 height: 30,
                                               ),
                                             ),
@@ -768,7 +567,6 @@ class GameScreenState extends State<GameScreen> {
                                       ),
                                     ],
                                   ),
-                                  
                                 ],
                               )
                             ],
@@ -777,7 +575,7 @@ class GameScreenState extends State<GameScreen> {
                       ),
                     ),
 
-                    // Botões fixos no topo da tela
+                    
                     Positioned(
                       top: 30,
                       left: 16,
@@ -789,7 +587,7 @@ class GameScreenState extends State<GameScreen> {
                             icon: Icon(Icons.arrow_back),
                             onPressed: () {
                               Navigator.pop(
-                                  context); // Voltar para a tela anterior
+                                  context); 
                             },
                           ),
                           Text(
@@ -832,4 +630,3 @@ class GameScreenState extends State<GameScreen> {
     );
   }
 }
-
