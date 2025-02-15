@@ -1,0 +1,286 @@
+{
+  "filename": "Tempo e Datas",
+  "tags": [
+    "jp",
+    "tempo",
+    "horas"
+  ],
+  "words": [],
+  "grammarQuestions": [
+    {
+      "question": "Que partícula indica o momento em que algo acontece?\n '私は7時_____起きます。'",
+      "mean": "Escolha a partícula correta para indicar o momento.",
+      "alternatives": [
+        "で",
+        "に",
+        "を",
+        "か"
+      ],
+      "correct": "に"
+    },
+    {
+      "question": "Qual é a forma correta para dizer 'Ontem foi segunda-feira'?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "昨日は月曜日です。",
+        "昨日は月曜日でした。",
+        "昨日は月曜日ます。",
+        "昨日は月曜日る。"
+      ],
+      "correct": "昨日は月曜日でした。"
+    },
+    {
+      "question": "Como se diz 'São 3 horas' em japonês?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "三時です。",
+        "三時ます。",
+        "三時する。",
+        "三時いる。"
+      ],
+      "correct": "三時です。"
+    },
+    {
+      "question": "Qual é a partícula correta para indicar duração?\n '私は2時間_____勉強しました。'",
+      "mean": "Escolha a partícula adequada para indicar duração.",
+      "alternatives": [
+        "で",
+        "に",
+        "を",
+        "か"
+      ],
+      "correct": "で"
+    },
+    {
+      "question": "Como se diz 'Ano que vem' em japonês?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "来年",
+        "去年",
+        "明年",
+        "来月"
+      ],
+      "correct": "来年"
+    },
+    {
+      "question": "Qual é a forma correta para dizer 'Eu nasci em 1990'?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "1990年に生まれました。",
+        "1990年で生まれました。",
+        "1990年を生まれました。",
+        "1990年か生まれました。"
+      ],
+      "correct": "1990年に生まれました。"
+    },
+    {
+      "question": "Qual é a partícula correta para indicar um ponto específico no tempo?\n '私は月曜日_____休みます。'",
+      "mean": "Escolha a partícula adequada para indicar o tempo.",
+      "alternatives": [
+        "で",
+        "に",
+        "を",
+        "か"
+      ],
+      "correct": "に"
+    },
+    {
+      "question": "Como se diz 'Daqui a duas semanas' em japonês?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "二週間後",
+        "二週間前",
+        "二週間で",
+        "二週間か"
+      ],
+      "correct": "二週間後"
+    },
+    {
+      "question": "Qual é a forma correta para dizer \n'Eu estudo japonês há 1 ano'?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "一年間日本語を勉強しています。",
+        "一年間日本語を勉強します。",
+        "一年間日本語を勉強した。",
+        "一年間日本語を勉強る。"
+      ],
+      "correct": "一年間日本語を勉強しています。"
+    },
+    {
+      "question": "Qual é a partícula correta para indicar frequência?\n '私は毎日_____日本語を勉強します。'",
+      "mean": "Escolha a partícula adequada para indicar frequência.",
+      "alternatives": [
+        "で",
+        "に",
+        "を",
+        "か"
+      ],
+      "correct": "に"
+    },
+    {
+      "question": "Como se diz 'Meia-noite' em japonês?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "午夜",
+        "夜中",
+        "零時",
+        "午後12時"
+      ],
+      "correct": "零時"
+    },
+    {
+      "question": "Qual é a forma correta para dizer \n'Eu vou ao Japão em dezembro'?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "十二月に日本へ行きます。",
+        "十二月で日本へ行きます。",
+        "十二月を日本へ行きます。",
+        "十二月か日本へ行きます。"
+      ],
+      "correct": "十二月に日本へ行きます。"
+    },
+    {
+      "question": "Qual é a partícula correta para indicar um período de tempo?\n '私は3時間_____寝ました。'",
+      "mean": "Escolha a partícula adequada para indicar o período.",
+      "alternatives": [
+        "で",
+        "に",
+        "を",
+        "か"
+      ],
+      "correct": "で"
+    },
+    {
+      "question": "Como se diz 'Dia 15 do mês' em japonês?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "十五日",
+        "十日五",
+        "五十日",
+        "五十日"
+      ],
+      "correct": "十五日"
+    },
+    {
+      "question": "Qual é a forma correta para dizer 'Eu chego às 8 horas'?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "八時に着きます。",
+        "八時で着きます。",
+        "八時を着きます。",
+        "八時か着きます。"
+      ],
+      "correct": "八時に着きます。"
+    },
+    {
+      "question": "Qual é a partícula correta para indicar um intervalo de tempo?\n '私は9時_____5時まで働きます。'",
+      "mean": "Escolha a partícula adequada para indicar o intervalo.",
+      "alternatives": [
+        "で",
+        "に",
+        "から",
+        "か"
+      ],
+      "correct": "から"
+    },
+    {
+      "question": "Como se diz 'Três meses atrás' em japonês?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "三ヶ月前",
+        "三ヶ月後",
+        "三ヶ月で",
+        "三ヶ月か"
+      ],
+      "correct": "三ヶ月前"
+    },
+    {
+      "question": "Qual é a forma correta para dizer \n'Eu vou viajar na próxima semana'?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "来週旅行します。",
+        "来週旅行る。",
+        "来週旅行した。",
+        "来週旅行ます。"
+      ],
+      "correct": "来週旅行します。"
+    },
+    {
+      "question": "Qual é a partícula correta para indicar um ponto final no tempo?\n '私は夜10時_____寝ます。'",
+      "mean": "Escolha a partícula adequada para indicar o ponto final.",
+      "alternatives": [
+        "で",
+        "に",
+        "を",
+        "か"
+      ],
+      "correct": "に"
+    },
+    {
+      "question": "Como se diz 'Ano passado' em japonês?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "去年",
+        "来年",
+        "今年",
+        "明年"
+      ],
+      "correct": "去年"
+    },
+    {
+      "question": "Qual é a forma correta para dizer \n'Eu trabalho das 9 às 5'?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "九時から五時まで働きます。",
+        "九時で五時まで働きます。",
+        "九時を五時まで働きます。",
+        "九時か五時まで働きます。"
+      ],
+      "correct": "九時から五時まで働きます。"
+    },
+    {
+      "question": "Qual é a partícula correta para indicar um momento específico?\n '私は朝7時_____起きます。'",
+      "mean": "Escolha a partícula adequada para indicar o momento.",
+      "alternatives": [
+        "で",
+        "に",
+        "を",
+        "か"
+      ],
+      "correct": "に"
+    },
+    {
+      "question": "Como se diz 'Daqui a 5 minutos' em japonês?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "五分後",
+        "五分前",
+        "五分で",
+        "五分か"
+      ],
+      "correct": "五分後"
+    },
+    {
+      "question": "Qual é a forma correta para dizer\n 'Eu chego às 6 da tarde'?",
+      "mean": "Escolha a forma correta para a frase.",
+      "alternatives": [
+        "午後六時に着きます。",
+        "午後六時で着きます。",
+        "午後六時を着きます。",
+        "午後六時か着きます。"
+      ],
+      "correct": "午後六時に着きます。"
+    },
+    {
+      "question": "Qual é a partícula correta para indicar um período de tempo?\n '私は1時間_____待ちました。'",
+      "mean": "Escolha a partícula adequada para indicar o período.",
+      "alternatives": [
+        "で",
+        "に",
+        "を",
+        "か"
+      ],
+      "correct": "で"
+    }
+  ]
+}
