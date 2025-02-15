@@ -172,13 +172,17 @@ class ManagerPageState extends State<ManagerPage>
     }
 
     int wordCount(Map<String, dynamic> content) {
-      if (content['words'] is List) {
-        return (content['words'] as List).length;
+      num totalWords = 0;
+
+      if (content['words'].isNotEmpty) {
+        totalWords += content['words'].length;
       }
-      if (content['grammarQuestions'] is List) {
-        return (content['grammarQuestions'] as List).length;
+
+      if (content['grammarQuestions'].isNotEmpty) {
+        totalWords += content['grammarQuestions'].length;
       }
-      return 0;
+
+      return totalWords.toInt();
     }
 
     Future<void> fetchAndSetFileData(List<Map<String, dynamic>> files) async {
