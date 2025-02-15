@@ -191,14 +191,12 @@ class ManagerPageState extends State<ManagerPage>
           http.get(Uri.parse(url)).then((response) async {
             if (response.statusCode == 200) {
               final data = jsonDecode(response.body);
-              if (data['content']['tags'] != null &&
-                  data['content']['tags'] is List) {
-                List<String> tags =
-                    (data['content']['tags'] as List).cast<String>();
+              if (data['tags'] != null && data['tags'] is List) {
+                List<String> tags = (data['tags'] as List).cast<String>();
 
                 fileData[file['name']] = {
                   'tags': tags.isNotEmpty ? tags : [localization!.mp_no_tags],
-                  'wordCount': wordCount(data['content']),
+                  'wordCount': wordCount(data),
                   'flag': LocaleUtils.getFlagPath(
                       tags.isNotEmpty ? tags.first : ''),
                 };
