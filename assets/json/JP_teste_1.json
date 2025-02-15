@@ -1,0 +1,286 @@
+{
+  "filename": "Gramatica 1",
+  "tags": [
+    "jp",
+    "gramatica",
+    "N5"
+  ],
+  "words": [],
+  "grammarQuestions": [
+    {
+      "question": "Escolha a partícula correta: \n'私は毎日公園_____散歩します。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "は",
+        "が"
+      ],
+      "correct": "で"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: \n'明日、映画を________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "見ます",
+        "見ません",
+        "見た",
+        "見ない"
+      ],
+      "correct": "見ます"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'友達_____手紙を書きました。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "に"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: \n'昨日、テレビを________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "見る",
+        "見ます",
+        "見た",
+        "見ない"
+      ],
+      "correct": "見た"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'図書館_____本を借りました。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "で"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: '毎日、日本語を________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "勉強したくない",
+        "勉強ぜ",
+        "勉強よ",
+        "勉強しないが"
+      ],
+      "correct": "勉強したくない"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'コーヒー_____飲みます。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "を"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: \n'来週、日本へ________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "行かぬ",
+        "行きます",
+        "行った",
+        "行かないで"
+      ],
+      "correct": "行く"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'彼は東京_____住んでいます。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "に"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: \n'毎晩、音楽を________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "聞くや",
+        "聴きます",
+        "聞かぬ",
+        "聴か"
+      ],
+      "correct": "聴きます"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'電車_____乗ります。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "に"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: \n'先週、友達と________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "会う",
+        "会います",
+        "会った",
+        "会わない"
+      ],
+      "correct": "会った"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'この本_____面白いです。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "が"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: \n'明日、宿題を________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "しないで",
+        "します",
+        "しった",
+        "しない"
+      ],
+      "correct": "します"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'レストラン_____食事をします。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "で"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: \n'昨日、手紙を________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "書く",
+        "書きます",
+        "書いた",
+        "書かない"
+      ],
+      "correct": "書いた"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'彼女はピアノ_____上手です。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "が"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: \n'毎朝、新聞を________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "読まぬ",
+        "読みます",
+        "読んだか",
+        "読まない"
+      ],
+      "correct": "読みます"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'学校_____勉強します。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "で"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: \n'先月、旅行に________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "行く",
+        "行きます",
+        "行った",
+        "行かない"
+      ],
+      "correct": "行った"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'このケーキ_____美味しいです。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "が"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: '毎晩、テレビを________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "見がる",
+        "見ます",
+        "見ている",
+        "見ない"
+      ],
+      "correct": "見ます"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'駅_____バスに乗ります。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "で"
+    },
+    {
+      "question": "Escolha a forma correta do verbo: \n'昨日、料理を________。'",
+      "mean": "Escolha a forma correta do verbo para a frase.",
+      "alternatives": [
+        "作る",
+        "作ります",
+        "作った",
+        "作らない"
+      ],
+      "correct": "作った"
+    },
+    {
+      "question": "Escolha a partícula correta: \n'彼は英語_____話せます。'",
+      "mean": "Escolha a partícula adequada para completar a frase.",
+      "alternatives": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "correct": "が"
+    }
+  ]
+}
