@@ -4,11 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kanjilogia/common/langstuff.dart';
 import 'package:kanjilogia/common/sharedpref.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kanjilogia/common/theme.dart';
 import 'package:kanjilogia/main.dart';
 import 'dart:io' show Platform;
-import 'package:kanjilogia/utils/fonts_windows.dart'; 
-// import 'package:kanjilogia/utils/fonts_web.dart'; 
-
+import 'package:provider/provider.dart';
+import 'package:kanjilogia/utils/fonts_windows.dart';
+// import 'package:kanjilogia/utils/fonts_web.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -21,6 +22,8 @@ class _SettingsPageState extends State<SettingsPage> {
   final isWindowsOrWeb = kIsWeb || Platform.isWindows;
   int _maxTime = 60;
   List<String> fonts = [];
+  late ColorPalette colorPalette;
+
   Future<void> _getMaxTime() async {
     final maxTime = await SharedPrefs().getMaxTime();
     setState(() {
@@ -71,25 +74,27 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    colorPalette = Provider.of<ColorPalette>(context);
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(0, 56, 16, 115),
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 600),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0,0,0,0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: ListView(
               children: [
                 Center(
                     child: Text(
-                  'Manage Settings',
+                  AppLocalizations.of(context)!.sp_manage_settings,
                   style: GoogleFonts.rampartOne(
-                    color: Colors.white,
+                    color: colorPalette.text,
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     shadows: [
                       Shadow(
-                        color: Colors.blueAccent,
+                        color: colorPalette.highlight,
                         blurRadius: 10,
                       )
                     ],
@@ -100,7 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 67, 19, 138),
+                    color: colorPalette.fillColor[1],
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
@@ -118,7 +123,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         children: [
                           Icon(
                             Icons.timer,
-                            color: Colors.white70,
+                            color: colorPalette.iconColor,
                             size: 18,
                           ),
                           const SizedBox(width: 8),
@@ -126,7 +131,6 @@ class _SettingsPageState extends State<SettingsPage> {
                             AppLocalizations.of(context)!.maxtimehint(_maxTime),
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white70,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -135,23 +139,16 @@ class _SettingsPageState extends State<SettingsPage> {
                       const SizedBox(height: 8),
                       SliderTheme(
                         data: SliderTheme.of(context).copyWith(
-                          activeTickMarkColor:
-                              Colors.transparent, 
-                          inactiveTickMarkColor: Colors
-                              .transparent, 
-                          overlayColor:
-                              Colors.transparent, 
-                          thumbColor: const Color.fromARGB(
-                              255, 98, 49, 172), 
-                          activeTrackColor: const Color.fromARGB(
-                              255, 152, 99, 233), 
-                          inactiveTrackColor: Colors.grey, 
-                          valueIndicatorTextStyle: TextStyle(
-                            color: Colors
-                                .white, 
-                          ),
-                          valueIndicatorColor: const Color.fromARGB(255, 98, 49,
-                              172), 
+                          activeTickMarkColor: Colors.transparent,
+                          inactiveTickMarkColor: Colors.transparent,
+                          overlayColor: Colors.transparent,
+                          thumbColor: const Color.fromARGB(255, 98, 49, 172),
+                          activeTrackColor:
+                              const Color.fromARGB(255, 152, 99, 233),
+                          inactiveTrackColor: Colors.grey,
+                          valueIndicatorTextStyle: TextStyle(),
+                          valueIndicatorColor:
+                              const Color.fromARGB(255, 98, 49, 172),
                         ),
                         child: Slider(
                           value: _maxTime.toDouble(),
@@ -160,8 +157,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           divisions: 5,
                           label: AppLocalizations.of(context)!
                               .mp_slider_text(_maxTime),
-                          activeColor: const Color.fromARGB(255, 152, 99, 233),
-                          thumbColor: const Color.fromARGB(255, 98, 49, 172),
+                          activeColor: colorPalette.dropdownColor[1],
+                          thumbColor: colorPalette.iconColor,
                           onChanged: (newTime) {
                             setState(() {
                               _maxTime = newTime.toInt();
@@ -179,7 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             vertical: 12, horizontal: 16),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 67, 19, 138),
+                          color: colorPalette.fillColor[1],
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
@@ -191,24 +188,25 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         child: ListTile(
                           leading: Icon(
-                            Icons.font_download,
-                            color: Colors.white,
+                            Icons.font_download_rounded,
+                            color: colorPalette.iconColor,
                             size: 32,
                           ),
                           title: Text(
                             kanjilogiaKey.currentState?.fontFamily ??
-                                'Default Font',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                                AppLocalizations.of(context)!.sp_default_font,
+                            style: TextStyle(fontSize: 16),
                           ),
                           subtitle: Text(
                             fonts.isNotEmpty
                                 ? AppLocalizations.of(context)!
                                     .fonts_count(fonts.length)
-                                : "Could not load fonts",
-                            style: TextStyle(color: Colors.white70),
+                                : AppLocalizations.of(context)!
+                                    .sp_error_loading_fonts,
+                            style: TextStyle(),
                           ),
-                          trailing: const Icon(Icons.chevron_right,
-                              color: Colors.white70),
+                          trailing: Icon(Icons.chevron_right,
+                              color: colorPalette.iconColor),
                           onTap: _changeFont,
                         ))
                     : SizedBox.shrink(),
@@ -217,7 +215,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 67, 19, 138),
+                    color: colorPalette.fillColor[1],
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
@@ -241,11 +239,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     title: Text(
                       '${AppLocalizations.of(context)!.settings_language}:',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      style: TextStyle(fontSize: 16),
                     ),
                     subtitle: Text(
-                      localinfo.isNotEmpty ? localinfo[1] : 'Null',
-                      style: TextStyle(color: Colors.white70),
+                      localinfo.isNotEmpty ? localinfo[1] : 'None',
+                      style: TextStyle(),
                     ),
                     trailing:
                         const Icon(Icons.chevron_right, color: Colors.white70),

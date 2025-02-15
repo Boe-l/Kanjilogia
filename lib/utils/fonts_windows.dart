@@ -4,39 +4,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kanjilogia/common/debg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kanjilogia/common/theme.dart';
+import 'package:provider/provider.dart';
+
 class LocalFonts {
-  
+  late ColorPalette colorPalette;
+
   static const _channel = MethodChannel('kanjilogia/fonts');
 
   Future<List<String>> listFonts() async {
     if (!Platform.isWindows) return [];
     try {
-      
       final fonts = await _channel.invokeMethod<List<dynamic>>('fonts');
 
       return fonts
               ?.cast<String>()
               .where((font) => !font.startsWith('@'))
-              .toList() ?? [];
+              .toList() ??
+          [];
     } on PlatformException catch (e) {
-      Debg().error('Erro ao obter fontes: ${e.message}');
+      Debg().error('Error loading fonts: ${e.message}');
       return [];
     }
   }
-  String loadFont (String fontname){
+
+  String loadFont(String fontname) {
     return '';
   }
+
   Future<void> showFontPickerPopup({
     required BuildContext context,
     required Function(String selectedFont) onFontSelected,
   }) async {
+    colorPalette = Provider.of<ColorPalette>(context, listen: false);
+
     List<String> fonts = [];
     if (!Platform.isWindows) return;
 
     try {
       fonts = await LocalFonts().listFonts();
     } catch (e) {
-      Debg().error("Erro ao carregar fontes: $e");
+      Debg().error("Error loading fonts: $e");
     }
 
     if (!context.mounted) return;
@@ -62,7 +70,7 @@ class LocalFonts {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              backgroundColor: Color.fromRGBO(56, 16, 115, 1),
+              backgroundColor: colorPalette.background,
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: 570,
@@ -73,13 +81,14 @@ class LocalFonts {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextField(
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(),
                         decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!
-                            .main_searchtooltip,
-                          hintStyle: const TextStyle(color: Colors.white70),
-                          prefixIcon:
-                              const Icon(Icons.search, color: Colors.white),
+                          hintText:
+                              AppLocalizations.of(context)!.main_searchtooltip,
+                          hintStyle: const TextStyle(),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                          ),
                           filled: true,
                           fillColor: Colors.transparent,
                           border: OutlineInputBorder(
@@ -89,15 +98,15 @@ class LocalFonts {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 109, 33, 223),
+                              color: colorPalette.borderColor,
                               width: 2,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
-                              color: Color.fromARGB(255, 109, 33, 223),
-                              width: 2,
+                              color: colorPalette.focusedBorderColor,
+                              width: 1.2,
                             ),
                           ),
                         ),
@@ -125,8 +134,7 @@ class LocalFonts {
                                       margin: const EdgeInsets.only(bottom: 10),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
-                                        color: const Color.fromARGB(
-                                            255, 67, 19, 138),
+                                        color: colorPalette.fillColor[1],
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.black26,
@@ -145,13 +153,11 @@ class LocalFonts {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            // Nome da fonte ajustado com FittedBox
                                             FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
                                                 fontName,
                                                 style: TextStyle(
-                                                  color: Colors.white,
                                                   fontFamily: fontName,
                                                   fontSize: 18,
                                                   overflow:
@@ -160,14 +166,12 @@ class LocalFonts {
                                                 ),
                                               ),
                                             ),
-                                            // Texto de exemplo ajustado com FittedBox
                                             Flexible(
                                               child: FittedBox(
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
                                                   '夢は見るものではなく、\n叶えるものだ。',
                                                   style: TextStyle(
-                                                    color: Colors.white,
                                                     fontFamily: fontName,
                                                     fontSize: 18,
                                                   ),
@@ -196,5 +200,4 @@ class LocalFonts {
       },
     );
   }
-
 }

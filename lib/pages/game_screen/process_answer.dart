@@ -53,8 +53,7 @@ class AnswerProcessor {
     } else {
       final List<dynamic> alternatives = currentWord['alternatives']
               ?.split(',')
-              .map((e) =>
-                  e.replaceAll(' ', '')) // Remove os espaços de cada elemento
+              .map((e) => e.replaceAll(' ', ''))
               .toList() ??
           [];
 
@@ -64,7 +63,7 @@ class AnswerProcessor {
         'C',
         'D',
         'E',
-      ]; // Ajuste se precisar de mais letras
+      ];
 
       final Map<String, String> labeledAlternatives = {
         for (int i = 0; i < alternatives.length && i < letters.length; i++)
@@ -94,7 +93,6 @@ class AnswerProcessor {
   void _finalizeGame(bool isCorrect) {
     if (isCorrect) score++;
     gameOver = true;
-    // _showGameOverDialog();
   }
 
   void _handleAnswer(
@@ -161,11 +159,9 @@ class AnswerProcessor {
       restartTimer();
     } else {
       gameOver = true;
-      // _showGameOverDialog();
     }
   }
 
-  
   Map<String, List<dynamic>> get getCorrectItems => correctItems;
   Map<String, List<dynamic>> get getErrorItems => errorItems;
   List<String> get getkanjisRespondidos => respondidos;

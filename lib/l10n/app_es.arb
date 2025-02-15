@@ -72,5 +72,16 @@
   "go_to_github_page": "Ir a la página de GitHub",
   "reset_all": "Borrar todos los datos",
   "reset_all_questioning": "¿Estás seguro de que deseas borrar todos los datos? Esto incluye archivos instalados, configuraciones y todo el caché.",
-  "go_confirm": "Confirmar"
+  "go_confirm": "Confirmar",
+  "sp_manage_settings": "Administrar configuración",
+  "sp_default_font": "Fuente predeterminada.",
+  "sp_error_loading_fonts": "No se pudieron cargar las fuentes.",
+  "hp_history": "Historial",
+  "hp_correct": "Correctos",
+  "hp_incorrect": "Incorrectos",
+  "hp_correct_appear_here": "Los aciertos aparecerán aquí.",
+  "hp_error_appear_here": "Los errores aparecerán aquí.",
+  "hp_pop_meaning": "Significado:",
+  "hp_pop_file_origin": "Archivo de origen:",
+  "hp_pop_user_answers": "Tus respuestas:"
 }

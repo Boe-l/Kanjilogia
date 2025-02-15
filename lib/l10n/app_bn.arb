@@ -72,5 +72,16 @@
   "go_to_github_page": "GitHub পৃষ্ঠায় যান",
   "reset_all": "সমস্ত ডেটা মুছে ফেলুন",
   "reset_all_questioning": "আপনি কি নিশ্চিত যে সমস্ত ডেটা মুছে ফেলতে চান? এর মধ্যে ইনস্টল করা ফাইল, সেটিংস এবং সমস্ত ক্যাশে অন্তর্ভুক্ত।",
-  "go_confirm": "নিশ্চিত করুন"  
+  "go_confirm": "নিশ্চিত করুন",
+  "sp_manage_settings": "সেটিংস পরিচালনা করুন",
+  "sp_default_font": "ডিফল্ট ফন্ট।",
+  "sp_error_loading_fonts": "ফন্ট লোড করা যায়নি।",
+  "hp_history": "ইতিহাস",
+  "hp_correct": "সঠিক",
+  "hp_incorrect": "ভুল",
+  "hp_correct_appear_here": "সঠিক উত্তর এখানে দেখাবে।",
+  "hp_error_appear_here": "ভুল উত্তর এখানে দেখাবে।",
+  "hp_pop_meaning": "অর্থ:",
+  "hp_pop_file_origin": "উৎস ফাইল:",
+  "hp_pop_user_answers": "আপনার উত্তর:"
 }

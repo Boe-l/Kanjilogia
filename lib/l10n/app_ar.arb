@@ -72,5 +72,16 @@
   "go_to_github_page": "اذهب إلى صفحة GitHub",
   "reset_all": "مسح جميع البيانات",
   "reset_all_questioning": "هل أنت متأكد أنك تريد مسح جميع البيانات؟ يشمل ذلك الملفات المثبتة والإعدادات وجميع ذاكرة التخزين المؤقت.",
-  "go_confirm": "تأكيد"
+  "go_confirm": "تأكيد",
+  "sp_manage_settings": "إدارة الإعدادات",
+  "sp_default_font": "الخط الافتراضي.",
+  "sp_error_loading_fonts": "تعذر تحميل الخطوط.",
+  "hp_history": "التاريخ",
+  "hp_correct": "صحيحة",
+  "hp_incorrect": "خاطئة",
+  "hp_correct_appear_here": "الإجابات الصحيحة ستظهر هنا.",
+  "hp_error_appear_here": "الإجابات الخاطئة ستظهر هنا.",
+  "hp_pop_meaning": "المعنى:",
+  "hp_pop_file_origin": "ملف المصدر:",
+  "hp_pop_user_answers": "إجاباتك:"
 }

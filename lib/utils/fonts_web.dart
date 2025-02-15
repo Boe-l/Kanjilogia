@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:kanjilogia/common/debg.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kanjilogia/common/theme.dart';
+import 'package:provider/provider.dart';
 
 /// Extension type for `Window`
 extension type Window(JSObject _) implements JSObject {}
@@ -181,6 +183,8 @@ class LocalFonts {
     }
 
     if (!context.mounted) return;
+    ColorPalette colorPalette =
+        Provider.of<ColorPalette>(context, listen: false);
 
     showDialog(
       context: context,
@@ -203,7 +207,7 @@ class LocalFonts {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              backgroundColor: Color.fromRGBO(56, 16, 115, 1),
+              backgroundColor: colorPalette.background,
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: 570,
@@ -214,13 +218,14 @@ class LocalFonts {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextField(
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(),
                         decoration: InputDecoration(
                           hintText:
                               AppLocalizations.of(context)!.main_searchtooltip,
-                          hintStyle: const TextStyle(color: Colors.white70),
-                          prefixIcon:
-                              const Icon(Icons.search, color: Colors.white),
+                          hintStyle: const TextStyle(),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                          ),
                           filled: true,
                           fillColor: Colors.transparent,
                           border: OutlineInputBorder(
@@ -230,14 +235,14 @@ class LocalFonts {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 109, 33, 223),
+                              color: colorPalette.highlight,
                               width: 2,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
-                              color: Color.fromARGB(255, 109, 33, 223),
+                              color: colorPalette.highlight,
                               width: 2,
                             ),
                           ),
@@ -246,12 +251,13 @@ class LocalFonts {
                       ),
                       const SizedBox(height: 16),
                       filteredFonts.isEmpty
-                          ?  Center(
+                          ? Center(
                               child: Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
-                                  AppLocalizations.of(context)!.fonts_not_available,
-                                  style: TextStyle(color: Colors.white),
+                                  AppLocalizations.of(context)!
+                                      .fonts_not_available,
+                                  style: TextStyle(),
                                 ),
                               ),
                             )
@@ -274,8 +280,7 @@ class LocalFonts {
                                       margin: const EdgeInsets.only(bottom: 10),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
-                                        color: const Color.fromARGB(
-                                            255, 67, 19, 138),
+                                        color: colorPalette.fillColor[1],
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.black26,
@@ -300,7 +305,6 @@ class LocalFonts {
                                               child: Text(
                                                 fontName,
                                                 style: TextStyle(
-                                                  color: Colors.white,
                                                   fontFamily: fontName,
                                                   fontSize: 18,
                                                   overflow:

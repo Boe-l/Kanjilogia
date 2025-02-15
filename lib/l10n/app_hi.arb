@@ -72,5 +72,16 @@
   "go_to_github_page": "GitHub पेज पर जाएं",
   "reset_all": "सभी डेटा हटाएं",
   "reset_all_questioning": "क्या आप सभी डेटा हटाना चाहते हैं? इसमें स्थापित फाइलें, सेटिंग्स और सभी कैश शामिल हैं।",
-  "go_confirm": "पुष्टि करें"
+  "go_confirm": "पुष्टि करें",
+  "sp_manage_settings": "सेटिंग्स प्रबंधित करें",
+  "sp_default_font": "डिफ़ॉल्ट फ़ॉन्ट।",
+  "sp_error_loading_fonts": "फ़ॉन्ट लोड नहीं कर सके।",
+  "hp_history": "इतिहास",
+  "hp_correct": "सही",
+  "hp_incorrect": "गलत",
+  "hp_correct_appear_here": "सही उत्तर यहाँ दिखेंगे।",
+  "hp_error_appear_here": "गलत उत्तर यहाँ दिखेंगे।",
+  "hp_pop_meaning": "अर्थ:",
+  "hp_pop_file_origin": "स्रोत फ़ाइल:",
+  "hp_pop_user_answers": "आपके उत्तर:"
 }

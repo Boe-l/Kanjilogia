@@ -20,32 +20,36 @@ class Debg {
   void log(String message, int debugType) async {
     if (!_isLoggingEnabled) return;
 
-    if (debugType < 0 || debugType > 5) {
+    if (debugType < 0 || debugType > 4) {
       debugPrint("[ERROR] Invalid debug type: $debugType");
       return;
     }
 
     final debugTypeEnum = DebugType.values[debugType];
     final timestamp = DateTime.now().toIso8601String();
-    final logMessage = "[$timestamp] [${debugTypeEnum.name.toUpperCase()}] $message";
+    final logMessage =
+        "[$timestamp] [${debugTypeEnum.name.toUpperCase()}] $message";
 
-    if (kReleaseMode) {
-      if (!kIsWeb) {
-        await _saveLogToFile(logMessage);
-      } else {
-        debugPrint(logMessage);
-      }
-    } else {
-      debugPrint(logMessage);
+    if (!kIsWeb) {
+      await _saveLogToFile(logMessage);
     }
+
+    debugPrint(logMessage);
   }
 
   Future<void> _saveLogToFile(String logMessage) async {
     try {
-      final directory = await getApplicationDocumentsDirectory(); // Usará AppData\Local no Windows
+      final directory = await getApplicationDocumentsDirectory();
+      final logDirectory = Directory('${directory.path}/Kanjilogia/logs');
+
+      if (!await logDirectory.exists()) {
+        await logDirectory.create(recursive: true);
+      }
+
       final date = DateTime.now();
       final fileName = "log_${date.year}-${date.month}-${date.day}.txt";
-      final logFile = File('${directory.path}/$fileName');
+      final logFile = File('${logDirectory.path}/$fileName');
+
       await logFile.writeAsString('$logMessage\n', mode: FileMode.append);
     } catch (e) {
       debugPrint("[ERROR] Failed to write log: $e");
@@ -60,9 +64,9 @@ class Debg {
 }
 
 enum DebugType {
-  info,      // 0
-  warning,   // 1
-  error,     // 2
-  critical,  // 3
+  info, // 0
+  warning, // 1
+  error, // 2
+  critical, // 3
   exception, // 4
 }

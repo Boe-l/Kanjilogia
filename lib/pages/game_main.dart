@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kanjilogia/common/theme.dart';
 import 'package:kanjilogia/common/transition.dart';
 import 'package:kanjilogia/common/database.dart';
 import 'package:kanjilogia/common/debg.dart';
@@ -10,6 +11,7 @@ import 'package:kanjilogia/common/langstuff.dart';
 import 'package:kanjilogia/common/sharedpref.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kanjilogia/pages/game_screen.dart';
+import 'package:provider/provider.dart';
 
 class GameMain extends StatefulWidget {
   const GameMain({super.key});
@@ -28,8 +30,9 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
   final GlobalKey settingsKey = GlobalKey();
   final bool _showFloatingButtons = true;
   late int selectedTime = 30;
-
   Map<String, Set<String>> _jsonFiles = {};
+  late ColorPalette colorPalette;
+
   @override
   void initState() {
     super.initState();
@@ -76,9 +79,9 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
 
     try {
       List<String> selectedFilesList = _selectedFiles;
-      List<dynamic> finalWords = await getWordsByFilenames(selectedFilesList);
+      List<dynamic> finalData = await getContentsByFilenames(selectedFilesList);
 
-      if (finalWords.isEmpty) {
+      if (finalData.isEmpty) {
         if (mounted) {
           _showErrorDialog(localization!.gs_words_empty);
           Debg().warning(localization.gs_words_empty);
@@ -88,7 +91,7 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
 
       final data = {
         'selectedTime': selectedTime,
-        'finalJsonData': finalWords,
+        'finalJsonData': finalData,
       };
 
       if (context.mounted) {
@@ -99,7 +102,7 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
       _searchController.clear();
       setState(() {});
     } catch (e) {
-      Debg().error(e as String);
+      Debg().error(e.toString());
     }
   }
 
@@ -114,8 +117,8 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
       position: StyledToastPosition.center,
       curve: Curves.elasticOut,
       reverseCurve: Curves.linear,
-      backgroundColor: Colors.red.withValues(alpha: 0.8),
-      textStyle: TextStyle(color: Colors.white, fontSize: 16),
+      backgroundColor: colorPalette.error.withValues(alpha: 0.9),
+      textStyle: TextStyle(fontSize: 16, color: colorPalette.text),
     );
     Debg().warning(message);
   }
@@ -133,6 +136,8 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    colorPalette = Provider.of<ColorPalette>(context);
+
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -149,12 +154,12 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                     Text(
                       "Kanjilogia",
                       style: GoogleFonts.rampartOne(
-                        color: Colors.white,
+                        color: colorPalette.text,
                         fontSize: screenWidth < 600 ? 28 : 36,
                         fontWeight: FontWeight.bold,
                         shadows: [
                           Shadow(
-                            color: Colors.blueAccent,
+                            color: colorPalette.highlight,
                             blurRadius: 10,
                           )
                         ],
@@ -168,24 +173,24 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                         decoration: InputDecoration(
                           hintText:
                               AppLocalizations.of(context)!.main_searchtooltip,
-                          hintStyle: TextStyle(color: Colors.white),
-                          prefixIcon: Icon(Icons.search, color: Colors.white),
+                          hintStyle: TextStyle(),
+                          prefixIcon: Icon(Icons.search,
+                              color: colorPalette.secondaryText),
                           filled: true,
-                          fillColor: const Color.fromARGB(118, 104, 58, 183),
+                          fillColor: colorPalette.fillColor[1],
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
-                                color: const Color.fromARGB(255, 109, 33, 223),
-                                width: 1),
+                                color: colorPalette.borderColor, width: 1),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
-                                color: Color.fromARGB(255, 109, 33, 223),
-                                width: 2),
+                                color: colorPalette.focusedBorderColor,
+                                width: 1),
                           ),
                         ),
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(),
                       ),
                     ),
                     Expanded(
@@ -194,7 +199,7 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                               child: Text(
                                 AppLocalizations.of(context)!.main_files_empty,
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
+                                    fontSize: 18, color: colorPalette.text),
                               ),
                             )
                           : AnimationLimiter(
@@ -259,66 +264,20 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                                                             const Offset(0, 3),
                                                       ),
                                                     ],
-                                                    gradient: LinearGradient(
-                                                      colors: isSelected
-                                                          ? [
-                                                              const Color
-                                                                      .fromARGB(
-                                                                      255,
-                                                                      80,
-                                                                      36,
-                                                                      133)
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.8), // cor mais escura para selecionado
-                                                              const Color
-                                                                      .fromARGB(
-                                                                      255,
-                                                                      80,
-                                                                      36,
-                                                                      133)
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.8),
-                                                            ]
-                                                          : [
-                                                              const Color
-                                                                  .fromARGB(
-                                                                  255,
-                                                                  67,
-                                                                  19,
-                                                                  138), // cor mais clara para não selecionado
-                                                              const Color
-                                                                      .fromARGB(
-                                                                      255,
-                                                                      80,
-                                                                      36,
-                                                                      133)
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.4), // opacidade reduzida
-                                                            ],
-                                                      begin: Alignment.topLeft,
-                                                      end:
-                                                          Alignment.bottomRight,
-                                                    ),
+                                                    gradient: isSelected
+                                                        ? colorPalette
+                                                            .selectedCardGradient
+                                                        : colorPalette
+                                                            .unselectedCardGradient,
                                                     border: Border.all(
                                                       color: isSelected
-                                                          ? const Color
-                                                              .fromARGB(
-                                                              255,
-                                                              109,
-                                                              33,
-                                                              223) // borda mais visível quando selecionado
-                                                          : const Color
-                                                                  .fromARGB(255,
-                                                                  159, 7, 219)
+                                                          ? colorPalette
+                                                              .focusedBorderColor
+                                                          : colorPalette
+                                                              .borderColor
                                                               .withValues(
-                                                                  alpha:
-                                                                      0.3), // borda mais suave quando não selecionado
-                                                      width: isSelected
-                                                          ? 2
-                                                          : 1, // espessura da borda ajustada para maior destaque quando selecionado
+                                                                  alpha: 0.9),
+                                                      width: isSelected ? 2 : 1,
                                                     ),
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -350,16 +309,6 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
-                                                            color: isSelected
-                                                                ? const Color
-                                                                    .fromARGB(
-                                                                    255,
-                                                                    255,
-                                                                    255,
-                                                                    255)
-                                                                : Colors.white
-                                                                    .withAlpha(
-                                                                        255),
                                                             fontSize:
                                                                 screenWidth <
                                                                         360
@@ -369,8 +318,8 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                                                                 FontWeight.bold,
                                                             shadows: [
                                                               Shadow(
-                                                                color: Colors
-                                                                    .blueAccent,
+                                                                color: colorPalette
+                                                                    .shadowColor,
                                                                 blurRadius: 10,
                                                               ),
                                                             ],
@@ -418,7 +367,7 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                       key: playButtonKey,
                       heroTag: 'play',
                       onPressed: () => _startGame(context, selectedTime),
-                      backgroundColor: Color(0xFF6C5CE7),
+                      backgroundColor: colorPalette.fillColor[1],
                       child: Icon(Icons.play_arrow),
                     ),
                   ),

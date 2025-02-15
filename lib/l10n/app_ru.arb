@@ -72,5 +72,16 @@
   "go_to_github_page": "Перейти на страницу GitHub",
   "reset_all": "Удалить все данные",
   "reset_all_questioning": "Вы уверены, что хотите удалить все данные? Это включает установленные файлы, настройки и весь кеш.",
-  "go_confirm": "Подтвердить"
+  "go_confirm": "Подтвердить",
+  "sp_manage_settings": "Управление настройками",
+  "sp_default_font": "Шрифт по умолчанию.",
+  "sp_error_loading_fonts": "Не удалось загрузить шрифты.",
+  "hp_history": "История",
+  "hp_correct": "Правильные",
+  "hp_incorrect": "Неправильные",
+  "hp_correct_appear_here": "Правильные ответы появятся здесь.",
+  "hp_error_appear_here": "Неправильные ответы появятся здесь.",
+  "hp_pop_meaning": "Значение:",
+  "hp_pop_file_origin": "Исходный файл:",
+  "hp_pop_user_answers": "Ваши ответы:"
 }

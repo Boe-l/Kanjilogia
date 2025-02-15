@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
-// Classe para gerenciar a paleta de cores
 class ColorPalette with ChangeNotifier {
-  // Cores principais
-  Color _background =
-      Color(0xFF1C1F27); // fundo escuro, mas suave (cinza-azulado)
+  Color _background = Color(0xFF1C1F27);
   Color _highlight = Color(0xFF61B6D6); // cor de destaque (azul suave)
   Color _text = Color(0xFFEBEBEB); // cor do texto (branco suave)
   Color _secondaryText = Color(0xFFB3B3B3); // texto secundário (cinza claro)
@@ -115,28 +112,32 @@ class ColorPalette with ChangeNotifier {
         _error = color;
         break;
       case 'fillColor':
-        if (_fillColor.length < 6)
+        if (_fillColor.length < 6) {
           _fillColor.add(color);
-        else
+        } else {
           _fillColor[0] = color; // Substitui a cor mais antiga
+        }
         break;
       case 'dropdownColor':
-        if (_dropdownColor.length < 6)
+        if (_dropdownColor.length < 6) {
           _dropdownColor.add(color);
-        else
+        } else {
           _dropdownColor[0] = color; // Substitui a cor mais antiga
+        }
         break;
       case 'inputBorderColor':
-        if (_inputBorderColor.length < 6)
+        if (_inputBorderColor.length < 6) {
           _inputBorderColor.add(color);
-        else
+        } else {
           _inputBorderColor[0] = color; // Substitui a cor mais antiga
+        }
         break;
       case 'buttonHoverColor':
-        if (_buttonHoverColor.length < 6)
+        if (_buttonHoverColor.length < 6) {
           _buttonHoverColor.add(color);
-        else
+        } else {
           _buttonHoverColor[0] = color; // Substitui a cor mais antiga
+        }
         break;
       case 'borderColor':
         _borderColor = color;

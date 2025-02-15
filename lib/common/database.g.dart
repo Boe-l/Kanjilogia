@@ -9,67 +9,71 @@ part of 'database.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetWordCollection on Isar {
-  IsarCollection<Word> get words => this.collection();
+extension GetContentCollection on Isar {
+  IsarCollection<Content> get contents => this.collection();
 }
 
-// Definindo o BigInt e convertendo para um número compatível com int
-final BigInt largeId = BigInt.parse("2997905348638732671");
-// Convertendo o BigInt para um número seguro no intervalo de 64 bits'
-
-var WordSchema = CollectionSchema(
-  name: r'Word',
-  id: largeId.toInt(), // Usando o valor convertido
-  properties: const {
+final BigInt largeId = BigInt.parse("2749874844035024652");
+var ContentSchema = CollectionSchema(
+  name: r'Content',
+  id: largeId.toInt(),
+  properties: {
     r'filename': PropertySchema(
       id: 0,
       name: r'filename',
       type: IsarType.string,
     ),
-    r'mean': PropertySchema(
+    r'grammarQuestions': PropertySchema(
       id: 1,
-      name: r'mean',
-      type: IsarType.string,
-    ),
-    r'reading': PropertySchema(
-      id: 2,
-      name: r'reading',
-      type: IsarType.string,
+      name: r'grammarQuestions',
+      type: IsarType.objectList,
+      target: r'GrammarQuestion',
     ),
     r'tags': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'tags',
       type: IsarType.stringList,
     ),
-    r'word': PropertySchema(
-      id: 4,
-      name: r'word',
-      type: IsarType.string,
+    r'words': PropertySchema(
+      id: 3,
+      name: r'words',
+      type: IsarType.objectList,
+      target: r'Word',
     )
   },
-  estimateSize: _wordEstimateSize,
-  serialize: _wordSerialize,
-  deserialize: _wordDeserialize,
-  deserializeProp: _wordDeserializeProp,
+  estimateSize: _contentEstimateSize,
+  serialize: _contentSerialize,
+  deserialize: _contentDeserialize,
+  deserializeProp: _contentDeserializeProp,
   idName: r'id',
-  indexes: const {},
-  links: const {},
-  embeddedSchemas: const {},
-  getId: _wordGetId,
-  getLinks: _wordGetLinks,
-  attach: _wordAttach,
+  indexes: {},
+  links: {},
+  embeddedSchemas: {
+    r'Word': WordSchema,
+    r'GrammarQuestion': GrammarQuestionSchema
+  },
+  getId: _contentGetId,
+  getLinks: _contentGetLinks,
+  attach: _contentAttach,
   version: '3.1.0',
 );
 
-int _wordEstimateSize(
-  Word object,
+int _contentEstimateSize(
+  Content object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.filename.length * 3;
-  bytesCount += 3 + object.mean.length * 3;
-  bytesCount += 3 + object.reading.length * 3;
+  bytesCount += 3 + object.grammarQuestions.length * 3;
+  {
+    final offsets = allOffsets[GrammarQuestion]!;
+    for (var i = 0; i < object.grammarQuestions.length; i++) {
+      final value = object.grammarQuestions[i];
+      bytesCount +=
+          GrammarQuestionSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
   bytesCount += 3 + object.tags.length * 3;
   {
     for (var i = 0; i < object.tags.length; i++) {
@@ -77,40 +81,67 @@ int _wordEstimateSize(
       bytesCount += value.length * 3;
     }
   }
-  bytesCount += 3 + object.word.length * 3;
+  bytesCount += 3 + object.words.length * 3;
+  {
+    final offsets = allOffsets[Word]!;
+    for (var i = 0; i < object.words.length; i++) {
+      final value = object.words[i];
+      bytesCount += WordSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
   return bytesCount;
 }
 
-void _wordSerialize(
-  Word object,
+void _contentSerialize(
+  Content object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.filename);
-  writer.writeString(offsets[1], object.mean);
-  writer.writeString(offsets[2], object.reading);
-  writer.writeStringList(offsets[3], object.tags);
-  writer.writeString(offsets[4], object.word);
+  writer.writeObjectList<GrammarQuestion>(
+    offsets[1],
+    allOffsets,
+    GrammarQuestionSchema.serialize,
+    object.grammarQuestions,
+  );
+  writer.writeStringList(offsets[2], object.tags);
+  writer.writeObjectList<Word>(
+    offsets[3],
+    allOffsets,
+    WordSchema.serialize,
+    object.words,
+  );
 }
 
-Word _wordDeserialize(
+Content _contentDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Word();
+  final object = Content();
   object.filename = reader.readString(offsets[0]);
+  object.grammarQuestions = reader.readObjectList<GrammarQuestion>(
+        offsets[1],
+        GrammarQuestionSchema.deserialize,
+        allOffsets,
+        GrammarQuestion(),
+      ) ??
+      [];
   object.id = id;
-  object.mean = reader.readString(offsets[1]);
-  object.reading = reader.readString(offsets[2]);
-  object.tags = reader.readStringList(offsets[3]) ?? [];
-  object.word = reader.readString(offsets[4]);
+  object.tags = reader.readStringList(offsets[2]) ?? [];
+  object.words = reader.readObjectList<Word>(
+        offsets[3],
+        WordSchema.deserialize,
+        allOffsets,
+        Word(),
+      ) ??
+      [];
   return object;
 }
 
-P _wordDeserializeProp<P>(
+P _contentDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -120,40 +151,50 @@ P _wordDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readObjectList<GrammarQuestion>(
+            offset,
+            GrammarQuestionSchema.deserialize,
+            allOffsets,
+            GrammarQuestion(),
+          ) ??
+          []) as P;
     case 2:
-      return (reader.readString(offset)) as P;
-    case 3:
       return (reader.readStringList(offset) ?? []) as P;
-    case 4:
-      return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readObjectList<Word>(
+            offset,
+            WordSchema.deserialize,
+            allOffsets,
+            Word(),
+          ) ??
+          []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Id _wordGetId(Word object) {
+Id _contentGetId(Content object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _wordGetLinks(Word object) {
+List<IsarLinkBase<dynamic>> _contentGetLinks(Content object) {
   return [];
 }
 
-void _wordAttach(IsarCollection<dynamic> col, Id id, Word object) {
+void _contentAttach(IsarCollection<dynamic> col, Id id, Content object) {
   object.id = id;
 }
 
-extension WordQueryWhereSort on QueryBuilder<Word, Word, QWhere> {
-  QueryBuilder<Word, Word, QAfterWhere> anyId() {
+extension ContentQueryWhereSort on QueryBuilder<Content, Content, QWhere> {
+  QueryBuilder<Content, Content, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension WordQueryWhere on QueryBuilder<Word, Word, QWhereClause> {
-  QueryBuilder<Word, Word, QAfterWhereClause> idEqualTo(Id id) {
+extension ContentQueryWhere on QueryBuilder<Content, Content, QWhereClause> {
+  QueryBuilder<Content, Content, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -162,7 +203,7 @@ extension WordQueryWhere on QueryBuilder<Word, Word, QWhereClause> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<Content, Content, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -184,7 +225,7 @@ extension WordQueryWhere on QueryBuilder<Word, Word, QWhereClause> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<Content, Content, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -193,7 +234,7 @@ extension WordQueryWhere on QueryBuilder<Word, Word, QWhereClause> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<Content, Content, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -202,7 +243,7 @@ extension WordQueryWhere on QueryBuilder<Word, Word, QWhereClause> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterWhereClause> idBetween(
+  QueryBuilder<Content, Content, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -216,6 +257,794 @@ extension WordQueryWhere on QueryBuilder<Word, Word, QWhereClause> {
         includeUpper: includeUpper,
       ));
     });
+  }
+}
+
+extension ContentQueryFilter
+    on QueryBuilder<Content, Content, QFilterCondition> {
+  QueryBuilder<Content, Content, QAfterFilterCondition> filenameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> filenameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> filenameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> filenameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'filename',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> filenameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> filenameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> filenameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'filename',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> filenameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'filename',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> filenameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'filename',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> filenameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'filename',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition>
+      grammarQuestionsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'grammarQuestions',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition>
+      grammarQuestionsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'grammarQuestions',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition>
+      grammarQuestionsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'grammarQuestions',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition>
+      grammarQuestionsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'grammarQuestions',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition>
+      grammarQuestionsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'grammarQuestions',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition>
+      grammarQuestionsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'grammarQuestions',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> idEqualTo(Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> idGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> idLessThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> idBetween(
+    Id lower,
+    Id upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'tags',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsElementContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsElementMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'tags',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'tags',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition>
+      tagsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'tags',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> tagsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> wordsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'words',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> wordsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'words',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> wordsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'words',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> wordsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'words',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> wordsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'words',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> wordsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'words',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+}
+
+extension ContentQueryObject
+    on QueryBuilder<Content, Content, QFilterCondition> {
+  QueryBuilder<Content, Content, QAfterFilterCondition> grammarQuestionsElement(
+      FilterQuery<GrammarQuestion> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'grammarQuestions');
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> wordsElement(
+      FilterQuery<Word> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'words');
+    });
+  }
+}
+
+extension ContentQueryLinks
+    on QueryBuilder<Content, Content, QFilterCondition> {}
+
+extension ContentQuerySortBy on QueryBuilder<Content, Content, QSortBy> {
+  QueryBuilder<Content, Content, QAfterSortBy> sortByFilename() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'filename', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterSortBy> sortByFilenameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'filename', Sort.desc);
+    });
+  }
+}
+
+extension ContentQuerySortThenBy
+    on QueryBuilder<Content, Content, QSortThenBy> {
+  QueryBuilder<Content, Content, QAfterSortBy> thenByFilename() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'filename', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterSortBy> thenByFilenameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'filename', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterSortBy> thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterSortBy> thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+}
+
+extension ContentQueryWhereDistinct
+    on QueryBuilder<Content, Content, QDistinct> {
+  QueryBuilder<Content, Content, QDistinct> distinctByFilename(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'filename', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Content, Content, QDistinct> distinctByTags() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'tags');
+    });
+  }
+}
+
+extension ContentQueryProperty
+    on QueryBuilder<Content, Content, QQueryProperty> {
+  QueryBuilder<Content, int, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Content, String, QQueryOperations> filenameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'filename');
+    });
+  }
+
+  QueryBuilder<Content, List<GrammarQuestion>, QQueryOperations>
+      grammarQuestionsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'grammarQuestions');
+    });
+  }
+
+  QueryBuilder<Content, List<String>, QQueryOperations> tagsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'tags');
+    });
+  }
+
+  QueryBuilder<Content, List<Word>, QQueryOperations> wordsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'words');
+    });
+  }
+}
+
+// **************************************************************************
+// IsarEmbeddedGenerator
+// **************************************************************************
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+final BigInt largeId2 = BigInt.parse("2997905348638732671");
+
+var WordSchema = Schema(
+  name: r'Word',
+  id: largeId2.toInt(),
+  properties: {
+    r'filename': PropertySchema(
+      id: 0,
+      name: r'filename',
+      type: IsarType.string,
+    ),
+    r'mean': PropertySchema(
+      id: 1,
+      name: r'mean',
+      type: IsarType.string,
+    ),
+    r'reading': PropertySchema(
+      id: 2,
+      name: r'reading',
+      type: IsarType.stringList,
+    ),
+    r'word': PropertySchema(
+      id: 3,
+      name: r'word',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _wordEstimateSize,
+  serialize: _wordSerialize,
+  deserialize: _wordDeserialize,
+  deserializeProp: _wordDeserializeProp,
+);
+
+int _wordEstimateSize(
+  Word object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.filename.length * 3;
+  bytesCount += 3 + object.mean.length * 3;
+  bytesCount += 3 + object.reading.length * 3;
+  {
+    for (var i = 0; i < object.reading.length; i++) {
+      final value = object.reading[i];
+      bytesCount += value.length * 3;
+    }
+  }
+  bytesCount += 3 + object.word.length * 3;
+  return bytesCount;
+}
+
+void _wordSerialize(
+  Word object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.filename);
+  writer.writeString(offsets[1], object.mean);
+  writer.writeStringList(offsets[2], object.reading);
+  writer.writeString(offsets[3], object.word);
+}
+
+Word _wordDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = Word();
+  object.filename = reader.readString(offsets[0]);
+  object.mean = reader.readString(offsets[1]);
+  object.reading = reader.readStringList(offsets[2]) ?? [];
+  object.word = reader.readString(offsets[3]);
+  return object;
+}
+
+P _wordDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readString(offset)) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
   }
 }
 
@@ -349,58 +1178,6 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> idEqualTo(Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> idGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> idLessThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> idBetween(
-    Id lower,
-    Id upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<Word, Word, QAfterFilterCondition> meanEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -529,7 +1306,7 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> readingEqualTo(
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingElementEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -542,7 +1319,7 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> readingGreaterThan(
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingElementGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -557,7 +1334,7 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> readingLessThan(
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingElementLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -572,7 +1349,7 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> readingBetween(
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingElementBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -591,7 +1368,7 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> readingStartsWith(
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingElementStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -604,7 +1381,7 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> readingEndsWith(
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingElementEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -617,7 +1394,8 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> readingContains(String value,
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingElementContains(
+      String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -628,7 +1406,8 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> readingMatches(String pattern,
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingElementMatches(
+      String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -636,186 +1415,56 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
+    });
+  }
+
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'reading',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'reading',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'reading',
+        length,
+        true,
+        length,
+        true,
+      );
     });
   }
 
   QueryBuilder<Word, Word, QAfterFilterCondition> readingIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'reading',
-        value: '',
-      ));
+      return query.listLength(
+        r'reading',
+        0,
+        true,
+        0,
+        true,
+      );
     });
   }
 
   QueryBuilder<Word, Word, QAfterFilterCondition> readingIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'reading',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsElementEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'tags',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsElementGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'tags',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsElementLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'tags',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsElementBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'tags',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsElementStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'tags',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsElementEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'tags',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsElementContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'tags',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsElementMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'tags',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsElementIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'tags',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsElementIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'tags',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'tags',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'tags',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'tags',
+        r'reading',
         0,
         false,
         999999,
@@ -824,13 +1473,13 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsLengthLessThan(
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'tags',
+        r'reading',
         0,
         true,
         length,
@@ -839,13 +1488,13 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsLengthGreaterThan(
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'tags',
+        r'reading',
         length,
         include,
         999999,
@@ -854,7 +1503,7 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Word, Word, QAfterFilterCondition> tagsLengthBetween(
+  QueryBuilder<Word, Word, QAfterFilterCondition> readingLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -862,7 +1511,7 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'tags',
+        r'reading',
         lower,
         includeLower,
         upper,
@@ -1002,190 +1651,741 @@ extension WordQueryFilter on QueryBuilder<Word, Word, QFilterCondition> {
 
 extension WordQueryObject on QueryBuilder<Word, Word, QFilterCondition> {}
 
-extension WordQueryLinks on QueryBuilder<Word, Word, QFilterCondition> {}
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+final BigInt largeId3 = BigInt.parse("-4089796948689493655");
 
-extension WordQuerySortBy on QueryBuilder<Word, Word, QSortBy> {
-  QueryBuilder<Word, Word, QAfterSortBy> sortByFilename() {
+var GrammarQuestionSchema = Schema(
+  name: r'GrammarQuestion',
+  id: largeId3.toInt(),
+  properties: {
+    r'alternatives': PropertySchema(
+      id: 0,
+      name: r'alternatives',
+      type: IsarType.stringList,
+    ),
+    r'correct': PropertySchema(
+      id: 1,
+      name: r'correct',
+      type: IsarType.string,
+    ),
+    r'mean': PropertySchema(
+      id: 2,
+      name: r'mean',
+      type: IsarType.string,
+    ),
+    r'question': PropertySchema(
+      id: 3,
+      name: r'question',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _grammarQuestionEstimateSize,
+  serialize: _grammarQuestionSerialize,
+  deserialize: _grammarQuestionDeserialize,
+  deserializeProp: _grammarQuestionDeserializeProp,
+);
+
+int _grammarQuestionEstimateSize(
+  GrammarQuestion object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.alternatives.length * 3;
+  {
+    for (var i = 0; i < object.alternatives.length; i++) {
+      final value = object.alternatives[i];
+      bytesCount += value.length * 3;
+    }
+  }
+  bytesCount += 3 + object.correct.length * 3;
+  bytesCount += 3 + object.mean.length * 3;
+  bytesCount += 3 + object.question.length * 3;
+  return bytesCount;
+}
+
+void _grammarQuestionSerialize(
+  GrammarQuestion object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeStringList(offsets[0], object.alternatives);
+  writer.writeString(offsets[1], object.correct);
+  writer.writeString(offsets[2], object.mean);
+  writer.writeString(offsets[3], object.question);
+}
+
+GrammarQuestion _grammarQuestionDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = GrammarQuestion();
+  object.alternatives = reader.readStringList(offsets[0]) ?? [];
+  object.correct = reader.readString(offsets[1]);
+  object.mean = reader.readString(offsets[2]);
+  object.question = reader.readString(offsets[3]);
+  return object;
+}
+
+P _grammarQuestionDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension GrammarQuestionQueryFilter
+    on QueryBuilder<GrammarQuestion, GrammarQuestion, QFilterCondition> {
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'filename', Sort.asc);
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'alternatives',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
-  QueryBuilder<Word, Word, QAfterSortBy> sortByFilenameDesc() {
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'filename', Sort.desc);
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'alternatives',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
-  QueryBuilder<Word, Word, QAfterSortBy> sortByMean() {
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mean', Sort.asc);
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'alternatives',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
-  QueryBuilder<Word, Word, QAfterSortBy> sortByMeanDesc() {
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mean', Sort.desc);
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'alternatives',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
-  QueryBuilder<Word, Word, QAfterSortBy> sortByReading() {
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'reading', Sort.asc);
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'alternatives',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
-  QueryBuilder<Word, Word, QAfterSortBy> sortByReadingDesc() {
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'reading', Sort.desc);
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'alternatives',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
-  QueryBuilder<Word, Word, QAfterSortBy> sortByWord() {
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesElementContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'word', Sort.asc);
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'alternatives',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
-  QueryBuilder<Word, Word, QAfterSortBy> sortByWordDesc() {
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesElementMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'word', Sort.desc);
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'alternatives',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'alternatives',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'alternatives',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'alternatives',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'alternatives',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'alternatives',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'alternatives',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'alternatives',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      alternativesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'alternatives',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      correctEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'correct',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      correctGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'correct',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      correctLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'correct',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      correctBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'correct',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      correctStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'correct',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      correctEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'correct',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      correctContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'correct',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      correctMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'correct',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      correctIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'correct',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      correctIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'correct',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      meanEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'mean',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      meanGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'mean',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      meanLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'mean',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      meanBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'mean',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      meanStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'mean',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      meanEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'mean',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      meanContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'mean',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      meanMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'mean',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      meanIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'mean',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      meanIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'mean',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      questionEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'question',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      questionGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'question',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      questionLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'question',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      questionBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'question',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      questionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'question',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      questionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'question',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      questionContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'question',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      questionMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'question',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      questionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'question',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GrammarQuestion, GrammarQuestion, QAfterFilterCondition>
+      questionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'question',
+        value: '',
+      ));
     });
   }
 }
 
-extension WordQuerySortThenBy on QueryBuilder<Word, Word, QSortThenBy> {
-  QueryBuilder<Word, Word, QAfterSortBy> thenByFilename() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'filename', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterSortBy> thenByFilenameDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'filename', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterSortBy> thenById() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterSortBy> thenByIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterSortBy> thenByMean() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mean', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterSortBy> thenByMeanDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mean', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterSortBy> thenByReading() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'reading', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterSortBy> thenByReadingDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'reading', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterSortBy> thenByWord() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'word', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Word, Word, QAfterSortBy> thenByWordDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'word', Sort.desc);
-    });
-  }
-}
-
-extension WordQueryWhereDistinct on QueryBuilder<Word, Word, QDistinct> {
-  QueryBuilder<Word, Word, QDistinct> distinctByFilename(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'filename', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Word, Word, QDistinct> distinctByMean(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'mean', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Word, Word, QDistinct> distinctByReading(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'reading', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Word, Word, QDistinct> distinctByTags() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'tags');
-    });
-  }
-
-  QueryBuilder<Word, Word, QDistinct> distinctByWord(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'word', caseSensitive: caseSensitive);
-    });
-  }
-}
-
-extension WordQueryProperty on QueryBuilder<Word, Word, QQueryProperty> {
-  QueryBuilder<Word, int, QQueryOperations> idProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
-    });
-  }
-
-  QueryBuilder<Word, String, QQueryOperations> filenameProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'filename');
-    });
-  }
-
-  QueryBuilder<Word, String, QQueryOperations> meanProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'mean');
-    });
-  }
-
-  QueryBuilder<Word, String, QQueryOperations> readingProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'reading');
-    });
-  }
-
-  QueryBuilder<Word, List<String>, QQueryOperations> tagsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'tags');
-    });
-  }
-
-  QueryBuilder<Word, String, QQueryOperations> wordProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'word');
-    });
-  }
-}
+extension GrammarQuestionQueryObject
+    on QueryBuilder<GrammarQuestion, GrammarQuestion, QFilterCondition> {}

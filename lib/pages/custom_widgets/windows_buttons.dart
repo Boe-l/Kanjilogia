@@ -22,8 +22,7 @@ class WindowButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment:
-          MainAxisAlignment.center, // Alinhando os botões no centro
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Minimize(
           colors: buttonColors,
@@ -40,10 +39,8 @@ class Minimize extends WindowButton {
       : super(
             animate: animate ?? false,
             iconBuilder: (buttonContext) => Center(
-                // Centralizando o ícone
                 child: Icon(Icons.remove_rounded,
-                    color: buttonContext.iconColor,
-                    size: 18.0)), // Ícone customizado
+                    color: buttonContext.iconColor, size: 18.0)),
             onPressed: onPressed ?? () => appWindow.minimize());
 }
 

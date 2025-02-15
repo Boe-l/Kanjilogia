@@ -1,32 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:pretty_animated_text/pretty_animated_text.dart';
 
-enum CardStyle { rounded, flat, outlined, shadowed, minimal }
+import 'package:kanjilogia/common/theme.dart';
+import 'package:kanjilogia/common/widget_transition.dart';
 
-class CustomCard extends StatefulWidget {
-  final String text;
+class GameScreenCard extends StatefulWidget {
+  final Map<String, dynamic> words;
   final double fontSize;
   final int fontWeight;
-  final CardStyle style;
+  final Function(String) processAnswer;
+  final ColorPalette colorPalette;
 
-  const CustomCard({
-    super.key, // Adiciona a key aqui
-    required this.text,
+  const GameScreenCard({
+    super.key,
+    required this.words,
     this.fontSize = 16.0,
     this.fontWeight = 400,
-    this.style = CardStyle.rounded,
-  }); // Passa a key para o StatefulWidget
+    required this.processAnswer,
+    required this.colorPalette,
+  });
 
   @override
-  CustomCardState createState() => CustomCardState();
+  GameScreenCardState createState() =>
+      GameScreenCardState(processAnswer: processAnswer);
 }
 
-class CustomCardState extends State<CustomCard>
+class GameScreenCardState extends State<GameScreenCard>
     with SingleTickerProviderStateMixin {
+  GameScreenCardState({required this.processAnswer});
+  final Function(String) processAnswer;
+
   bool _hasError = false;
   late AnimationController _shakeController;
   late Animation<double> _shakeAnimation;
   Color _textColor = const Color.fromARGB(255, 255, 255, 255);
-
+  int currentWidget = 0;
   @override
   void initState() {
     super.initState();
@@ -63,7 +71,7 @@ class CustomCardState extends State<CustomCard>
         if (mounted) {
           setState(() {
             _hasError = false;
-            _textColor = const Color.fromARGB(255, 255, 255, 255);
+            _textColor = widget.colorPalette.text;
           });
         }
       });
@@ -72,54 +80,154 @@ class CustomCardState extends State<CustomCard>
 
   @override
   Widget build(BuildContext context) {
+    return CircularRevealAnimationWidget(
+      widget: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        child:
+            (widget.words['word'] != null && widget.words['word']!.isNotEmpty)
+                ? CustomCard(
+                    context: context,
+                    hasError: _hasError,
+                    shakeAnimation: _shakeAnimation,
+                    shakeController: _shakeController,
+                    textColor: _textColor,
+                    widget: widget,
+                    key: ValueKey(0),
+                  )
+                : Quiz(
+                    processAnswer: processAnswer,
+                    key: ValueKey(1), //
+                    words: widget.words,
+                  ),
+      ),
+    );
+  }
+}
+
+class CustomCard extends StatefulWidget {
+  const CustomCard({
+    super.key,
+    required this.widget,
+    required this.shakeController,
+    required this.hasError,
+    required this.shakeAnimation,
+    required this.textColor,
+    required this.context,
+  });
+
+  final GameScreenCard widget;
+  final AnimationController shakeController;
+  final bool hasError;
+  final Animation<double> shakeAnimation;
+  final Color textColor;
+  final BuildContext context;
+
+  @override
+  CustomCardState createState() => CustomCardState();
+}
+
+class CustomCardState extends State<CustomCard> {
+  late AnimationController _shakeController;
+  late bool _hasError;
+  late Animation<double> _shakeAnimation;
+  late Color _textColor;
+  String _currentText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _shakeController = widget.shakeController;
+    _hasError = widget.hasError;
+    _shakeAnimation = widget.shakeAnimation;
+    _textColor = widget.textColor;
+    _currentText = widget.widget.words['word'] ?? '';
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.hasError != widget.hasError) {
+      setState(() {
+        _hasError = widget.hasError;
+      });
+    }
+    if (oldWidget.shakeAnimation != widget.shakeAnimation) {
+      setState(() {
+        _shakeAnimation = widget.shakeAnimation;
+      });
+    }
+    if (oldWidget.textColor != widget.textColor) {
+      setState(() {
+        _textColor = widget.textColor;
+      });
+    }
+    if (oldWidget.widget.words['word'] != widget.widget.words['word']) {
+      setState(() {
+        _currentText = widget.widget.words['word'] ?? '';
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            padding: _getPadding(widget.style).add(const EdgeInsets.all(8.0)),
-            decoration: BoxDecoration(
-              color: _getBackgroundColor(widget.style),
-              borderRadius:
-                  BorderRadius.circular(_getBorderRadius(widget.style)),
-              border: Border.all(
-                color: _getBorderColor(widget.style),
-                width: _getBorderWidth(widget.style),
-              ),
-              boxShadow: _getShadow(widget.style),
-            ),
-            constraints: const BoxConstraints(minWidth: 50, minHeight: 30),
-            child: AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.decelerate,
-              child: Center(
-                child: AnimatedBuilder(
-                  animation: _shakeController,
-                  builder: (context, child) {
-                    return Transform.translate(
-                      offset: Offset(_hasError ? _shakeAnimation.value : 0, 0),
-                      child: AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontSize: widget.fontSize /
-                                  (widget.text.length + 1) *
-                                  3,
-                              fontWeight: FontWeight.values[
-                                  (widget.fontWeight ~/ 100).clamp(0, 8)],
-                              color: _textColor,
+          return Center(
+            child: AnimatedBuilder(
+              animation: _shakeController,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(_hasError ? _shakeAnimation.value : 0, 0),
+                  child: AnimatedDefaultTextStyle(
+                    duration: const Duration(milliseconds: 50),
+                    curve: Curves.easeInOut,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontSize: widget.widget.fontSize /
+                              (_currentText.length + 1) *
+                              3,
+                          fontWeight: FontWeight.values[
+                              (widget.widget.fontWeight ~/ 100).clamp(0, 8)],
+                          color: _textColor,
+                        ),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder:
+                          (Widget child, Animation<double> animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                      child: OffsetText(
+                        key: ValueKey(_currentText),
+                        text: _formatText(_currentText, constraints.maxWidth),
+                        duration: const Duration(milliseconds: 400),
+                        type: AnimationType.letter,
+                        slideType: SlideAnimationType.alternateTB,
+                        textStyle: TextStyle(
+                          fontSize: widget.widget.fontSize,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 8.0,
+                              color: Colors.black.withValues(alpha: 0.5),
+                              offset: Offset(2, 2),
                             ),
-                        child: Text(
-                          _formatText(widget.text, constraints.maxWidth),
-                          textAlign: TextAlign.center,
+                          ],
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
+                  ),
+                );
+              },
             ),
           );
         },
@@ -128,58 +236,125 @@ class CustomCardState extends State<CustomCard>
   }
 }
 
-double _getBorderRadius(CardStyle style) {
-  switch (style) {
-    case CardStyle.rounded:
-      return 90;
-    case CardStyle.minimal:
-      return 0;
-    default:
-      return 8;
-  }
+class Quiz extends StatefulWidget {
+  final Map<String, dynamic> words;
+  final Function(String) processAnswer;
+
+  const Quiz({super.key, required this.words, required this.processAnswer});
+
+  @override
+  QuizState createState() => QuizState(processAnswer: processAnswer);
 }
 
-double _getBorderWidth(CardStyle style) {
-  return (style == CardStyle.outlined) ? 2 : 0;
-}
+class QuizState extends State<Quiz> with TickerProviderStateMixin {
+  QuizState({required this.processAnswer});
 
-Color _getBorderColor(CardStyle style) {
-  return (style == CardStyle.outlined) ? Colors.black : Colors.transparent;
-}
+  final Function(String) processAnswer;
+  bool evaluate = false;
+  bool selected = false;
 
-Color _getBackgroundColor(CardStyle style) {
-  switch (style) {
-    case CardStyle.shadowed:
-      return Colors.grey[200]!;
-    case CardStyle.minimal:
-      return Colors.transparent;
-    default:
-      return Colors.transparent;
-  }
-}
+  int perguntaAtual = 0;
+  List<String?> respostasUsuario = List.filled(3, null);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(minHeight: 60, maxHeight: 60),
+              child: Text(
+                widget.words['question'] ?? '',
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 20),
+            ...widget.words["alternatives"]!
+                .split(',')
+                .asMap()
+                .entries
+                .map<Widget>((entry) {
+              int index = entry.key;
+              String alternativa = entry.value.trim();
 
-List<BoxShadow> _getShadow(CardStyle style) {
-  if (style == CardStyle.shadowed) {
-    return [
-      BoxShadow(
-        color: Colors.black.withValues(alpha: .2),
-        blurRadius: 10,
-        spreadRadius: 2,
-        offset: const Offset(4, 4),
+              return RadioListTile<String>(
+                value: alternativa,
+                groupValue: respostasUsuario[perguntaAtual],
+                onChanged: evaluate
+                    ? null
+                    : (value) {
+                        setState(() {
+                          respostasUsuario[perguntaAtual] = value;
+                          evaluate = true;
+                          selected = true;
+                          Future.delayed(Duration(seconds: 2), () {
+                            String alternativaSelecionada =
+                                ['A', 'B', 'C', 'D', 'E'][index];
+
+                            processAnswer(alternativaSelecionada);
+
+                            setState(() {
+                              respostasUsuario[perguntaAtual] = null;
+                              evaluate = false;
+                              selected = false;
+                            });
+                          });
+                        });
+                      },
+                title: Row(
+                  children: [
+                    Text(
+                      '${['A', 'B', 'C', 'D', 'E'][index]}. $alternativa',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const Spacer(),
+                    generateIcon(perguntaAtual, alternativa),
+                  ],
+                ),
+                activeColor: Colors.grey,
+                selectedTileColor:
+                    respostasUsuario[perguntaAtual] == alternativa
+                        ? const Color.fromARGB(36, 158, 158, 158)
+                        : Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                selected: respostasUsuario[perguntaAtual] == alternativa,
+              );
+            }),
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
-    ];
+    );
   }
-  return [];
-}
 
-EdgeInsets _getPadding(CardStyle style) {
-  switch (style) {
-    case CardStyle.minimal:
-      return const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0);
-    case CardStyle.flat:
-      return const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0);
-    default:
-      return const EdgeInsets.all(16.0);
+  Widget generateIcon(int perguntaAtual, String alternativa) {
+    if (respostasUsuario[perguntaAtual] != null) {
+      return Container(
+        key: ValueKey(alternativa),
+        child: Icon(
+          alternativa == widget.words['correct']
+              ? Icons.check_circle
+              : Icons.cancel,
+          color: alternativa == widget.words['correct']
+              ? Colors.green
+              : Colors.red,
+          size: 30.0,
+        ),
+      );
+    }
+
+    return Container();
   }
 }
 
@@ -191,7 +366,6 @@ String _formatText(String text, double maxWidth) {
   )..layout(maxWidth: maxWidth);
 
   if (textPainter.didExceedMaxLines) {
-    // Se o texto ultrapassar o tamanho máximo, forçar quebra de linha após um espaço
     int breakIndex = text.indexOf(' ', (text.length / 2).floor());
     if (breakIndex == -1) breakIndex = text.length ~/ 2;
     return '${text.substring(0, breakIndex)}\n${text.substring(breakIndex)}';

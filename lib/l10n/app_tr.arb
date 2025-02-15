@@ -72,5 +72,16 @@
   "go_to_github_page": "GitHub sayfasına git",
   "reset_all": "Tüm verileri sil",
   "reset_all_questioning": "Tüm verileri silmek istediğinizden emin misiniz? Bu, yüklenmiş dosyalar, ayarlar ve tüm önbellek dahil.",
-  "go_confirm": "Onayla"
+  "go_confirm": "Onayla",
+  "sp_manage_settings": "Ayarları yönet",
+  "sp_default_font": "Varsayılan yazı tipi.",
+  "sp_error_loading_fonts": "Yazı tipleri yüklenemedi.",
+  "hp_history": "Geçmiş",
+  "hp_correct": "Doğru",
+  "hp_incorrect": "Yanlış",
+  "hp_correct_appear_here": "Doğru cevaplar burada görünecek.",
+  "hp_error_appear_here": "Yanlış cevaplar burada görünecek.",
+  "hp_pop_meaning": "Anlam:",
+  "hp_pop_file_origin": "Kaynak dosya:",
+  "hp_pop_user_answers": "Cevapların:"
 }

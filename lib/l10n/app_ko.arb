@@ -72,5 +72,16 @@
   "go_to_github_page": "GitHub 페이지로 이동",
   "reset_all": "모든 데이터 삭제",
   "reset_all_questioning": "모든 데이터를 삭제하시겠습니까? 여기에는 설치된 파일, 설정 및 모든 캐시가 포함됩니다.",
-  "go_confirm": "확인"
+  "go_confirm": "확인",
+  "sp_manage_settings": "설정 관리",
+  "sp_default_font": "기본 글꼴.",
+  "sp_error_loading_fonts": "글꼴을 불러올 수 없습니다.",
+  "hp_history": "기록",
+  "hp_correct": "정답",
+  "hp_incorrect": "오답",
+  "hp_correct_appear_here": "정답이 여기에 표시됩니다.",
+  "hp_error_appear_here": "오답이 여기에 표시됩니다.",
+  "hp_pop_meaning": "의미:",
+   "hp_pop_file_origin": "원본 파일:",
+  "hp_pop_user_answers": "당신의 답변:"
 }

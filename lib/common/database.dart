@@ -3,71 +3,155 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:idb_shim/idb_browser.dart'; // Para a Web
+import 'package:idb_shim/idb_browser.dart';
 
-import 'package:isar/isar.dart'; // Para dispositivos móveis e desktop
+import 'package:isar/isar.dart';
 
-part 'database.g.dart'; // Certifique-se de que o arquivo gerado estará aqui
+part 'database.g.dart';
 
-const String _objectStoreName = 'words';
+const String _objectStoreName = 'content';
 
-// Criação de um modelo de dados
 @Collection()
-class Word {
+class Content {
   Id id = Isar.autoIncrement;
+  late String filename;
+  late List<String> tags;
+  late List<Word> words;
+  late List<GrammarQuestion> grammarQuestions;
+
+  Content();
+
+  factory Content.fromJson(Map<String, dynamic> json) {
+    return Content()
+      ..filename = json['filename'] ?? ''
+      ..tags = List<String>.from(json['tags'] ?? [])
+      ..words = (json['words'] as List<dynamic>?)
+              ?.map((e) => Word.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          []
+      ..grammarQuestions = (json['grammarQuestions'] as List<dynamic>?)
+              ?.map((e) => GrammarQuestion.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'filename': filename,
+      'tags': tags,
+      'words': words.map((e) => e.toJson()).toList(),
+      'grammarQuestions': grammarQuestions.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+@Embedded()
+class Word {
   late String word;
-  late String reading;
+  late List<String> reading;
   late String mean;
-  late List<String> tags; // Lista de tags para cada palavra
-  late String filename; // Armazenar o nome do arquivo associado
+  late String filename;
+
+  Word();
+
+  factory Word.fromJson(Map<String, dynamic> json) {
+    return Word()
+      ..word = json['word'] ?? ''
+      ..reading = List<String>.from(json['reading'] ?? [])
+      ..mean = json['mean'] ?? ''
+      ..filename = json['filename'] ?? '';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'word': word,
+      'reading': reading,
+      'mean': mean,
+      'filename': filename,
+    };
+  }
+}
+
+@Embedded()
+class GrammarQuestion {
+  late String question;
+  late String mean;
+  late List<String> alternatives;
+  late String correct;
+
+  GrammarQuestion();
+
+  factory GrammarQuestion.fromJson(Map<String, dynamic> json) {
+    return GrammarQuestion()
+      ..question = json['question'] ?? ''
+      ..mean = json['mean'] ?? ''
+      ..alternatives = List<String>.from(json['alternatives'] ?? [])
+      ..correct = json['correct'] ?? '';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'question': question,
+      'mean': mean,
+      'alternatives': alternatives,
+      'correct': correct,
+    };
+  }
 }
 
 Isar? _isarInstance;
-// Função para obter a instância do banco de dados
 Future<Isar> getIsarInstance() async {
   if (_isarInstance != null) {
-    // Se já existe uma instância aberta, retorna a mesma
     return _isarInstance!;
   }
 
-  final dir = await getApplicationDocumentsDirectory();
-  _isarInstance = await Isar.open(
-    [WordSchema],
-    directory: dir.path,
-  );
+  try {
+    final dir = await getApplicationDocumentsDirectory();
+
+    _isarInstance = await Isar.open(
+      [ContentSchema],
+      directory: dir.path,
+    );
+  } catch (e) {
+    rethrow;
+  }
 
   return _isarInstance!;
 }
 
 Future<dynamic> getDbInstance() async {
-  // Se for Web, usar IndexedDB com idb_shim
   final dbFactory = getIdbFactory()?.open(
-    'wordDatabase',
+    'contentDatabase',
     version: 1,
     onUpgradeNeeded: (e) {
       final db = e.database;
-      db.createObjectStore('words', keyPath: 'filename');
+      db.createObjectStore(_objectStoreName, keyPath: 'filename');
     },
   );
   return dbFactory;
 }
 
-bool validateJson(Map<String, dynamic> json) {
-  return json.containsKey('word') &&
-      json.containsKey('reading') &&
-      json.containsKey('mean') &&
-      json['word'] is String &&
-      json['reading'] is String &&
-      json['mean'] is String;
-}
+bool validateWordJson(Map<String, dynamic> wordJson) {
+  if (!wordJson.containsKey('word') ||
+      !wordJson.containsKey('reading') ||
+      !wordJson.containsKey('mean')) {
+    return false;
+  }
 
-// Adiciona um arquivo JSON formatado ao banco de dados
-// Função para adicionar palavras ao banco de dados
+  if (wordJson['word'] is! String) return false;
+  if (wordJson['reading'] is! List ||
+      !(wordJson['reading'] as List).every((r) => r is String)) {
+    return false;
+  }
+  if (wordJson['mean'] is! String) return false;
+
+  return true;
+}
 
 Future<String> addJsonToDatabase(
     {String? jsonFilePath, Uint8List? jsonBytes}) async {
   if (jsonFilePath == null && jsonBytes == null) {
-    return '400'; // Nenhum dado fornecido
+    return '400';
   }
 
   String jsonString;
@@ -75,16 +159,15 @@ Future<String> addJsonToDatabase(
   if (jsonFilePath != null) {
     final file = File(jsonFilePath);
     if (!await file.exists()) {
-      return '404'; // Arquivo não encontrado
+      return '404';
     }
     jsonString = await file.readAsString(encoding: utf8);
   } else if (jsonBytes != null) {
     jsonString = utf8.decode(jsonBytes);
   } else {
-    return '400'; // Nenhum dado válido fornecido
+    return '400';
   }
 
-  // Função para corrigir pinyin
   String corrigirTexto(String texto) {
     return texto
         .replaceAll('ɡ', 'g')
@@ -107,254 +190,239 @@ Future<String> addJsonToDatabase(
     final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
 
     if (!jsonData.containsKey('filename') || jsonData['filename'] is! String) {
-      return '400'; // Formato do JSON incorreto: falta 'filename'
+      return '400';
     }
 
     final filename = jsonData['filename'] as String;
 
-    if (!jsonData.containsKey('content') ||
-        jsonData['content'] is! Map<String, dynamic>) {
-      return '400'; // Formato do JSON incorreto: falta 'content'
-    }
+    final content = jsonData;
+    final tags = content['tags'] as List<dynamic>? ?? [];
+    final wordsJson = content['words'] as List<dynamic>? ?? [];
+    final grammarQuestionsJson =
+        content['grammarQuestions'] as List<dynamic>? ?? [];
 
-    final content = jsonData['content'] as Map<String, dynamic>;
-    final tags = content['tags'] as List<dynamic>;
-    final wordsJson = content['words'] as List<dynamic>;
-
-    // Corrige o pinyin de todas as palavras antes de continuar
-    if (content.containsKey('words') && content['words'] is List) {
-      List<dynamic> wordsList = content['words'];
-
-      // Iterando sobre a lista de palavras e corrigindo 'word' e 'reading'
-      for (var wordJson in wordsList) {
+    if (wordsJson.isNotEmpty) {
+      for (var wordJson in wordsJson) {
         if (wordJson is Map<String, dynamic>) {
-          // Corrigir 'word' e 'reading' dentro de cada item da lista
           if (wordJson.containsKey('word')) {
             wordJson['word'] = corrigirTexto(wordJson['word'] ?? '');
           }
-          if (wordJson.containsKey('reading')) {
-            wordJson['reading'] = corrigirTexto(wordJson['reading'] ?? '');
+
+          if (wordJson.containsKey('reading') && wordJson['reading'] is List) {
+            List<String> readings = List<String>.from(wordJson['reading']);
+            for (int i = 0; i < readings.length; i++) {
+              readings[i] = corrigirTexto(readings[i]);
+            }
+            wordJson['reading'] = readings;
           }
         }
       }
     }
 
-    // Valida todas as palavras antes de continuar
-    final allValid = wordsJson.every((word) => validateJson(word));
+    final allValid = wordsJson.every(
+        (word) => word is Map<String, dynamic> && validateWordJson(word));
 
     if (!allValid) {
-      return '500'; // Dados inválidos encontrados
+      return '500';
     }
 
-    // Verifica se o arquivo já existe no banco de dados
+    List<Word> words = [];
     if (kIsWeb) {
       final db = await getDbInstance();
-      final txn = db.transaction('words', idbModeReadWrite);
-      final store = txn.objectStore('words');
+      final txn = db.transaction(_objectStoreName, idbModeReadWrite);
+      final store = txn.objectStore(_objectStoreName);
       final result = await store.getAll();
 
       for (final item in result) {
         if (item['filename'].contains(filename)) {
-          return '409'; // Arquivo já existe no banco de dados
+          return '409';
         }
       }
 
-      await store.put({
+      List<Map<String, dynamic>> wordsList = [];
+      List<Map<String, dynamic>> grammarQuestionsList = [];
+
+      for (var wordJson in wordsJson) {
+        if (wordJson is Map<String, dynamic>) {
+          wordsList.add({
+            'word': wordJson['word'] ?? '',
+            'reading': List<String>.from(wordJson['reading'] ?? []),
+            'mean': wordJson['mean'] ?? '',
+            'filename': filename,
+          });
+        }
+      }
+
+      if (grammarQuestionsJson.isNotEmpty) {
+        for (var questionJson in grammarQuestionsJson) {
+          if (questionJson is Map<String, dynamic>) {
+            grammarQuestionsList.add({
+              'question': questionJson['question'] ?? '',
+              'mean': questionJson['mean'] ?? '',
+              'alternatives':
+                  List<String>.from(questionJson['alternatives'] ?? []),
+              'correct': questionJson['correct'] ?? '',
+            });
+          }
+        }
+      }
+
+      final content = {
         'filename': filename,
-        'content': content,
-      });
+        'tags': List<String>.from(tags),
+        'words': wordsList,
+        'grammarQuestions': grammarQuestionsList,
+      };
+
+      await store.put(content);
       await txn.completed;
     } else {
-      // Se for outras plataformas, usar Isar
       final isar = await getIsarInstance();
       final existingFile =
-          await isar.words.filter().filenameEqualTo(filename).findFirst();
+          await isar.contents.filter().filenameEqualTo(filename).findFirst();
       if (existingFile != null) {
-        return '409'; // Conflito: arquivo já existe
+        return '409';
       }
 
       await isar.writeTxn(() async {
-        for (final wordJson in wordsJson) {
+        for (var wordJson in wordsJson) {
           if (wordJson is Map<String, dynamic>) {
             final word = Word()
               ..word = wordJson['word'] ?? ''
-              ..reading = wordJson['reading'] ?? ''
+              ..reading = List<String>.from(wordJson['reading'] ?? [])
               ..mean = wordJson['mean'] ?? ''
-              ..tags = tags.cast<String>()
               ..filename = filename;
-            await isar.words.put(word);
+
+            words.add(word);
           }
         }
+
+        List<GrammarQuestion> grammarQuestions = [];
+
+        if (grammarQuestionsJson.isNotEmpty) {
+          for (var questionJson in grammarQuestionsJson) {
+            if (questionJson is Map<String, dynamic>) {
+              final question = GrammarQuestion()
+                ..question = questionJson['question'] ?? ''
+                ..mean = questionJson['mean'] ?? ''
+                ..alternatives =
+                    List<String>.from(questionJson['alternatives'] ?? [])
+                ..correct = questionJson['correct'] ?? '';
+              grammarQuestions.add(question);
+            }
+          }
+        }
+
+        final content = Content()
+          ..filename = filename
+          ..tags = List<String>.from(tags)
+          ..words = words
+          ..grammarQuestions = grammarQuestions;
+
+        await isar.contents.put(content);
       });
     }
-
-    return '0'; // Sucesso
+    return '0';
   } catch (e) {
-    return '500'; // Erro interno
+    return '500';
   }
 }
 
-// Lista todos os filenames distintos no banco de dados
-// Lista todos os filenames distintos no banco de dados
 Future<Map<String, Set<String>>> listFilenamesWithTags() async {
   if (kIsWeb) {
     final db = await getDbInstance();
-    // Para Web, usar IndexedDB
-    final txn = db.transaction('words', idbModeReadOnly);
-    final store = txn.objectStore('words');
+    final txn = db.transaction(_objectStoreName, idbModeReadOnly);
+    final store = txn.objectStore(_objectStoreName);
     final result = await store.getAll();
     await txn.completed;
 
     final Map<String, Set<String>> filenamesWithTags = {};
     for (final item in result) {
       final filename = item['filename'];
-      final tags = item['content']['tags'];
+      final tags = item['tags'] ?? [];
+
       filenamesWithTags[filename] = Set<String>.from(tags);
     }
 
     return filenamesWithTags;
   } else {
-    // Para outras plataformas, usar Isar
     final isar = await getIsarInstance();
 
-    // Obtém todas as palavras diretamente
-    final allWords = await isar.words.where().findAll();
+    final allContents = await isar.contents.where().findAll();
 
-    // Agrupa tags por filename
     final Map<String, Set<String>> filenamesWithTags = {};
 
-    for (var word in allWords) {
-      if (!filenamesWithTags.containsKey(word.filename)) {
-        filenamesWithTags[word.filename] = {};
+    for (var content in allContents) {
+      if (!filenamesWithTags.containsKey(content.filename)) {
+        filenamesWithTags[content.filename] = {};
       }
-      filenamesWithTags[word.filename]!.addAll(word.tags);
+      for (var tag in content.tags) {
+        filenamesWithTags[content.filename]!.add(tag);
+      }
     }
+
     return filenamesWithTags;
   }
 }
 
-// Apaga todas as entradas relacionadas a um filename específico
 Future<String> deleteFilename(String filename) async {
   if (kIsWeb) {
     final db = await getDbInstance();
-    final txn = db.transaction('words', idbModeReadWrite);
-    final store = txn.objectStore('words');
+    final txn = db.transaction(_objectStoreName, idbModeReadWrite);
+    final store = txn.objectStore(_objectStoreName);
     await store.delete(filename);
     await txn.completed;
     return 'Arquivo deletado com sucesso';
   } else {
     final isar = await getIsarInstance();
+
     final result = await isar.writeTxn(() async {
       final deletedCount =
-          await isar.words.filter().filenameEqualTo(filename).deleteAll();
+          await isar.contents.filter().filenameEqualTo(filename).deleteAll();
+
       return deletedCount > 0
           ? "Arquivo deletado com sucesso"
           : "Nenhuma entrada encontrada";
     });
+
     return result;
   }
 }
 
-Future<List<Word>> getWordsByFilenames(List<String> filenames) async {
+Future<List<Map<String, dynamic>>> getContentsByFilenames(
+    List<String> filenames) async {
   try {
     if (kIsWeb) {
-      // Usar IndexedDB para Web
       final db = await getDbInstance();
       final txn = db.transaction(_objectStoreName, idbModeReadOnly);
       final store = txn.objectStore(_objectStoreName);
-      List<Word> results = [];
+      List<Map<String, dynamic>> results = [];
 
       for (final filename in filenames) {
         final object = await store.getObject(filename);
         if (object != null) {
-          final content = object['content'] as Map<String, dynamic>;
-          final wordsJson = content['words'] as List<dynamic>;
-          for (final wordJson in wordsJson) {
-            if (wordJson is Map<String, dynamic>) {
-              final word = Word()
-                ..word = wordJson['word']
-                ..reading = wordJson['reading']
-                ..mean = wordJson['mean']
-                ..tags = content['tags'].cast<String>()
-                ..filename = filename;
-              results.add(word);
-            }
-          }
+          results.add(object);
         }
       }
+
       await txn.completed;
       return results;
     } else {
-      // Usar Isar para outras plataformas
       final isar = await getIsarInstance();
-      final results = <Word>[];
+      final results = <Map<String, dynamic>>[];
 
       for (final filename in filenames) {
-        final words =
-            await isar.words.filter().filenameEqualTo(filename).findAll();
-        results.addAll(words);
+        final contents =
+            await isar.contents.filter().filenameEqualTo(filename).findAll();
+
+        for (final content in contents) {
+          results.add(content.toJson());
+        }
       }
 
       return results;
     }
   } catch (e) {
     return [];
-  }
-}
-
-Future<String> exportWordsToJson(
-    List<String> filenames, String outputPath) async {
-  try {
-    List<Word> words;
-    if (kIsWeb) {
-      // Usar IndexedDB para Web
-      final db = await getDbInstance();
-      final txn = db.transaction(_objectStoreName, idbModeReadOnly);
-      final store = txn.objectStore(_objectStoreName);
-      words = [];
-
-      for (final filename in filenames) {
-        final object = await store.getObject(filename);
-        if (object != null) {
-          final content = object['content'] as Map<String, dynamic>;
-          final wordsJson = content['words'] as List<dynamic>;
-          for (final wordJson in wordsJson) {
-            if (wordJson is Map<String, dynamic>) {
-              final word = Word()
-                ..word = wordJson['word']
-                ..reading = wordJson['reading']
-                ..mean = wordJson['mean']
-                ..tags = content['tags'].cast<String>()
-                ..filename = filename;
-              words.add(word);
-            }
-          }
-        }
-      }
-      await txn.completed;
-    } else {
-      // Usar Isar para outras plataformas
-      words = await getWordsByFilenames(filenames);
-    }
-
-    final groupedWords = <String, dynamic>{};
-    for (final filename in filenames) {
-      groupedWords[filename] = words
-          .where((word) => word.filename == filename)
-          .map((word) => {
-                'word': word.word,
-                'reading': word.reading,
-                'mean': word.mean,
-                'tags': word.tags,
-              })
-          .toList();
-    }
-
-    final jsonString = jsonEncode(groupedWords);
-    final file = File(outputPath);
-    await file.writeAsString(jsonString);
-    return "Dados exportados para $outputPath.";
-  } catch (e) {
-    return '500'; // Erro interno ao exportar
   }
 }

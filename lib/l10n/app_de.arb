@@ -72,5 +72,16 @@
   "go_to_github_page": "Zur GitHub-Seite gehen",
   "reset_all": "Alle Daten löschen",
   "reset_all_questioning": "Sind Sie sicher, dass Sie alle Daten löschen möchten? Dies umfasst installierte Dateien, Einstellungen und den gesamten Cache.",
-  "go_confirm": "Bestätigen"
+  "go_confirm": "Bestätigen",
+  "sp_manage_settings": "Einstellungen verwalten",
+  "sp_default_font": "Standard-Schriftart.",
+  "sp_error_loading_fonts": "Schriftarten konnten nicht geladen werden.",
+  "hp_history": "Verlauf",
+  "hp_correct": "Richtig",
+  "hp_incorrect": "Falsch",
+  "hp_correct_appear_here": "Richtige Antworten erscheinen hier.",
+  "hp_error_appear_here": "Falsche Antworten erscheinen hier.",
+  "hp_pop_meaning": "Bedeutung:",
+  "hp_pop_file_origin": "Quelldatei:",
+  "hp_pop_user_answers": "Deine Antworten:"
 }

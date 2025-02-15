@@ -72,5 +72,16 @@
   "go_to_github_page": "前往 GitHub 页面",
   "reset_all": "删除所有数据",
   "reset_all_questioning": "您确定要删除所有数据吗？这包括已安装的文件、设置和所有缓存。",
-  "go_confirm": "确认"
+  "go_confirm": "确认",
+  "sp_manage_settings": "管理设置",
+  "sp_default_font": "默认字体。",
+  "sp_error_loading_fonts": "无法加载字体。",
+  "hp_history": "历史记录",
+  "hp_correct": "正确",
+  "hp_incorrect": "错误",
+  "hp_correct_appear_here": "正确答案将在此显示。",
+  "hp_error_appear_here": "错误答案将在此显示。",
+  "hp_pop_meaning": "含义：",
+  "hp_pop_file_origin": "源文件：",
+  "hp_pop_user_answers": "你的答案："
 }

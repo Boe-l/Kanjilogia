@@ -7,6 +7,8 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:kanjilogia/common/theme.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import '../common/database.dart';
 import 'package:file_picker/file_picker.dart';
@@ -43,7 +45,7 @@ class ManagerPageState extends State<ManagerPage>
   List<Map<String, dynamic>> _files = [];
   Map<String, Map<String, dynamic>> fileData = {};
   final BehaviorSubject<int> counterSubject = BehaviorSubject<int>.seeded(0);
-
+  late ColorPalette colorPalette;
   Slider? slider;
   @override
   void initState() {
@@ -107,8 +109,18 @@ class ManagerPageState extends State<ManagerPage>
     _tags.addAll(newTags);
 
     for (String filename in newFilenames) {
-      final words = await getWordsByFilenames([filename]);
-      _wordCounts[filename] = words.length;
+      final fileContent = await getContentsByFilenames([filename]);
+      num totalWords = 0;
+
+      if (fileContent[0]['words'].isNotEmpty) {
+        totalWords += fileContent[0]['words'].length;
+      }
+
+      if (fileContent[0]['grammarQuestions'].isNotEmpty) {
+        totalWords += fileContent[0]['grammarQuestions'].length;
+      }
+
+      _wordCounts[filename] = totalWords.toInt();
     }
 
     for (var i = oldLength; i < _filenames.length; i++) {
@@ -163,6 +175,9 @@ class ManagerPageState extends State<ManagerPage>
       if (content['words'] is List) {
         return (content['words'] as List).length;
       }
+      if (content['grammarQuestions'] is List) {
+        return (content['grammarQuestions'] as List).length;
+      }
       return 0;
     }
 
@@ -208,7 +223,7 @@ class ManagerPageState extends State<ManagerPage>
       useSafeArea: true,
       context: context,
       isScrollControlled: true,
-      backgroundColor: Color.fromARGB(255, 56, 16, 115),
+      backgroundColor: colorPalette.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
       ),
@@ -272,7 +287,7 @@ class ManagerPageState extends State<ManagerPage>
                           padding: EdgeInsets.all(16.0),
                           child: Text(
                             AppLocalizations.of(context)!.mp_error_file_load,
-                            style: TextStyle(color: Colors.red),
+                            style: TextStyle(color: colorPalette.error),
                           ),
                         )
                       else if (filteredFiles.isEmpty)
@@ -306,8 +321,7 @@ class ManagerPageState extends State<ManagerPage>
                                       child: Card(
                                         margin: const EdgeInsets.symmetric(
                                             horizontal: 8, vertical: 4),
-                                        color: const Color.fromARGB(
-                                            255, 74, 32, 126),
+                                        color: colorPalette.fillColor[1],
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(16),
@@ -330,18 +344,17 @@ class ManagerPageState extends State<ManagerPage>
                                             file['name']
                                                     ?.replaceAll('.json', '') ??
                                                 '',
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                            style: const TextStyle(),
                                           ),
                                           subtitle: Text(
                                             '${fileData[file['name']]!['tags'].isNotEmpty && fileData[file['name']]!['tags'][0].isNotEmpty ? '${AppLocalizations.of(context)!.tags}: ${fileData[file['name']]!['tags'][0] + ','}' : AppLocalizations.of(context)!.mp_error_file_load} ${fileData[file['name']]!['tags'].length > 1 && fileData[file['name']]!['tags'][1].isNotEmpty ? fileData[file['name']]!['tags'][1] + '.' : ''}\n'
                                             '${"${fileData[file['name']]!['wordCount']} ${AppLocalizations.of(context)!.words}"}',
-                                            style: const TextStyle(
-                                                color: Colors.white70),
+                                            style: const TextStyle(),
                                           ),
                                           trailing: IconButton(
-                                            icon: const Icon(Icons.download,
-                                                color: Colors.white),
+                                            icon: const Icon(
+                                              Icons.download,
+                                            ),
                                             onPressed: () async {
                                               final downloadUrl =
                                                   file['download_url'] ?? '';
@@ -397,13 +410,15 @@ class ManagerPageState extends State<ManagerPage>
               }
             }
             if (code == '409') {
-              _showToast(localization!.mp_error_file_exists, Colors.red);
+              _showToast(
+                  localization!.mp_error_file_exists, colorPalette.error);
             } else if (code == '500') {
-              _showToast(localization!.mp_error_invalid_formatting, Colors.red);
+              _showToast(localization!.mp_error_invalid_formatting,
+                  colorPalette.error);
             } else if (code == '0') {
               _showToast(localization!.mp_file_add_ok, Colors.green);
             } else {
-              _showToast(localization!.mp_error_file_add, Colors.red);
+              _showToast(localization!.mp_error_file_add, colorPalette.error);
             }
           }
           await _loadFilenames();
@@ -421,21 +436,24 @@ class ManagerPageState extends State<ManagerPage>
             await _loadFilenames();
 
             if (code == '409') {
-              _showToast(localization!.mp_error_file_exists, Colors.red);
+              _showToast(
+                  localization!.mp_error_file_exists, colorPalette.error);
             } else if (code == '500') {
-              _showToast(localization!.mp_error_invalid_formatting, Colors.red);
+              _showToast(localization!.mp_error_invalid_formatting,
+                  colorPalette.error);
             } else if (code == '0') {
               _showToast(localization!.mp_file_add_ok, Colors.green);
             } else {
-              _showToast(localization!.mp_error_file_add, Colors.red);
+              _showToast(localization!.mp_error_file_add, colorPalette.error);
             }
           } else {
             _showToast(
                 '${localization!.mp_error_download} ${response.statusCode}',
-                Colors.red);
+                colorPalette.error);
           }
         } catch (e) {
-          _showToast('${localization!.mp_error_download} $e', Colors.red);
+          _showToast(
+              '${localization!.mp_error_download} $e', colorPalette.error);
         }
       }
     }
@@ -451,7 +469,7 @@ class ManagerPageState extends State<ManagerPage>
           });
           urlController.clear();
           return AlertDialog(
-            backgroundColor: Color.fromARGB(255, 49, 19, 94),
+            backgroundColor: colorPalette.background,
             title: Text(
               AppLocalizations.of(context)!.mp_url_tooltip,
               style: TextStyle(fontSize: 17),
@@ -460,7 +478,9 @@ class ManagerPageState extends State<ManagerPage>
               focusNode: textFieldFocus,
               controller: urlController,
               decoration: InputDecoration(
+                  labelStyle: TextStyle(color: colorPalette.text),
                   labelText: AppLocalizations.of(context)!.mp_url_label,
+                  hintStyle: TextStyle(color: colorPalette.text),
                   hintText: AppLocalizations.of(context)!.mp_url_hint,
                   suffixIcon: IconButton(
                     icon: Icon(Icons.paste),
@@ -477,7 +497,10 @@ class ManagerPageState extends State<ManagerPage>
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(AppLocalizations.of(context)!.go_cancel),
+                child: Text(
+                  AppLocalizations.of(context)!.go_cancel,
+                  style: TextStyle(color: colorPalette.text),
+                ),
               ),
               TextButton(
                 onPressed: () async {
@@ -491,33 +514,36 @@ class ManagerPageState extends State<ManagerPage>
                         code = await addJsonToDatabase(jsonBytes: bytes);
                         await _loadFilenames();
                         if (code == '409') {
-                          _showToast(
-                              localization!.mp_error_file_exists, Colors.red);
+                          _showToast(localization!.mp_error_file_exists,
+                              colorPalette.error);
                         } else if (code == '500') {
                           _showToast(localization!.mp_error_invalid_formatting,
-                              Colors.red);
+                              colorPalette.error);
                         } else if (code == '0') {
                           _showToast(
                               localization!.mp_file_add_ok, Colors.green);
                         } else {
-                          _showToast(
-                              localization!.mp_error_file_add, Colors.red);
+                          _showToast(localization!.mp_error_file_add,
+                              colorPalette.error);
                         }
                       } else {
                         _showToast(
                             '${localization!.mp_error_download} ${response.statusCode}',
-                            Colors.red);
+                            colorPalette.error);
                       }
                     } catch (e) {
-                      _showToast(
-                          '${localization!.mp_error_download} $e', Colors.red);
+                      _showToast('${localization!.mp_error_download} $e',
+                          colorPalette.error);
                     }
                   } else {
-                    _showToast(
-                        AppLocalizations.of(context)!.mp_url_empty, Colors.red);
+                    _showToast(AppLocalizations.of(context)!.mp_url_empty,
+                        colorPalette.error);
                   }
                 },
-                child: Text(AppLocalizations.of(context)!.add),
+                child: Text(
+                  AppLocalizations.of(context)!.add,
+                  style: TextStyle(color: colorPalette.text),
+                ),
               ),
             ],
           );
@@ -538,7 +564,7 @@ class ManagerPageState extends State<ManagerPage>
       curve: Curves.elasticOut,
       reverseCurve: Curves.linear,
       backgroundColor: color,
-      textStyle: const TextStyle(color: Colors.white, fontSize: 16),
+      textStyle: const TextStyle(fontSize: 16),
     );
   }
 
@@ -550,21 +576,22 @@ class ManagerPageState extends State<ManagerPage>
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
           margin: const EdgeInsets.only(right: 8.0),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 79, 55, 139),
+            color: colorPalette.fillColor[0],
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Text(
             AppLocalizations.of(context)!.mp_url_tooltip,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: Colors.white,
+              color: colorPalette.text,
             ),
           ),
         ),
         FloatingActionButton(
+          backgroundColor: colorPalette.fillColor[1],
           onPressed: () => _addFile(true, ''),
           heroTag: "btn1",
-          child: const Icon(Icons.add_link),
+          child: Icon(Icons.add_link, color: colorPalette.iconColor),
         ),
       ],
     );
@@ -576,22 +603,22 @@ class ManagerPageState extends State<ManagerPage>
         padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
         margin: const EdgeInsets.only(right: 8.0),
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 79, 55, 139),
+          color: colorPalette.fillColor[0],
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Text(
           AppLocalizations.of(context)!.mp_local_file,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
-            color: Colors.white,
+            color: colorPalette.text,
           ),
         ),
       ),
       FloatingActionButton(
-        onPressed: () => _addFile(false, ''),
-        heroTag: "btn2",
-        child: Icon(Icons.add),
-      ),
+          onPressed: () => _addFile(false, ''),
+          heroTag: "btn2",
+          backgroundColor: colorPalette.fillColor[1],
+          child: Icon(Icons.add, color: colorPalette.iconColor)),
     ]);
   }
 
@@ -602,21 +629,25 @@ class ManagerPageState extends State<ManagerPage>
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
           margin: const EdgeInsets.only(right: 8.0),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 79, 55, 139),
+            color: colorPalette.fillColor[0],
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Text(
             AppLocalizations.of(context)!.mp_github_file,
-            style: const TextStyle(
+            style: TextStyle(
+              color: colorPalette.text,
               fontSize: 14,
-              color: Colors.white,
             ),
           ),
         ),
         FloatingActionButton(
           onPressed: () => showFilesPopup(context),
           heroTag: "btn3",
-          child: Icon(Icons.web),
+          backgroundColor: colorPalette.fillColor[1],
+          child: Icon(
+            Icons.web,
+            color: colorPalette.iconColor,
+          ),
         ),
       ],
     );
@@ -629,6 +660,8 @@ class ManagerPageState extends State<ManagerPage>
   }
 
   Widget files(BuildContext context, AppLocalizations? localization) {
+    colorPalette = Provider.of<ColorPalette>(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color.fromARGB(0, 56, 16, 115),
@@ -646,12 +679,12 @@ class ManagerPageState extends State<ManagerPage>
                         Text(
                           AppLocalizations.of(context)!.manage_files,
                           style: GoogleFonts.rampartOne(
-                            color: Colors.white,
+                            color: colorPalette.text,
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
                             shadows: [
                               Shadow(
-                                color: Colors.blueAccent,
+                                color: colorPalette.highlight,
                                 blurRadius: 10,
                               )
                             ],
@@ -667,8 +700,7 @@ class ManagerPageState extends State<ManagerPage>
                           ? Center(
                               child: Text(
                                 AppLocalizations.of(context)!.mp_addedfiles,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
+                                style: TextStyle(fontSize: 18),
                               ),
                             )
                           : AnimationLimiter(
@@ -691,10 +723,10 @@ class ManagerPageState extends State<ManagerPage>
                                         index >= _tags.length) {
                                       return const SizedBox();
                                     }
-        
+
                                     final filename = _filenames[index];
                                     final tags = _tags[index].toList();
-        
+
                                     return AnimationConfiguration.staggeredList(
                                       position: index,
                                       duration:
@@ -709,8 +741,8 @@ class ManagerPageState extends State<ManagerPage>
                                           child: Card(
                                             margin: const EdgeInsets.symmetric(
                                                 horizontal: 8, vertical: 4),
-                                            color: const Color.fromARGB(
-                                                255, 67, 19, 138),
+                                            color: colorPalette.fillColor[1]
+                                                .withValues(alpha: 0.9),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(16),
@@ -732,18 +764,16 @@ class ManagerPageState extends State<ManagerPage>
                                               ),
                                               title: Text(
                                                 filename,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
+                                                style: const TextStyle(),
                                               ),
                                               subtitle: Text(
                                                 '${AppLocalizations.of(context)!.tags}: ${tags.join(', ')}.\n'
                                                 '${_wordCounts.containsKey(filename) ? "${_wordCounts[filename]} ${AppLocalizations.of(context)!.words}" : AppLocalizations.of(context)!.loading}',
-                                                style: const TextStyle(
-                                                    color: Colors.white70),
+                                                style: const TextStyle(),
                                               ),
                                               trailing: IconButton(
-                                                icon: const Icon(Icons.delete,
-                                                    color: Colors.redAccent),
+                                                icon: Icon(Icons.delete,
+                                                    color: colorPalette.error),
                                                 onPressed: () =>
                                                     _deleteFile(filename),
                                               ),
@@ -772,8 +802,8 @@ class ManagerPageState extends State<ManagerPage>
                       tooltip: AppLocalizations.of(context)!.action_menu,
                       fabButtons: <Widget>[float1(), float3(), float2()],
                       key: key,
-                      colorStartAnimation: const Color(0xFF6C5CE7),
-                      colorEndAnimation: Colors.red,
+                      colorStartAnimation: colorPalette.fillColor[1],
+                      colorEndAnimation: colorPalette.errorBorderColor,
                       animatedIconData: AnimatedIcons.menu_close,
                     ),
                   ),
