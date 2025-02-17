@@ -7,77 +7,107 @@
     "words": [
         {
             "word": "赤",
-            "reading": "あか",
+            "reading": [
+                "あか"
+            ],
             "mean": "vermelho"
         },
         {
             "word": "青",
-            "reading": "あお",
+            "reading": [
+                "あお"
+            ],
             "mean": "azul"
         },
         {
             "word": "黄色",
-            "reading": "きいろ",
+            "reading": [
+                "きいろ"
+            ],
             "mean": "amarelo"
         },
         {
             "word": "緑",
-            "reading": "みどり",
+            "reading": [
+                "みどり"
+            ],
             "mean": "verde"
         },
         {
             "word": "黒",
-            "reading": "くろ",
+            "reading": [
+                "くろ"
+            ],
             "mean": "preto"
         },
         {
             "word": "白",
-            "reading": "しろ",
+            "reading": [
+                "しろ"
+            ],
             "mean": "branco"
         },
         {
             "word": "ピンク",
-            "reading": "ぴんく",
+            "reading": [
+                "ぴんく"
+            ],
             "mean": "rosa"
         },
         {
             "word": "紫",
-            "reading": "むらさき",
+            "reading": [
+                "むらさき"
+            ],
             "mean": "roxo"
         },
         {
             "word": "茶色",
-            "reading": "ちゃいろ",
+            "reading": [
+                "ちゃいろ"
+            ],
             "mean": "marrom"
         },
         {
             "word": "灰色",
-            "reading": "はいいろ",
+            "reading": [
+                "はいいろ"
+            ],
             "mean": "cinza"
         },
         {
             "word": "オレンジ",
-            "reading": "おれんじ",
+            "reading": [
+                "おれんじ"
+            ],
             "mean": "laranja"
         },
         {
             "word": "金色",
-            "reading": "きんいろ",
+            "reading": [
+                "きんいろ"
+            ],
             "mean": "dourado"
         },
         {
             "word": "銀色",
-            "reading": "ぎんいろ",
+            "reading": [
+                "ぎんいろ"
+            ],
             "mean": "prateado"
         },
         {
             "word": "水色",
-            "reading": "みずいろ",
+            "reading": [
+                "みずいろ"
+            ],
             "mean": "azul claro"
         },
         {
             "word": "ベージュ",
-            "reading": "べえじゅ",
+            "reading": [
+                "べえじゅ"
+            ],
             "mean": "bege"
         }
     ],

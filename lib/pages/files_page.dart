@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:kanjilogia/common/debg.dart';
 import 'package:kanjilogia/common/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -51,8 +52,6 @@ class ManagerPageState extends State<ManagerPage>
   void initState() {
     super.initState();
 
-    _loadInitialData();
-
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent),
     );
@@ -79,13 +78,6 @@ class ManagerPageState extends State<ManagerPage>
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {});
-  }
-
-  Future<void> _loadInitialData() async {
-    final files = await _sharedPrefs.getFiles();
-    setState(() {
-      _files = files;
-    });
   }
 
   Future<void> _refreshFiles() async {
@@ -159,6 +151,8 @@ class ManagerPageState extends State<ManagerPage>
       files = _files;
       filteredFiles = List.from(files);
     } catch (e) {
+      Debg().error("showFilesPopup error: ${e.toString()}");
+
       errorOccurred = true;
     }
     void filterFiles(String query) {
@@ -425,7 +419,8 @@ class ManagerPageState extends State<ManagerPage>
           }
           await _loadFilenames();
         } catch (e) {
-          debugPrint(e as String);
+          Debg().error("_addFile $type, $url error: ${e.toString()}");
+
         }
       }
     } else {
@@ -454,6 +449,8 @@ class ManagerPageState extends State<ManagerPage>
                 colorPalette.error);
           }
         } catch (e) {
+          Debg().error("_addFile $type, $url error: ${e.toString()}");
+
           _showToast(
               '${localization!.mp_error_download} $e', colorPalette.error);
         }
@@ -534,6 +531,9 @@ class ManagerPageState extends State<ManagerPage>
                             colorPalette.error);
                       }
                     } catch (e) {
+                      Debg()
+                          .error("_addFile $type, $url error: ${e.toString()}");
+
                       _showToast('${localization!.mp_error_download} $e',
                           colorPalette.error);
                     }
