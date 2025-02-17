@@ -61,7 +61,7 @@ class KanjilogiaState extends State<Kanjilogia> {
   }
 
   Future<void> loadFont([String? fontname]) async {
-    if (!kIsWeb || Platform.isWindows) {
+    if (!kIsWeb) {
       try {
         setState(() {
           fontFamily = fontname ?? '';

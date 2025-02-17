@@ -17,9 +17,9 @@ jobs:
         with:
           name: source-code
           path: |
-            .                     # Diretório raiz
-            !build/               # Excluindo a pasta build
-            !ios/                 # Excluindo a pasta ios
-            !android/             # Excluindo a pasta android
-            !.dart_tool/          # Excluindo a pasta .dart_tool
-            !*.log                # Excluindo arquivos de log
+            ./*                   
+            !**/build/**          
+            !**/ios/**            
+            !**/android/**         
+            !**/.dart_tool/**      
+            !**/*.log                 
