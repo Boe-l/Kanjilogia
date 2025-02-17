@@ -61,7 +61,7 @@ class KanjilogiaState extends State<Kanjilogia> {
   }
 
   Future<void> loadFont([String? fontname]) async {
-    if (!kIsWeb) {
+    if (!kIsWeb || Platform.isWindows) {
       try {
         setState(() {
           fontFamily = fontname ?? '';
@@ -198,7 +198,7 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
         },
       ).show(context: context);
     } catch (e) {
-      Debg().error(e as String);
+      Debg().error("Show tutorial error: ${e.toString()}");
     }
   }
 
