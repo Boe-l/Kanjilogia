@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:kanjilogia/common/debg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:idb_shim/idb_browser.dart';
@@ -113,6 +114,8 @@ Future<Isar> getIsarInstance() async {
       directory: dir.path,
     );
   } catch (e) {
+    Debg().error("getIsarInstance error: ${e.toString()}");
+
     rethrow;
   }
 
@@ -150,21 +153,19 @@ bool validateWordJson(Map<String, dynamic> wordJson) {
 
 Future<String> addJsonToDatabase(
     {String? jsonFilePath, Uint8List? jsonBytes}) async {
-  if (jsonFilePath == null && jsonBytes == null) {
-    return '400';
-  }
+  Debg().info(
+      "Trying to add json file, ['path': ${jsonFilePath != null ? "'true'" : "'false'"}, 'bytes': ${jsonBytes != null ? "'true'" : "'false'"}]");
 
   String jsonString;
 
   if (jsonFilePath != null) {
     final file = File(jsonFilePath);
-    if (!await file.exists()) {
-      return '404';
-    }
     jsonString = await file.readAsString(encoding: utf8);
   } else if (jsonBytes != null) {
     jsonString = utf8.decode(jsonBytes);
   } else {
+    Debg().error("Could not add file, null path, null bytes.");
+
     return '400';
   }
 
@@ -190,6 +191,8 @@ Future<String> addJsonToDatabase(
     final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
 
     if (!jsonData.containsKey('filename') || jsonData['filename'] is! String) {
+      Debg().error("Could not add file, invalid formatting.");
+
       return '400';
     }
 
@@ -223,6 +226,8 @@ Future<String> addJsonToDatabase(
         (word) => word is Map<String, dynamic> && validateWordJson(word));
 
     if (!allValid) {
+      Debg().error("Could not add file, invalid formatting.");
+
       return '500';
     }
 
@@ -235,6 +240,9 @@ Future<String> addJsonToDatabase(
 
       for (final item in result) {
         if (item['filename'].contains(filename)) {
+          Debg()
+              .error("Could not add file, file with same name already exists.");
+
           return '409';
         }
       }
@@ -322,8 +330,12 @@ Future<String> addJsonToDatabase(
         await isar.contents.put(content);
       });
     }
+    
+    Debg().error("File added successfully.");
     return '0';
   } catch (e) {
+    Debg().error("addJsonToDatabase error: ${e.toString()}");
+
     return '500';
   }
 }
@@ -423,6 +435,8 @@ Future<List<Map<String, dynamic>>> getContentsByFilenames(
       return results;
     }
   } catch (e) {
+    Debg().error("getContentsByFilenames error: ${e.toString()}");
+
     return [];
   }
 }

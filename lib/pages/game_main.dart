@@ -56,7 +56,7 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
         _filteredJsonFiles = jsonFiles;
       });
     } catch (e) {
-      Debg().error(e as String);
+      Debg().error("_loadJsonFiles error: ${e.toString()}");
     }
   }
 
@@ -102,7 +102,7 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
       _searchController.clear();
       setState(() {});
     } catch (e) {
-      Debg().error(e.toString());
+      Debg().error("_startGame (time: $selectedTime) error: ${e.toString()}");
     }
   }
 

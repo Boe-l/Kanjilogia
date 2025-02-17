@@ -165,6 +165,7 @@ class GameScreenState extends State<GameScreen> {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (!_timeIsPaused && timeLeftNotifier.value > 0) {
         timeLeftNotifier.value--;
+        if (isGameOver) _timeIsPaused = true;
       } else if (timeLeftNotifier.value == 0) {
         _processAnswer("");
         timer.cancel();
@@ -435,7 +436,10 @@ class GameScreenState extends State<GameScreen> {
                                                               .iconColor,
                                                         ),
                                                         onPressed: () {
+                                                          pauseTimer();
                                                           navigateWithCircularAnimation(
+                                                            onComplete:
+                                                                resumeTimer,
                                                             context,
                                                             History(
                                                               correctItems:

@@ -96,7 +96,7 @@ class SharedPrefs {
         Debg().exception('Falha ao buscar arquivos');
       }
     } catch (e) {
-      Debg().error('Erro ao buscar ou salvar os arquivos: $e');
+      Debg().error("fetchAndSaveFiles error: ${e.toString()}");
     }
   }
 

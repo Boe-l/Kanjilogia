@@ -52,7 +52,7 @@ class Debg {
 
       await logFile.writeAsString('$logMessage\n', mode: FileMode.append);
     } catch (e) {
-      debugPrint("[ERROR] Failed to write log: $e");
+      Debg().error("Failed to write log: ${e.toString()}");
     }
   }
 

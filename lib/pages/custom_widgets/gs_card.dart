@@ -308,14 +308,18 @@ class QuizState extends State<Quiz> with TickerProviderStateMixin {
                       },
                 title: Row(
                   children: [
-                    Text(
-                      '${['A', 'B', 'C', 'D', 'E'][index]}. $alternativa',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                    Expanded(
+                      child: Text(
+                        '${['A', 'B', 'C', 'D', 'E'][index]}. $alternativa',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(width: 8),
                     generateIcon(perguntaAtual, alternativa),
                   ],
                 ),

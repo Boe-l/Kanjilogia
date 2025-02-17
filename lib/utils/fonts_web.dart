@@ -56,6 +56,8 @@ Future<T> promiseToFuture<T extends JSAny>(JSPromise<T> promise) {
   try {
     callMethod(promise, 'then', [resolve, reject]);
   } catch (e) {
+    Debg().error("promiseToFuture(fonts_web) error: ${e.toString()}");
+
     completer.completeError('Error calling method: $e');
   }
 
@@ -107,7 +109,7 @@ class LocalFonts {
 
       return fonts;
     } catch (e, stack) {
-      Debg().error('Could not load local fonts: $e');
+      Debg().error("listFontsmain(fonts_web) error: ${e.toString()}");
       Debg().error('Stack trace: $stack');
       return [];
     }
@@ -118,8 +120,9 @@ class LocalFonts {
       final fonts = await listFontsmain();
       return fonts.map((font) => font.postscriptName).toList();
     } catch (e) {
-      Debg().error("Erro ao carregar as fontes: $e");
-      return []; // Retorna uma lista vazia em caso de erro
+      Debg().error("listFonts(fonts_web) error: ${e.toString()}");
+
+      return [];
     }
   }
 
@@ -150,7 +153,7 @@ class LocalFonts {
         return;
       }
     } catch (e) {
-      Debg().error('Could not load font: $e');
+      Debg().error("loadFont(fonts_web) error: ${e.toString()}");
     }
   }
 
@@ -165,7 +168,8 @@ class LocalFonts {
       final arrayBuffer = await promiseToFuture(blob.arrayBuffer());
       return Uint8List.view(arrayBuffer.toDart);
     } catch (e) {
-      Debg().error('Failed to obtain blob bytes: $e');
+      Debg().error("getBlobBytes(fonts_web) error: ${e.toString()}");
+
       rethrow;
     }
   }
@@ -179,7 +183,7 @@ class LocalFonts {
     try {
       fonts = await LocalFonts().listFonts();
     } catch (e) {
-      Debg().error("Erro ao carregar fontes: $e");
+      Debg().error("listFonts(fonts_web) error: ${e.toString()}");
     }
 
     if (!context.mounted) return;
@@ -299,7 +303,6 @@ class LocalFonts {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            // Nome da fonte ajustado com FittedBox
                                             FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(

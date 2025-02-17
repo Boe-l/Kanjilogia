@@ -23,7 +23,8 @@ class LocalFonts {
               .toList() ??
           [];
     } on PlatformException catch (e) {
-      Debg().error('Error loading fonts: ${e.message}');
+      Debg().error("listFonts(fonts_windows) error: ${e.toString()}");
+
       return [];
     }
   }
@@ -44,7 +45,7 @@ class LocalFonts {
     try {
       fonts = await LocalFonts().listFonts();
     } catch (e) {
-      Debg().error("Error loading fonts: $e");
+      Debg().error("showFontPickerPopup(fonts_windows) error: ${e.toString()}");
     }
 
     if (!context.mounted) return;

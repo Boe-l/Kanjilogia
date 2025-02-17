@@ -6,14 +6,16 @@ import 'package:provider/provider.dart';
 
 import 'package:kanjilogia/common/theme.dart';
 
-void navigateWithCircularAnimation(BuildContext context, Widget page) {
+void navigateWithCircularAnimation(BuildContext context, Widget page,
+    {VoidCallback? onComplete}) {
   ColorPalette colorPalette = Provider.of<ColorPalette>(context, listen: false);
 
   final screenSize = MediaQuery.of(context).size;
   final shortestSide = screenSize.shortestSide;
   final durationMs = (shortestSide * 2).clamp(800, 2000).toInt();
 
-  Navigator.of(context).push(
+  Navigator.of(context)
+      .push(
     PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionDuration: Duration(milliseconds: durationMs),
@@ -31,16 +33,19 @@ void navigateWithCircularAnimation(BuildContext context, Widget page) {
               },
             ),
             ClipPath(
-              clipper: CircularRevealClipper(
-                animation.value,
-              ),
+              clipper: CircularRevealClipper(animation.value),
               child: child,
             ),
           ],
         );
       },
     ),
-  );
+  )
+      .then((_) {
+    if (onComplete != null) {
+      onComplete();
+    }
+  });
 }
 
 class CircularRevealClipper extends CustomClipper<Path> {
