@@ -14,3 +14,5 @@ jobs:
 
   build-android:
     uses: ./.github/workflows/build-android.yaml
+  save-source:
+    uses: ./.github/workflows/save-source.yaml
