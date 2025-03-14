@@ -13,6 +13,7 @@ class SharedPrefs {
       'https://api.github.com/repos/Boe-l/Kanjilogia/contents/assets/json?ref=source';
   static const String _cachedFilesKey = 'cachedFiles';
   static const String _lastFetchTimeKey = 'lastFetchTime';
+  static const String _rpcEnabledKey = 'rpcEnabled';
 
   Future<void> saveTutorialComplete(bool isComplete) async {
     final prefs = await SharedPreferences.getInstance();
@@ -22,6 +23,16 @@ class SharedPrefs {
   Future<bool> isTutorialComplete() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_tutorialCompleteKey) ?? false;
+  }
+
+  Future<void> saveRPC(bool isEnabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_rpcEnabledKey, isEnabled);
+  }
+
+  Future<bool> getRPC() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_rpcEnabledKey) ?? false;
   }
 
   Future<void> saveMaxTime(int maxTime) async {

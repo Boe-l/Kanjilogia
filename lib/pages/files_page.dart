@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:kanjilogia/common/debg.dart';
 import 'package:kanjilogia/common/theme.dart';
+import 'package:kanjilogia/utils/discord_rpc.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import '../common/database.dart';
@@ -55,7 +56,12 @@ class ManagerPageState extends State<ManagerPage>
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent),
     );
-
+    Provider.of<DiscordRichPresenceNotifier>(context, listen: false)
+        .updateActivity(
+      title: 'Browsing Files',
+      subtitle: 'Viewing files list',
+      imageDetails: 'Kanjilogia',
+    );
     _loadFilenames();
 
     _animationController = AnimationController(
@@ -420,7 +426,6 @@ class ManagerPageState extends State<ManagerPage>
           await _loadFilenames();
         } catch (e) {
           Debg().error("_addFile $type, $url error: ${e.toString()}");
-
         }
       }
     } else {
@@ -754,14 +759,39 @@ class ManagerPageState extends State<ManagerPage>
                                               leading: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(8),
-                                                child: Image.asset(
-                                                  LocaleUtils.getFlagPath(
-                                                      tags.isNotEmpty
-                                                          ? tags.first
-                                                          : 'default'),
-                                                  width: 40,
-                                                  height: 40,
-                                                  fit: BoxFit.cover,
+                                                child: Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    // Primeira bandeira
+                                                    Image.asset(
+                                                      LocaleUtils.getFlagPath(
+                                                          tags.isNotEmpty
+                                                              ? tags.first
+                                                              : 'default'),
+                                                      width: 50,
+                                                      height: 50,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    // Segunda bandeira posicionada com deslocamento
+                                                    if (tags.length >
+                                                        1) // Verifica se há uma segunda bandeira
+                                                      Positioned(
+                                                        bottom:
+                                                            0, // Ajuste o valor para controlar a posição vertical
+                                                        right:
+                                                            0, // Ajuste o valor para controlar a posição horizontal
+                                                        child: Image.asset(
+                                                          LocaleUtils.getFlagPath(
+                                                              tags.elementAt(
+                                                                  1)), // Acessa a segunda bandeira
+                                                          width:
+                                                              25, // Ajuste o tamanho conforme necessário
+                                                          height:
+                                                              25, // Ajuste o tamanho conforme necessário
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                  ],
                                                 ),
                                               ),
                                               title: Text(

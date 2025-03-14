@@ -6,6 +6,7 @@ import 'package:kanjilogia/common/sharedpref.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kanjilogia/common/theme.dart';
 import 'package:kanjilogia/main.dart';
+import 'package:kanjilogia/utils/discord_rpc.dart';
 import 'dart:io' show Platform;
 import 'package:provider/provider.dart';
 import 'package:kanjilogia/utils/fonts_windows.dart';
@@ -23,6 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
   int _maxTime = 60;
   List<String> fonts = [];
   late ColorPalette colorPalette;
+  bool _isRPCEnabled = false;
 
   Future<void> _getMaxTime() async {
     final maxTime = await SharedPrefs().getMaxTime();
@@ -33,6 +35,8 @@ class _SettingsPageState extends State<SettingsPage> {
     if (isWindowsOrWeb) {
       fonts = await LocalFonts().listFonts();
     }
+    _isRPCEnabled = await SharedPrefs().getRPC();
+
     setState(() {});
   }
 
@@ -70,6 +74,20 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     _getMaxTime();
+    Provider.of<DiscordRichPresenceNotifier>(context, listen: false)
+        .updateActivity(
+      title: 'Viewing Settings',
+      subtitle: 'Idle',
+      imageDetails: 'Kanjilogia',
+    );
+  }
+
+  void _toggleRPC(bool value) async {
+    setState(() {
+      _isRPCEnabled = value;
+    });
+    Provider.of<DiscordRichPresenceNotifier>(context, listen: false)
+        .toggleRichPresence(value);
   }
 
   @override
@@ -170,46 +188,45 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                   ),
                 ),
-                isWindowsOrWeb
-                    ? Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: colorPalette.fillColor[1],
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
+                if (isWindowsOrWeb)
+                  Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colorPalette.fillColor[1],
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.font_download_rounded,
+                          color: colorPalette.iconColor,
+                          size: 32,
                         ),
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.font_download_rounded,
-                            color: colorPalette.iconColor,
-                            size: 32,
-                          ),
-                          title: Text(
-                            kanjilogiaKey.currentState?.fontFamily ??
-                                AppLocalizations.of(context)!.sp_default_font,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          subtitle: Text(
-                            fonts.isNotEmpty
-                                ? AppLocalizations.of(context)!
-                                    .fonts_count(fonts.length)
-                                : AppLocalizations.of(context)!
-                                    .sp_error_loading_fonts,
-                            style: TextStyle(),
-                          ),
-                          trailing: Icon(Icons.chevron_right,
-                              color: colorPalette.iconColor),
-                          onTap: _changeFont,
-                        ))
-                    : SizedBox.shrink(),
+                        title: Text(
+                          kanjilogiaKey.currentState?.fontFamily ??
+                              AppLocalizations.of(context)!.sp_default_font,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        subtitle: Text(
+                          fonts.isNotEmpty
+                              ? AppLocalizations.of(context)!
+                                  .fonts_count(fonts.length)
+                              : AppLocalizations.of(context)!
+                                  .sp_error_loading_fonts,
+                          style: TextStyle(),
+                        ),
+                        trailing: Icon(Icons.chevron_right,
+                            color: colorPalette.iconColor),
+                        onTap: _changeFont,
+                      )),
                 Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -253,6 +270,47 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                 ),
+                if (Platform.isWindows)
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: colorPalette.fillColor[1],
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.gamepad,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                      title: Text(
+                        'Discord RPC',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        'Enables/Disables Discord Rich Presence',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      trailing: Switch(
+                          value: _isRPCEnabled,
+                          onChanged: _toggleRPC,
+                          activeColor: Colors.green,
+                          inactiveThumbColor:
+                              const Color.fromARGB(200, 255, 255, 255),
+                          inactiveTrackColor:
+                              const Color.fromARGB(76, 43, 41, 41)),
+                      onTap: () {},
+                    ),
+                  )
               ],
             ),
           ),

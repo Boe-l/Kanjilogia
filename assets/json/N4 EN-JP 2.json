@@ -1,0 +1,543 @@
+{
+  "filename": "N4 EN-JP 2",
+  "tags": [
+    "jp",
+    "en",
+    "N4"
+  ],
+  "words": [
+    {
+      "word": "聞こえる",
+      "reading": [
+        "きこえる"
+      ],
+      "mean": "to be heard"
+    },
+    {
+      "word": "持ち物",
+      "reading": [
+        "もちもの"
+      ],
+      "mean": "belongings"
+    },
+    {
+      "word": "楽しい",
+      "reading": [
+        "たのしい"
+      ],
+      "mean": "fun"
+    },
+    {
+      "word": "会話",
+      "reading": [
+        "かいわ"
+      ],
+      "mean": "conversation"
+    },
+    {
+      "word": "話題",
+      "reading": [
+        "わだい"
+      ],
+      "mean": "topic"
+    },
+    {
+      "word": "町",
+      "reading": [
+        "まち"
+      ],
+      "mean": "town"
+    },
+    {
+      "word": "事",
+      "reading": [
+        "こと"
+      ],
+      "mean": "thing, matter"
+    },
+    {
+      "word": "特別",
+      "reading": [
+        "とくべつ"
+      ],
+      "mean": "special"
+    },
+    {
+      "word": "全然",
+      "reading": [
+        "ぜんぜん"
+      ],
+      "mean": "not at all"
+    },
+    {
+      "word": "好き",
+      "reading": [
+        "すき"
+      ],
+      "mean": "liked, favorite"
+    },
+    {
+      "word": "嫌い",
+      "reading": [
+        "きらい"
+      ],
+      "mean": "dislike"
+    },
+    {
+      "word": "明るい",
+      "reading": [
+        "あかるい"
+      ],
+      "mean": "bright"
+    },
+    {
+      "word": "暗い",
+      "reading": [
+        "くらい"
+      ],
+      "mean": "dark"
+    },
+    {
+      "word": "近く",
+      "reading": [
+        "ちかく"
+      ],
+      "mean": "nearby"
+    },
+    {
+      "word": "後で",
+      "reading": [
+        "あとで"
+      ],
+      "mean": "later"
+    },
+    {
+      "word": "外",
+      "reading": [
+        "そと"
+      ],
+      "mean": "outside"
+    },
+    {
+      "word": "中",
+      "reading": [
+        "なか"
+      ],
+      "mean": "inside"
+    },
+    {
+      "word": "言葉",
+      "reading": [
+        "ことば"
+      ],
+      "mean": "word, language"
+    },
+    {
+      "word": "図書館",
+      "reading": [
+        "としょかん"
+      ],
+      "mean": "library"
+    },
+    {
+      "word": "言う",
+      "reading": [
+        "いう"
+      ],
+      "mean": "to say"
+    },
+    {
+      "word": "使う",
+      "reading": [
+        "つかう"
+      ],
+      "mean": "to use"
+    },
+    {
+      "word": "見る",
+      "reading": [
+        "みる"
+      ],
+      "mean": "to see"
+    },
+    {
+      "word": "聞く",
+      "reading": [
+        "きく"
+      ],
+      "mean": "to ask"
+    },
+    {
+      "word": "作る",
+      "reading": [
+        "つくる"
+      ],
+      "mean": "to make"
+    },
+    {
+      "word": "食べる",
+      "reading": [
+        "たべる"
+      ],
+      "mean": "to eat"
+    },
+    {
+      "word": "見る",
+      "reading": [
+        "みる"
+      ],
+      "mean": "to look"
+    },
+    {
+      "word": "歩く",
+      "reading": [
+        "あるく"
+      ],
+      "mean": "to walk"
+    },
+    {
+      "word": "手伝う",
+      "reading": [
+        "てつだう"
+      ],
+      "mean": "to help"
+    },
+    {
+      "word": "助ける",
+      "reading": [
+        "たすける"
+      ],
+      "mean": "to assist"
+    },
+    {
+      "word": "料理",
+      "reading": [
+        "りょうり"
+      ],
+      "mean": "cooking"
+    },
+    {
+      "word": "運転",
+      "reading": [
+        "うんてん"
+      ],
+      "mean": "driving"
+    },
+    {
+      "word": "掃除",
+      "reading": [
+        "そうじ"
+      ],
+      "mean": "cleaning"
+    },
+    {
+      "word": "洗濯",
+      "reading": [
+        "せんたく"
+      ],
+      "mean": "laundry"
+    },
+    {
+      "word": "買い物",
+      "reading": [
+        "かいもの"
+      ],
+      "mean": "shopping"
+    },
+    {
+      "word": "遊ぶ",
+      "reading": [
+        "あそぶ"
+      ],
+      "mean": "to play"
+    },
+    {
+      "word": "読書",
+      "reading": [
+        "どくしょ"
+      ],
+      "mean": "reading"
+    },
+    {
+      "word": "寝る",
+      "reading": [
+        "ねる"
+      ],
+      "mean": "to sleep"
+    },
+    {
+      "word": "起きる",
+      "reading": [
+        "おきる"
+      ],
+      "mean": "to wake up"
+    },
+    {
+      "word": "行く",
+      "reading": [
+        "いく"
+      ],
+      "mean": "to go"
+    },
+    {
+      "word": "来る",
+      "reading": [
+        "くる"
+      ],
+      "mean": "to come"
+    },
+    {
+      "word": "帰る",
+      "reading": [
+        "かえる"
+      ],
+      "mean": "to return home"
+    },
+    {
+      "word": "する",
+      "reading": [
+        "する"
+      ],
+      "mean": "to do"
+    },
+    {
+      "word": "飲む",
+      "reading": [
+        "のむ"
+      ],
+      "mean": "to drink"
+    },
+    {
+      "word": "見せる",
+      "reading": [
+        "みせる"
+      ],
+      "mean": "to show"
+    },
+    {
+      "word": "話す",
+      "reading": [
+        "はなす"
+      ],
+      "mean": "to speak"
+    },
+    {
+      "word": "待つ",
+      "reading": [
+        "まつ"
+      ],
+      "mean": "to wait"
+    },
+    {
+      "word": "作業",
+      "reading": [
+        "さぎょう"
+      ],
+      "mean": "work, task"
+    },
+    {
+      "word": "掃除機",
+      "reading": [
+        "そうじき"
+      ],
+      "mean": "vacuum cleaner"
+    },
+    {
+      "word": "自転車",
+      "reading": [
+        "じてんしゃ"
+      ],
+      "mean": "bicycle"
+    },
+    {
+      "word": "車",
+      "reading": [
+        "くるま"
+      ],
+      "mean": "car"
+    },
+    {
+      "word": "電車",
+      "reading": [
+        "でんしゃ"
+      ],
+      "mean": "train"
+    },
+    {
+      "word": "飛行機",
+      "reading": [
+        "ひこうき"
+      ],
+      "mean": "airplane"
+    },
+    {
+      "word": "船",
+      "reading": [
+        "ふね"
+      ],
+      "mean": "ship"
+    },
+    {
+      "word": "地域",
+      "reading": [
+        "ちいき"
+      ],
+      "mean": "region"
+    },
+    {
+      "word": "世界",
+      "reading": [
+        "せかい"
+      ],
+      "mean": "world"
+    },
+    {
+      "word": "町",
+      "reading": [
+        "まち"
+      ],
+      "mean": "city"
+    },
+    {
+      "word": "村",
+      "reading": [
+        "むら"
+      ],
+      "mean": "village"
+    },
+    {
+      "word": "大学",
+      "reading": [
+        "だいがく"
+      ],
+      "mean": "university"
+    },
+    {
+      "word": "学校",
+      "reading": [
+        "がっこう"
+      ],
+      "mean": "school"
+    },
+    {
+      "word": "教師",
+      "reading": [
+        "きょうし"
+      ],
+      "mean": "teacher"
+    },
+    {
+      "word": "生徒",
+      "reading": [
+        "せいと"
+      ],
+      "mean": "student"
+    },
+    {
+      "word": "テスト",
+      "reading": [
+        "てすと"
+      ],
+      "mean": "test"
+    },
+    {
+      "word": "勉強",
+      "reading": [
+        "べんきょう"
+      ],
+      "mean": "study"
+    },
+    {
+      "word": "問題",
+      "reading": [
+        "もんだい"
+      ],
+      "mean": "problem"
+    },
+    {
+      "word": "答え",
+      "reading": [
+        "こたえ"
+      ],
+      "mean": "answer"
+    },
+    {
+      "word": "書く",
+      "reading": [
+        "かく"
+      ],
+      "mean": "to write"
+    },
+    {
+      "word": "読んで",
+      "reading": [
+        "よんで"
+      ],
+      "mean": "read (imperative)"
+    },
+    {
+      "word": "聞いて",
+      "reading": [
+        "きいて"
+      ],
+      "mean": "listen (imperative)"
+    },
+    {
+      "word": "会話",
+      "reading": [
+        "かいわ"
+      ],
+      "mean": "conversation"
+    },
+    {
+      "word": "表現",
+      "reading": [
+        "ひょうげん"
+      ],
+      "mean": "expression"
+    },
+    {
+      "word": "意味",
+      "reading": [
+        "いみ"
+      ],
+      "mean": "meaning"
+    },
+    {
+      "word": "直す",
+      "reading": [
+        "なおす"
+      ],
+      "mean": "to fix"
+    },
+    {
+      "word": "新しい",
+      "reading": [
+        "あたらしい"
+      ],
+      "mean": "new"
+    },
+    {
+      "word": "古い",
+      "reading": [
+        "ふるい"
+      ],
+      "mean": "old"
+    },
+    {
+      "word": "明るい",
+      "reading": [
+        "あかるい"
+      ],
+      "mean": "bright"
+    },
+    {
+      "word": "暗い",
+      "reading": [
+        "くらい"
+      ],
+      "mean": "dark"
+    }
+  ],
+  "grammarQuestions": []
+}

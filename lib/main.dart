@@ -4,11 +4,14 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kanjilogia/common/langstuff.dart';
 import 'package:kanjilogia/common/theme.dart';
 import 'package:kanjilogia/pages/custom_widgets/windows_buttons.dart';
 import 'package:kanjilogia/pages/custom_widgets/bg_painter.dart';
+import 'package:kanjilogia/pages/feed.dart';
 import 'package:kanjilogia/pages/game_main.dart';
 import 'package:kanjilogia/pages/settings_page.dart';
+import 'package:kanjilogia/utils/discord_rpc.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'common/sharedpref.dart';
@@ -23,10 +26,17 @@ import 'package:kanjilogia/utils/fonts_windows.dart';
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  runApp(ChangeNotifierProvider(
-      create: (context) => ColorPalette(),
-      child: Kanjilogia(key: kanjilogiaKey)));
 
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ColorPalette()),
+        ChangeNotifierProvider(
+            create: (context) => DiscordRichPresenceNotifier()),
+      ],
+      child: Kanjilogia(key: kanjilogiaKey),
+    ),
+  );
   doWhenWindowReady(() {
     if (!Platform.isWindows) return;
     const initialSize = Size(600, 600);
@@ -155,20 +165,34 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
   late int selectedTime = 30;
   late TabController _tabController;
   List<TargetFocus> targets = [];
+  // late DiscordRichPresence discord;
+
   @override
   void initState() {
     super.initState();
     kDebugMode
         ? Debg().setLoggingEnabled(true)
         : Debg().setLoggingEnabled(false);
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     String? lastfont;
 
     void onstart() async {
-      widget.changeLanguage();
+      widget
+          .changeLanguage(); // starts the app with the last language or default(english) if none
+
       lastfont = await SharedPrefs().getFontName();
       widget.loadFont(lastfont.toString());
+
       setState(() {});
+      await SharedPrefs().isTutorialComplete().then(
+        (value) async {
+          if (value == false && mounted) {
+            await LocaleUtils().showLanguageSelector(
+                context); // show language picker (first run)
+            SharedPrefs().saveTutorialComplete(true);
+          }
+        },
+      );
     }
 
     onstart();
@@ -176,31 +200,35 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    // discord.disconnect();
+
     _tabController.dispose();
     super.dispose();
   }
 
-  void showTutorial() {
-    try {
-      TutorialCoachMark(
-        targets: targets,
-        colorShadow: Colors.red,
-        textSkip: AppLocalizations.of(context)!.tutorial_skip,
-        onClickTarget: (target) {},
-        onClickTargetWithTapPosition: (target, tapDetails) {},
-        onClickOverlay: (target) {},
-        onSkip: () {
-          SharedPrefs().saveTutorialComplete(true);
-          return true;
-        },
-        onFinish: () async {
-          await SharedPrefs().saveTutorialComplete(true);
-        },
-      ).show(context: context);
-    } catch (e) {
-      Debg().error("Show tutorial error: ${e.toString()}");
-    }
-  }
+  // void showTutorial() {
+  //   try {
+  //     LocaleUtils().showLanguageSelector(context);
+
+  //     TutorialCoachMark(
+  //       targets: targets,
+  //       colorShadow: Colors.red,
+  //       textSkip: AppLocalizations.of(context)!.tutorial_skip,
+  //       onClickTarget: (target) {},
+  //       onClickTargetWithTapPosition: (target, tapDetails) {},
+  //       onClickOverlay: (target) {},
+  //       onSkip: () {
+  //         SharedPrefs().saveTutorialComplete(true);
+  //         return true;
+  //       },
+  //       onFinish: () async {
+  //         await SharedPrefs().saveTutorialComplete(true);
+  //       },
+  //     ).show(context: context);
+  //   } catch (e) {
+  //     Debg().error("Show tutorial error: ${e.toString()}");
+  //   }
+  // }
 
   final Map<String, dynamic> bgparameters = {
     "seed": 11234236,
@@ -275,6 +303,7 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
                           GameMain(),
                           ManagerPage(),
                           SettingsPage(),
+                          FeedPage(),
                         ],
                       ),
                     ),
@@ -303,6 +332,7 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
                             Tab(
                                 icon: Icon(Icons.settings_suggest_outlined),
                                 text: AppLocalizations.of(context)!.settings),
+                            Tab(icon: Icon(Icons.rss_feed), text: 'Feed')
                           ],
                         ),
                       ),

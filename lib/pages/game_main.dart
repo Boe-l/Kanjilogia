@@ -11,6 +11,7 @@ import 'package:kanjilogia/common/langstuff.dart';
 import 'package:kanjilogia/common/sharedpref.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kanjilogia/pages/game_screen.dart';
+import 'package:kanjilogia/utils/discord_rpc.dart';
 import 'package:provider/provider.dart';
 
 class GameMain extends StatefulWidget {
@@ -37,7 +38,12 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _loadJsonFiles();
-
+    Provider.of<DiscordRichPresenceNotifier>(context, listen: false)
+        .updateActivity(
+      title: 'On Main Menu',
+      subtitle: 'Slacking off',
+      imageDetails: 'Can i get a star?',
+    );
     _searchController.addListener(_filterJsonFiles);
 
     SharedPrefs().getMaxTime().then((time) {
@@ -294,12 +300,39 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                                                       Spacer(flex: 1),
                                                       Expanded(
                                                         flex: 5,
-                                                        child: Image.asset(
-                                                          LocaleUtils.getFlagPath(
-                                                              _filteredJsonFiles[
-                                                                      fileName]!
-                                                                  .first),
-                                                          fit: BoxFit.contain,
+                                                        child: Stack(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          children: [
+                                                            // Primeira bandeira (idioma principal)
+                                                            Image.asset(
+                                                              LocaleUtils.getFlagPath(
+                                                                  _filteredJsonFiles[
+                                                                              fileName]!
+                                                                          .toList()[
+                                                                      0]), // Converte Set para List e acessa o primeiro elemento
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                            ),
+                                                            // Segunda bandeira (idioma secundário) posicionada com deslocamento
+                                                            Positioned(
+                                                              bottom:
+                                                                  0, // Ajuste o valor para controlar a posição vertical
+                                                              right:
+                                                                  0, // Ajuste o valor para controlar a posição horizontal
+                                                              child:
+                                                                  Image.asset(
+                                                                LocaleUtils.getFlagPath(
+                                                                    _filteredJsonFiles[
+                                                                            fileName]!
+                                                                        .toList()[1]),
+                                                                scale:
+                                                                    3, // Converte Set para List e acessa o segundo elemento
+                                                                fit: BoxFit
+                                                                    .contain,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
                                                       Expanded(
