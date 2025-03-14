@@ -1,0 +1,320 @@
+{
+  "filename": "N5 EN-JP 3",
+  "tags": [
+    "jp",
+    "en",
+    "N5"
+  ],
+  "words": [
+    {
+      "word": "朝",
+      "reading": ["あさ"],
+      "mean": "morning"
+    },
+    {
+      "word": "昼",
+      "reading": ["ひる"],
+      "mean": "noon"
+    },
+    {
+      "word": "夕方",
+      "reading": ["ゆうがた"],
+      "mean": "evening"
+    },
+    {
+      "word": "夜",
+      "reading": ["よる"],
+      "mean": "night"
+    },
+    {
+      "word": "今",
+      "reading": ["いま"],
+      "mean": "now"
+    },
+    {
+      "word": "昨日",
+      "reading": ["きのう"],
+      "mean": "yesterday"
+    },
+    {
+      "word": "今日",
+      "reading": ["きょう"],
+      "mean": "today"
+    },
+    {
+      "word": "明日",
+      "reading": ["あした"],
+      "mean": "tomorrow"
+    },
+    {
+      "word": "月",
+      "reading": ["つき", "げつ"],
+      "mean": "moon, month"
+    },
+    {
+      "word": "年",
+      "reading": ["とし", "ねん"],
+      "mean": "year"
+    },
+    {
+      "word": "曜日",
+      "reading": ["ようび"],
+      "mean": "day of the week"
+    },
+    {
+      "word": "月曜日",
+      "reading": ["げつようび"],
+      "mean": "Monday"
+    },
+    {
+      "word": "火曜日",
+      "reading": ["かようび"],
+      "mean": "Tuesday"
+    },
+    {
+      "word": "水曜日",
+      "reading": ["すいようび"],
+      "mean": "Wednesday"
+    },
+    {
+      "word": "木曜日",
+      "reading": ["もくようび"],
+      "mean": "Thursday"
+    },
+    {
+      "word": "金曜日",
+      "reading": ["きんようび"],
+      "mean": "Friday"
+    },
+    {
+      "word": "土曜日",
+      "reading": ["どようび"],
+      "mean": "Saturday"
+    },
+    {
+      "word": "日曜日",
+      "reading": ["にちようび"],
+      "mean": "Sunday"
+    },
+    {
+      "word": "春",
+      "reading": ["はる"],
+      "mean": "spring"
+    },
+    {
+      "word": "夏",
+      "reading": ["なつ"],
+      "mean": "summer"
+    },
+    {
+      "word": "秋",
+      "reading": ["あき"],
+      "mean": "autumn"
+    },
+    {
+      "word": "冬",
+      "reading": ["ふゆ"],
+      "mean": "winter"
+    },
+    {
+      "word": "朝ご飯",
+      "reading": ["あさごはん"],
+      "mean": "breakfast"
+    },
+    {
+      "word": "昼ご飯",
+      "reading": ["ひるごはん"],
+      "mean": "lunch"
+    },
+    {
+      "word": "晩ご飯",
+      "reading": ["ばんごはん"],
+      "mean": "dinner"
+    },
+    {
+      "word": "牛乳",
+      "reading": ["ぎゅうにゅう"],
+      "mean": "milk"
+    },
+    {
+      "word": "卵",
+      "reading": ["たまご"],
+      "mean": "egg"
+    },
+    {
+      "word": "魚",
+      "reading": ["さかな"],
+      "mean": "fish"
+    },
+    {
+      "word": "肉",
+      "reading": ["にく"],
+      "mean": "meat"
+    },
+    {
+      "word": "野菜",
+      "reading": ["やさい"],
+      "mean": "vegetable"
+    },
+    {
+      "word": "果物",
+      "reading": ["くだもの"],
+      "mean": "fruit"
+    },
+    {
+      "word": "水",
+      "reading": ["みず"],
+      "mean": "water"
+    },
+    {
+      "word": "お茶",
+      "reading": ["おちゃ"],
+      "mean": "tea"
+    },
+    {
+      "word": "ご飯",
+      "reading": ["ごはん"],
+      "mean": "cooked rice, meal"
+    },
+    {
+      "word": "砂糖",
+      "reading": ["さとう"],
+      "mean": "sugar"
+    },
+    {
+      "word": "塩",
+      "reading": ["しお"],
+      "mean": "salt"
+    },
+    {
+      "word": "学校",
+      "reading": ["がっこう"],
+      "mean": "school"
+    },
+    {
+      "word": "大学",
+      "reading": ["だいがく"],
+      "mean": "university"
+    },
+    {
+      "word": "中学校",
+      "reading": ["ちゅうがっこう"],
+      "mean": "middle school"
+    },
+    {
+      "word": "小学校",
+      "reading": ["しょうがっこう"],
+      "mean": "elementary school"
+    },
+    {
+      "word": "図書館",
+      "reading": ["としょかん"],
+      "mean": "library"
+    },
+    {
+      "word": "公園",
+      "reading": ["こうえん"],
+      "mean": "park"
+    },
+    {
+      "word": "郵便局",
+      "reading": ["ゆうびんきょく"],
+      "mean": "post office"
+    },
+    {
+      "word": "銀行",
+      "reading": ["ぎんこう"],
+      "mean": "bank"
+    },
+    {
+      "word": "駅",
+      "reading": ["えき"],
+      "mean": "station"
+    },
+    {
+      "word": "空港",
+      "reading": ["くうこう"],
+      "mean": "airport"
+    },
+    {
+      "word": "病院",
+      "reading": ["びょういん"],
+      "mean": "hospital"
+    },
+    {
+      "word": "薬",
+      "reading": ["くすり"],
+      "mean": "medicine"
+    },
+    {
+      "word": "風邪",
+      "reading": ["かぜ"],
+      "mean": "cold (illness)"
+    },
+    {
+      "word": "熱",
+      "reading": ["ねつ"],
+      "mean": "fever"
+    },
+    {
+      "word": "先生",
+      "reading": ["せんせい"],
+      "mean": "teacher"
+    },
+    {
+      "word": "生徒",
+      "reading": ["せいと"],
+      "mean": "student"
+    },
+    {
+      "word": "仕事",
+      "reading": ["しごと"],
+      "mean": "work, job"
+    },
+    {
+      "word": "会社員",
+      "reading": ["かいしゃいん"],
+      "mean": "company employee"
+    },
+    {
+      "word": "警察",
+      "reading": ["けいさつ"],
+      "mean": "police"
+    },
+    {
+      "word": "消防士",
+      "reading": ["しょうぼうし"],
+      "mean": "firefighter"
+    },
+    {
+      "word": "運転手",
+      "reading": ["うんてんしゅ"],
+      "mean": "driver"
+    },
+    {
+      "word": "美容師",
+      "reading": ["びようし"],
+      "mean": "hairdresser"
+    },
+    {
+      "word": "歌手",
+      "reading": ["かしゅ"],
+      "mean": "singer"
+    },
+    {
+      "word": "医者",
+      "reading": ["いしゃ"],
+      "mean": "doctor"
+    },
+    {
+      "word": "看護師",
+      "reading": ["かんごし"],
+      "mean": "nurse"
+    },
+    {
+      "word": "弁護士",
+      "reading": ["べんごし"],
+      "mean": "lawyer"
+    }
+  ]
+}

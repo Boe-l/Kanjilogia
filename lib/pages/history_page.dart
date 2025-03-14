@@ -5,6 +5,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kanjilogia/utils/discord_rpc.dart';
 import 'package:provider/provider.dart';
 
 import 'package:kanjilogia/common/langstuff.dart';
@@ -33,7 +34,14 @@ class HistoryPage extends State<History> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    Provider.of<DiscordRichPresenceNotifier>(context, listen: false)
+        .updateActivity(
+      title: 'Browsing history',
+      subtitle: 'Checking answers',
+      imageDetails: 'Kanjilogia',
+    );
     onStart();
+
   }
 
   onStart() {

@@ -29,12 +29,6 @@ class LastWordState extends State<LastWord> {
   List reading = [];
   String meaning = '';
 
-  @override
-  void initState() {
-    super.initState();
-    _processLastWord();
-  }
-
   void _processLastWord() {
     String lastItem = widget.pastItems.isNotEmpty ? widget.pastItems.last : "";
 
@@ -57,6 +51,8 @@ class LastWordState extends State<LastWord> {
 
   @override
   Widget build(BuildContext context) {
+    _processLastWord();
+
     Color textColor = widget.pastItems.isNotEmpty
         ? (widget.correctItems.containsKey(widget.pastItems.last)
             ? Colors.green

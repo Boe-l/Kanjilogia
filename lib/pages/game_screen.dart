@@ -18,6 +18,7 @@ import 'package:kanjilogia/pages/custom_widgets/windows_buttons.dart';
 import 'package:kanjilogia/pages/custom_widgets/gs_card.dart';
 import 'package:kanjilogia/pages/game_screen/process_answer.dart';
 import 'package:kanjilogia/pages/history_page.dart';
+import 'package:kanjilogia/utils/discord_rpc.dart';
 import 'package:provider/provider.dart';
 import '../common/sharedpref.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -64,6 +65,12 @@ class GameScreenState extends State<GameScreen> {
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     super.initState();
     timeLeftNotifier = ValueNotifier<int>(_timeLeft);
+    Provider.of<DiscordRichPresenceNotifier>(context, listen: false)
+        .updateActivity(
+      title: 'In Game',
+      subtitle: 'Score: 0',
+      imageDetails: 'Kanjilogia',
+    );
     _loadWords();
 
     SharedPrefs().getMaxTime().then((value) {
@@ -211,6 +218,13 @@ class GameScreenState extends State<GameScreen> {
     currentIndex = _answerProcessor!.getCurrentIndex;
     score = _answerProcessor!.getScore;
     isGameOver = _answerProcessor!.getGameOver;
+    Provider.of<DiscordRichPresenceNotifier>(context, listen: false)
+        .updateActivity(
+      title: 'In Game',
+      subtitle: 'Score: $score',
+      imageDetails:
+          '${gameitems.length} Total Items, ${gameitems.length - pastItems.length} Left.',
+    );
     setState(() {});
   }
 
