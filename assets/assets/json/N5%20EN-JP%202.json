@@ -1,0 +1,310 @@
+{
+  "filename": "N5 EN-JP 2",
+  "tags": [
+    "jp",
+    "en",
+    "N5"
+  ],
+  "words": [
+    {
+      "word": "青",
+      "reading": ["あお"],
+      "mean": "blue"
+    },
+    {
+      "word": "赤",
+      "reading": ["あか"],
+      "mean": "red"
+    },
+    {
+      "word": "白",
+      "reading": ["しろ"],
+      "mean": "white"
+    },
+    {
+      "word": "黒",
+      "reading": ["くろ"],
+      "mean": "black"
+    },
+    {
+      "word": "黄色",
+      "reading": ["きいろ"],
+      "mean": "yellow"
+    },
+    {
+      "word": "高い",
+      "reading": ["たかい"],
+      "mean": "tall, expensive"
+    },
+    {
+      "word": "安い",
+      "reading": ["やすい"],
+      "mean": "cheap"
+    },
+    {
+      "word": "新しい",
+      "reading": ["あたらしい"],
+      "mean": "new"
+    },
+    {
+      "word": "古い",
+      "reading": ["ふるい"],
+      "mean": "old (not for people)"
+    },
+    {
+      "word": "大きい",
+      "reading": ["おおきい"],
+      "mean": "big"
+    },
+    {
+      "word": "小さい",
+      "reading": ["ちいさい"],
+      "mean": "small"
+    },
+    {
+      "word": "長い",
+      "reading": ["ながい"],
+      "mean": "long"
+    },
+    {
+      "word": "短い",
+      "reading": ["みじかい"],
+      "mean": "short"
+    },
+    {
+      "word": "早い",
+      "reading": ["はやい"],
+      "mean": "fast, early"
+    },
+    {
+      "word": "遅い",
+      "reading": ["おそい"],
+      "mean": "slow, late"
+    },
+    {
+      "word": "暑い",
+      "reading": ["あつい"],
+      "mean": "hot (weather)"
+    },
+    {
+      "word": "寒い",
+      "reading": ["さむい"],
+      "mean": "cold (weather)"
+    },
+    {
+      "word": "熱い",
+      "reading": ["あつい"],
+      "mean": "hot (things)"
+    },
+    {
+      "word": "冷たい",
+      "reading": ["つめたい"],
+      "mean": "cold (things)"
+    },
+    {
+      "word": "楽しい",
+      "reading": ["たのしい"],
+      "mean": "fun, enjoyable"
+    },
+    {
+      "word": "難しい",
+      "reading": ["むずかしい"],
+      "mean": "difficult"
+    },
+    {
+      "word": "簡単",
+      "reading": ["かんたん"],
+      "mean": "easy, simple"
+    },
+    {
+      "word": "好き",
+      "reading": ["すき"],
+      "mean": "like, fond of"
+    },
+    {
+      "word": "嫌い",
+      "reading": ["きらい"],
+      "mean": "dislike, hate"
+    },
+    {
+      "word": "多い",
+      "reading": ["おおい"],
+      "mean": "many, a lot"
+    },
+    {
+      "word": "少ない",
+      "reading": ["すくない"],
+      "mean": "few, little"
+    },
+    {
+      "word": "強い",
+      "reading": ["つよい"],
+      "mean": "strong"
+    },
+    {
+      "word": "弱い",
+      "reading": ["よわい"],
+      "mean": "weak"
+    },
+    {
+      "word": "太い",
+      "reading": ["ふとい"],
+      "mean": "thick, fat"
+    },
+    {
+      "word": "細い",
+      "reading": ["ほそい"],
+      "mean": "thin, slender"
+    },
+    {
+      "word": "甘い",
+      "reading": ["あまい"],
+      "mean": "sweet"
+    },
+    {
+      "word": "辛い",
+      "reading": ["からい"],
+      "mean": "spicy, hot"
+    },
+    {
+      "word": "美しい",
+      "reading": ["うつくしい"],
+      "mean": "beautiful"
+    },
+    {
+      "word": "汚い",
+      "reading": ["きたない"],
+      "mean": "dirty"
+    },
+    {
+      "word": "静か",
+      "reading": ["しずか"],
+      "mean": "quiet"
+    },
+    {
+      "word": "うるさい",
+      "reading": ["うるさい"],
+      "mean": "noisy, annoying"
+    },
+    {
+      "word": "元気",
+      "reading": ["げんき"],
+      "mean": "healthy, energetic"
+    },
+    {
+      "word": "有名",
+      "reading": ["ゆうめい"],
+      "mean": "famous"
+    },
+    {
+      "word": "便利",
+      "reading": ["べんり"],
+      "mean": "convenient"
+    },
+    {
+      "word": "不便",
+      "reading": ["ふべん"],
+      "mean": "inconvenient"
+    },
+    {
+      "word": "忙しい",
+      "reading": ["いそがしい"],
+      "mean": "busy"
+    },
+    {
+      "word": "楽",
+      "reading": ["らく"],
+      "mean": "comfortable, easy"
+    },
+    {
+      "word": "危ない",
+      "reading": ["あぶない"],
+      "mean": "dangerous"
+    },
+    {
+      "word": "大変",
+      "reading": ["たいへん"],
+      "mean": "tough, very"
+    },
+    {
+      "word": "同じ",
+      "reading": ["おなじ"],
+      "mean": "same"
+    },
+    {
+      "word": "違う",
+      "reading": ["ちがう"],
+      "mean": "different"
+    },
+    {
+      "word": "必要",
+      "reading": ["ひつよう"],
+      "mean": "necessary"
+    },
+    {
+      "word": "十分",
+      "reading": ["じゅうぶん"],
+      "mean": "enough, sufficient"
+    },
+    {
+      "word": "緑",
+      "reading": ["みどり"],
+      "mean": "green"
+    },
+    {
+      "word": "茶色",
+      "reading": ["ちゃいろ"],
+      "mean": "brown"
+    },
+    {
+      "word": "灰色",
+      "reading": ["はいいろ"],
+      "mean": "gray"
+    },
+    {
+      "word": "紫",
+      "reading": ["むらさき"],
+      "mean": "purple"
+    },
+    {
+      "word": "桃色",
+      "reading": ["ももいろ"],
+      "mean": "pink"
+    },
+    {
+      "word": "銀色",
+      "reading": ["ぎんいろ"],
+      "mean": "silver"
+    },
+    {
+      "word": "金色",
+      "reading": ["きんいろ"],
+      "mean": "golden"
+    },
+    {
+      "word": "空",
+      "reading": ["そら"],
+      "mean": "sky"
+    },
+    {
+      "word": "星",
+      "reading": ["ほし"],
+      "mean": "star"
+    },
+    {
+      "word": "海",
+      "reading": ["うみ"],
+      "mean": "sea, ocean"
+    },
+    {
+      "word": "池",
+      "reading": ["いけ"],
+      "mean": "pond"
+    },
+    {
+      "word": "島",
+      "reading": ["しま"],
+      "mean": "island"
+    }
+  ]
+}

@@ -1,0 +1,645 @@
+{
+  "filename": "N4 EN-JP 1",
+  "tags": [
+    "jp",
+    "en",
+    "N4"
+  ],
+  "words": [
+    {
+      "word": "意味",
+      "reading": [
+        "いみ"
+      ],
+      "mean": "meaning"
+    },
+    {
+      "word": "会う",
+      "reading": [
+        "あう"
+      ],
+      "mean": "to meet"
+    },
+    {
+      "word": "買う",
+      "reading": [
+        "かう"
+      ],
+      "mean": "to buy"
+    },
+    {
+      "word": "急ぐ",
+      "reading": [
+        "いそぐ"
+      ],
+      "mean": "to hurry"
+    },
+    {
+      "word": "車",
+      "reading": [
+        "くるま"
+      ],
+      "mean": "car"
+    },
+    {
+      "word": "歩く",
+      "reading": [
+        "あるく"
+      ],
+      "mean": "to walk"
+    },
+    {
+      "word": "天気",
+      "reading": [
+        "てんき"
+      ],
+      "mean": "weather"
+    },
+    {
+      "word": "食べ物",
+      "reading": [
+        "たべもの"
+      ],
+      "mean": "food"
+    },
+    {
+      "word": "難しい",
+      "reading": [
+        "むずかしい"
+      ],
+      "mean": "difficult"
+    },
+    {
+      "word": "切る",
+      "reading": [
+        "きる"
+      ],
+      "mean": "to cut"
+    },
+    {
+      "word": "音楽",
+      "reading": [
+        "おんがく"
+      ],
+      "mean": "music"
+    },
+    {
+      "word": "大きい",
+      "reading": [
+        "おおきい"
+      ],
+      "mean": "big"
+    },
+    {
+      "word": "小さい",
+      "reading": [
+        "ちいさい"
+      ],
+      "mean": "small"
+    },
+    {
+      "word": "住む",
+      "reading": [
+        "すむ"
+      ],
+      "mean": "to live"
+    },
+    {
+      "word": "書く",
+      "reading": [
+        "かく"
+      ],
+      "mean": "to write"
+    },
+    {
+      "word": "食べる",
+      "reading": [
+        "たべる"
+      ],
+      "mean": "to eat"
+    },
+    {
+      "word": "見る",
+      "reading": [
+        "みる"
+      ],
+      "mean": "to see"
+    },
+    {
+      "word": "言う",
+      "reading": [
+        "いう"
+      ],
+      "mean": "to say"
+    },
+    {
+      "word": "話す",
+      "reading": [
+        "はなす"
+      ],
+      "mean": "to speak"
+    },
+    {
+      "word": "買い物",
+      "reading": [
+        "かいもの"
+      ],
+      "mean": "shopping"
+    },
+    {
+      "word": "泳ぐ",
+      "reading": [
+        "およぐ"
+      ],
+      "mean": "to swim"
+    },
+    {
+      "word": "寝る",
+      "reading": [
+        "ねる"
+      ],
+      "mean": "to sleep"
+    },
+    {
+      "word": "起きる",
+      "reading": [
+        "おきる"
+      ],
+      "mean": "to wake up"
+    },
+    {
+      "word": "聞く",
+      "reading": [
+        "きく"
+      ],
+      "mean": "to listen"
+    },
+    {
+      "word": "歩きます",
+      "reading": [
+        "あるきます"
+      ],
+      "mean": "to walk (polite)"
+    },
+    {
+      "word": "待つ",
+      "reading": [
+        "まつ"
+      ],
+      "mean": "to wait"
+    },
+    {
+      "word": "切符",
+      "reading": [
+        "きっぷ"
+      ],
+      "mean": "ticket"
+    },
+    {
+      "word": "勉強",
+      "reading": [
+        "べんきょう"
+      ],
+      "mean": "study"
+    },
+    {
+      "word": "楽しい",
+      "reading": [
+        "たのしい"
+      ],
+      "mean": "fun"
+    },
+    {
+      "word": "新しい",
+      "reading": [
+        "あたらしい"
+      ],
+      "mean": "new"
+    },
+    {
+      "word": "古い",
+      "reading": [
+        "ふるい"
+      ],
+      "mean": "old"
+    },
+    {
+      "word": "早い",
+      "reading": [
+        "はやい"
+      ],
+      "mean": "early, fast"
+    },
+    {
+      "word": "遅い",
+      "reading": [
+        "おそい"
+      ],
+      "mean": "late, slow"
+    },
+    {
+      "word": "広い",
+      "reading": [
+        "ひろい"
+      ],
+      "mean": "wide"
+    },
+    {
+      "word": "狭い",
+      "reading": [
+        "せまい"
+      ],
+      "mean": "narrow"
+    },
+    {
+      "word": "暑い",
+      "reading": [
+        "あつい"
+      ],
+      "mean": "hot (weather)"
+    },
+    {
+      "word": "寒い",
+      "reading": [
+        "さむい"
+      ],
+      "mean": "cold (weather)"
+    },
+    {
+      "word": "高い",
+      "reading": [
+        "たかい"
+      ],
+      "mean": "high, expensive"
+    },
+    {
+      "word": "安い",
+      "reading": [
+        "やすい"
+      ],
+      "mean": "cheap"
+    },
+    {
+      "word": "近い",
+      "reading": [
+        "ちかい"
+      ],
+      "mean": "near"
+    },
+    {
+      "word": "遠い",
+      "reading": [
+        "とおい"
+      ],
+      "mean": "far"
+    },
+    {
+      "word": "親切",
+      "reading": [
+        "しんせつ"
+      ],
+      "mean": "kind"
+    },
+    {
+      "word": "忙しい",
+      "reading": [
+        "いそがしい"
+      ],
+      "mean": "busy"
+    },
+    {
+      "word": "楽器",
+      "reading": [
+        "がっき"
+      ],
+      "mean": "musical instrument"
+    },
+    {
+      "word": "問題",
+      "reading": [
+        "もんだい"
+      ],
+      "mean": "problem, question"
+    },
+    {
+      "word": "答え",
+      "reading": [
+        "こたえ"
+      ],
+      "mean": "answer"
+    },
+    {
+      "word": "同じ",
+      "reading": [
+        "おなじ"
+      ],
+      "mean": "same"
+    },
+    {
+      "word": "違う",
+      "reading": [
+        "ちがう"
+      ],
+      "mean": "different"
+    },
+    {
+      "word": "寒い",
+      "reading": [
+        "さむい"
+      ],
+      "mean": "cold (weather)"
+    },
+    {
+      "word": "大丈夫",
+      "reading": [
+        "だいじょうぶ"
+      ],
+      "mean": "all right"
+    },
+    {
+      "word": "いいえ",
+      "reading": [
+        "いいえ"
+      ],
+      "mean": "no"
+    },
+    {
+      "word": "はい",
+      "reading": [
+        "はい"
+      ],
+      "mean": "yes"
+    },
+    {
+      "word": "今",
+      "reading": [
+        "いま"
+      ],
+      "mean": "now"
+    },
+    {
+      "word": "今日",
+      "reading": [
+        "きょう"
+      ],
+      "mean": "today"
+    },
+    {
+      "word": "明日",
+      "reading": [
+        "あした"
+      ],
+      "mean": "tomorrow"
+    },
+    {
+      "word": "昨日",
+      "reading": [
+        "きのう"
+      ],
+      "mean": "yesterday"
+    },
+    {
+      "word": "今週",
+      "reading": [
+        "こんしゅう"
+      ],
+      "mean": "this week"
+    },
+    {
+      "word": "来週",
+      "reading": [
+        "らいしゅう"
+      ],
+      "mean": "next week"
+    },
+    {
+      "word": "来月",
+      "reading": [
+        "らいげつ"
+      ],
+      "mean": "next month"
+    },
+    {
+      "word": "先週",
+      "reading": [
+        "せんしゅう"
+      ],
+      "mean": "last week"
+    },
+    {
+      "word": "先月",
+      "reading": [
+        "せんげつ"
+      ],
+      "mean": "last month"
+    },
+    {
+      "word": "年",
+      "reading": [
+        "ねん"
+      ],
+      "mean": "year"
+    },
+    {
+      "word": "月",
+      "reading": [
+        "つき",
+        "げつ"
+      ],
+      "mean": "month, moon"
+    },
+    {
+      "word": "日",
+      "reading": [
+        "ひ",
+        "にち",
+        "じつ"
+      ],
+      "mean": "day, sun"
+    },
+    {
+      "word": "時",
+      "reading": [
+        "じ"
+      ],
+      "mean": "time, hour"
+    },
+    {
+      "word": "分",
+      "reading": [
+        "ふん",
+        "ぶん"
+      ],
+      "mean": "minute, part"
+    },
+    {
+      "word": "午前",
+      "reading": [
+        "ごぜん"
+      ],
+      "mean": "AM"
+    },
+    {
+      "word": "午後",
+      "reading": [
+        "ごご"
+      ],
+      "mean": "PM"
+    },
+    {
+      "word": "時々",
+      "reading": [
+        "ときどき"
+      ],
+      "mean": "sometimes"
+    },
+    {
+      "word": "毎日",
+      "reading": [
+        "まいにち"
+      ],
+      "mean": "every day"
+    },
+    {
+      "word": "毎週",
+      "reading": [
+        "まいしゅう"
+      ],
+      "mean": "every week"
+    },
+    {
+      "word": "毎月",
+      "reading": [
+        "まいつき"
+      ],
+      "mean": "every month"
+    },
+    {
+      "word": "毎年",
+      "reading": [
+        "まいねん"
+      ],
+      "mean": "every year"
+    },
+    {
+      "word": "昨日",
+      "reading": [
+        "きのう"
+      ],
+      "mean": "yesterday"
+    },
+    {
+      "word": "今日は",
+      "reading": [
+        "きょうは"
+      ],
+      "mean": "today"
+    },
+    {
+      "word": "明日",
+      "reading": [
+        "あした"
+      ],
+      "mean": "tomorrow"
+    },
+    {
+      "word": "週末",
+      "reading": [
+        "しゅうまつ"
+      ],
+      "mean": "weekend"
+    },
+    {
+      "word": "今週",
+      "reading": [
+        "こんしゅう"
+      ],
+      "mean": "this week"
+    },
+    {
+      "word": "来週",
+      "reading": [
+        "らいしゅう"
+      ],
+      "mean": "next week"
+    },
+    {
+      "word": "終わる",
+      "reading": [
+        "おわる"
+      ],
+      "mean": "to finish"
+    },
+    {
+      "word": "始める",
+      "reading": [
+        "はじめる"
+      ],
+      "mean": "to start"
+    },
+    {
+      "word": "持つ",
+      "reading": [
+        "もつ"
+      ],
+      "mean": "to have, to hold"
+    },
+    {
+      "word": "送る",
+      "reading": [
+        "おくる"
+      ],
+      "mean": "to send"
+    },
+    {
+      "word": "始まる",
+      "reading": [
+        "はじまる"
+      ],
+      "mean": "to begin"
+    },
+    {
+      "word": "作る",
+      "reading": [
+        "つくる"
+      ],
+      "mean": "to make"
+    },
+    {
+      "word": "続ける",
+      "reading": [
+        "つづける"
+      ],
+      "mean": "to continue"
+    },
+    {
+      "word": "信じる",
+      "reading": [
+        "しんじる"
+      ],
+      "mean": "to believe"
+    },
+    {
+      "word": "泳ぐ",
+      "reading": [
+        "およぐ"
+      ],
+      "mean": "to swim"
+    },
+    {
+      "word": "閉じる",
+      "reading": [
+        "とじる"
+      ],
+      "mean": "to close"
+    },
+    {
+      "word": "開ける",
+      "reading": [
+        "あける"
+      ],
+      "mean": "to open"
+    }
+  ],
+  "grammarQuestions": []
+}

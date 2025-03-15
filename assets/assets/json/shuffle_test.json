@@ -2,10 +2,18 @@
   "filename": "Shuffle Test",
   "tags": [
     "jp",
-    "tempo",
+    "pt",
     "horas"
   ],
-  "words": [],
+  "words": [
+    {
+      "word": "緑",
+      "reading": [
+        "みどり"
+      ],
+      "mean": "verde"
+    }
+  ],
   "grammarQuestions": [
     {
       "question": "Que partícula indica o momento em que algo acontece?\n '私は7時_____起きます。'",
