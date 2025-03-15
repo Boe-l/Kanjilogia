@@ -193,6 +193,14 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
           }
         },
       );
+      await SharedPrefs().getRPC().then(
+        (value) async {
+          if (value && mounted) {
+            Provider.of<DiscordRichPresenceNotifier>(context, listen: false)
+                .toggleRichPresence(value);
+          }
+        },
+      );
     }
 
     onstart();

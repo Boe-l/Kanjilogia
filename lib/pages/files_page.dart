@@ -142,7 +142,9 @@ class ManagerPageState extends State<ManagerPage>
           _showFloatingButtons = true;
         });
       }
-
+      if (_filenames.isEmpty) {
+        setState(() {});
+      }
       await deleteFilename(filename);
     }
   }
@@ -174,11 +176,12 @@ class ManagerPageState extends State<ManagerPage>
     int wordCount(Map<String, dynamic> content) {
       num totalWords = 0;
 
-      if (content['words'].isNotEmpty) {
+      if (content['words'] != null && content['words'] is List) {
         totalWords += content['words'].length;
       }
 
-      if (content['grammarQuestions'].isNotEmpty) {
+      if (content['grammarQuestions'] != null &&
+          content['grammarQuestions'] is List) {
         totalWords += content['grammarQuestions'].length;
       }
 
@@ -188,26 +191,32 @@ class ManagerPageState extends State<ManagerPage>
     Future<void> fetchAndSetFileData(List<Map<String, dynamic>> files) async {
       List<Future<void>> fetchTasks = [];
       final localization = AppLocalizations.of(context);
-      for (var file in files) {
-        final url = file['download_url'] ?? '';
+      try {
+        for (var file in files) {
+          final url = file['download_url'] ?? '';
 
-        fetchTasks.add(
-          http.get(Uri.parse(url)).then((response) async {
-            if (response.statusCode == 200) {
-              final data = jsonDecode(response.body);
-              if (data['tags'] != null && data['tags'] is List) {
-                List<String> tags = (data['tags'] as List).cast<String>();
+          fetchTasks.add(
+            http.get(Uri.parse(url)).then((response) async {
+              if (response.statusCode == 200) {
+                final data = jsonDecode(response.body);
+                if (data['tags'] != null && data['tags'] is List) {
+                  List<String> tags =
+                      (data['tags'] as List).whereType<String>().toList();
 
-                fileData[file['name']] = {
-                  'tags': tags.isNotEmpty ? tags : [localization!.mp_no_tags],
-                  'wordCount': wordCount(data),
-                  'flag': LocaleUtils.getFlagPath(
-                      tags.isNotEmpty ? tags.first : ''),
-                };
+                  fileData[file['name']] = {
+                    'tags':
+                        (tags.isNotEmpty) ? tags : [localization!.mp_no_tags],
+                    'wordCount': wordCount(data),
+                    'flag': LocaleUtils.getFlagPath(
+                        (tags.isNotEmpty) ? tags.first : ''),
+                  };
+                }
               }
-            }
-          }),
-        );
+            }),
+          );
+        }
+      } catch (e) {
+        Debg().exception(e.toString());
       }
 
       await Future.wait(fetchTasks);
@@ -772,22 +781,17 @@ class ManagerPageState extends State<ManagerPage>
                                                       height: 50,
                                                       fit: BoxFit.cover,
                                                     ),
-                                                    // Segunda bandeira posicionada com deslocamento
-                                                    if (tags.length >
-                                                        1) // Verifica se há uma segunda bandeira
+                                                    if (tags.length > 1)
                                                       Positioned(
-                                                        bottom:
-                                                            0, // Ajuste o valor para controlar a posição vertical
-                                                        right:
-                                                            0, // Ajuste o valor para controlar a posição horizontal
+                                                        bottom: 0,
+                                                        right: 0,
                                                         child: Image.asset(
-                                                          LocaleUtils.getFlagPath(
-                                                              tags.elementAt(
-                                                                  1)), // Acessa a segunda bandeira
-                                                          width:
-                                                              25, // Ajuste o tamanho conforme necessário
-                                                          height:
-                                                              25, // Ajuste o tamanho conforme necessário
+                                                          LocaleUtils
+                                                              .getFlagPath(tags
+                                                                  .elementAt(
+                                                                      1)),
+                                                          width: 25,
+                                                          height: 25,
                                                           fit: BoxFit.cover,
                                                         ),
                                                       ),
