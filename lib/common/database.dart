@@ -289,6 +289,8 @@ Future<String> addJsonToDatabase(
       final existingFile =
           await isar.contents.filter().filenameEqualTo(filename).findFirst();
       if (existingFile != null) {
+        Debg().error("Could not add file, file with same name already exists.");
+
         return '409';
       }
 
@@ -330,12 +332,11 @@ Future<String> addJsonToDatabase(
         await isar.contents.put(content);
       });
     }
-    
-    Debg().error("File added successfully.");
+
+    Debg().info("File added successfully.");
     return '0';
   } catch (e) {
     Debg().error("addJsonToDatabase error: ${e.toString()}");
-
     return '500';
   }
 }
