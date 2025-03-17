@@ -41,7 +41,6 @@ class HistoryPage extends State<History> with TickerProviderStateMixin {
       imageDetails: 'Kanjilogia',
     );
     onStart();
-
   }
 
   onStart() {
@@ -256,7 +255,7 @@ class Correct extends StatelessWidget {
                             children: [
                               if (values[0][0].isNotEmpty)
                                 Text(
-                                  '「${values[0]}」',
+                                  '「${values[0].join('、 ')}」',
                                   style: TextStyle(fontWeight: FontWeight.w800),
                                 ),
                               Text(values[1]),
@@ -355,7 +354,7 @@ class Incorrect extends StatelessWidget {
                             children: [
                               if (values[0][0].isNotEmpty)
                                 Text(
-                                  '「${values[0]}」',
+                                  '「${values[0].join('、 ')}」',
                                   style: TextStyle(fontWeight: FontWeight.w800),
                                 ),
                               Text(values[1]),

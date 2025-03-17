@@ -1,3 +1,4 @@
+import 'package:kana_kit/kana_kit.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -7,17 +8,21 @@ class LastWord extends StatefulWidget {
   final Map<String, List<dynamic>> correctItems;
   final Map<String, List<dynamic>> errorItems;
   final double screenWidth;
+  final bool isRomaji;
   final List<Map<String, dynamic>> words;
   final AppLocalizations? localization;
+  double fontSize;
 
-  const LastWord({
+  LastWord({
     super.key,
     required this.pastItems,
+    required this.isRomaji,
     required this.correctItems,
     required this.errorItems,
     required this.screenWidth,
     required this.words,
     required this.localization,
+    required this.fontSize,
   });
 
   @override
@@ -28,8 +33,10 @@ class LastWordState extends State<LastWord> {
   Map<String, dynamic>? wordData;
   List reading = [];
   String meaning = '';
+  static const kanaKit = KanaKit();
 
   void _processLastWord() {
+    reading.clear();
     String lastItem = widget.pastItems.isNotEmpty ? widget.pastItems.last : "";
 
     if (widget.words.isNotEmpty && widget.words.last['word'] != null) {
@@ -38,7 +45,14 @@ class LastWordState extends State<LastWord> {
         orElse: () => {},
       );
       meaning = wordData!["mean"] ?? "N/A";
-      reading = [wordData!["reading"] ?? "N/A"];
+      if (widget.isRomaji && wordData!["tags"].contains('jp')) {
+        reading = (wordData?["reading"] ?? [])
+            .map((e) => kanaKit.toRomaji(e))
+            .toList();
+      } else {
+        reading = [wordData?["reading"] ?? "N/A"];
+      }
+      // reading = [wordData!["reading"] ?? "N/A"];
     } else {
       wordData = widget.words.firstWhere(
         (word) => word["question"] == lastItem,
@@ -74,11 +88,12 @@ class LastWordState extends State<LastWord> {
             alignment: Alignment.centerLeft,
             child: Text(
               widget.pastItems.isNotEmpty ? widget.pastItems.last : "",
-              key: ValueKey(
-                  widget.pastItems.isNotEmpty ? widget.pastItems.last : ""),
+              key: ValueKey(widget.pastItems.isNotEmpty
+                  ? '${widget.pastItems.last} ${widget.fontSize}'
+                  : ""),
               style: TextStyle(
                 color: textColor,
-                fontSize: (widget.screenWidth * 0.05).clamp(20.0, 21.0),
+                fontSize: (widget.fontSize * 0.3).clamp(20.0, 35.0),
               ),
             ),
           ),
@@ -95,11 +110,12 @@ class LastWordState extends State<LastWord> {
               alignment: Alignment.centerLeft,
               child: ScaleText(
                 duration: Duration(milliseconds: 300),
-                key: ValueKey("$meaning ($reading)"),
-                text: "$meaning ${reading.join(', ')}",
+                key: ValueKey("$meaning $reading"),
+                text:
+                    "「${reading.join(', ').replaceAll('[', '').replaceAll(']', '')}」 $meaning ",
                 type: AnimationType.word,
                 textStyle: TextStyle(
-                  fontSize: (widget.screenWidth * 0.05).clamp(5.0, 15.0),
+                  fontSize: (widget.fontSize * 0.20).clamp(15.0, 30.0),
                 ),
               ),
             ),

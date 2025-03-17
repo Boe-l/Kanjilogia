@@ -7,11 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:kanjilogia/common/langstuff.dart';
 import 'package:kanjilogia/common/theme.dart';
 import 'package:kanjilogia/pages/custom_widgets/windows_buttons.dart';
-import 'package:kanjilogia/pages/custom_widgets/bg_painter.dart';
 import 'package:kanjilogia/pages/feed.dart';
 import 'package:kanjilogia/pages/game_main.dart';
 import 'package:kanjilogia/pages/settings_page.dart';
 import 'package:kanjilogia/utils/discord_rpc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'common/sharedpref.dart';
@@ -37,15 +37,16 @@ void main() {
       child: Kanjilogia(key: kanjilogiaKey),
     ),
   );
-  doWhenWindowReady(() {
-    if (!Platform.isWindows) return;
-    const initialSize = Size(600, 600);
-    appWindow.minSize = initialSize;
-    appWindow.size = initialSize;
-    appWindow.alignment = Alignment.center;
-    appWindow.show();
-    appWindow.maximize();
-  });
+  if (Platform.isWindows) {
+    doWhenWindowReady(() {
+      const initialSize = Size(600, 600);
+      appWindow.minSize = initialSize;
+      appWindow.size = initialSize;
+      appWindow.alignment = Alignment.center;
+      appWindow.show();
+      appWindow.maximize();
+    });
+  }
 }
 
 final GlobalKey<KanjilogiaState> kanjilogiaKey = GlobalKey<KanjilogiaState>();
@@ -165,7 +166,6 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
   late int selectedTime = 30;
   late TabController _tabController;
   List<TargetFocus> targets = [];
-  // late DiscordRichPresence discord;
 
   @override
   void initState() {
@@ -208,8 +208,6 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // discord.disconnect();
-
     _tabController.dispose();
     super.dispose();
   }
@@ -259,19 +257,24 @@ class MainMenuState extends State<MainMenu> with TickerProviderStateMixin {
           color: Colors.transparent,
           child: Stack(
             children: [
-              Positioned.fill(
-                child: RepaintBoundary(
-                  child: CustomPaint(
-                    painter: CharacterBackgroundPainter(
-                        seed: bgparameters['seed'],
-                        enableFlip: bgparameters['flip'],
-                        enableRotation: bgparameters['rotation'],
-                        minFontSize: bgparameters['minFontSize'],
-                        maxFontSize: bgparameters['maxFontSize'],
-                        colorPalette: colorPalette),
-                  ),
-                ),
-              ),
+              // Positioned.fill(
+              //   child: RepaintBoundary(
+              //     child: CustomPaint(
+              //       painter: CharacterBackgroundPainter(
+              //           seed: bgparameters['seed'],
+              //           enableFlip: bgparameters['flip'],
+              //           enableRotation: bgparameters['rotation'],
+              //           minFontSize: bgparameters['minFontSize'],
+              //           maxFontSize: bgparameters['maxFontSize'],
+              //           colorPalette: colorPalette),
+              //     ),
+              //   ),
+              // ),
+              Lottie.asset('assets/lottie/1.json',
+                  repeat: false,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity),
               Positioned.fill(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(
