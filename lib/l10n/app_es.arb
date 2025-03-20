@@ -83,5 +83,15 @@
   "hp_error_appear_here": "Los errores aparecerán aquí.",
   "hp_pop_meaning": "Significado:",
   "hp_pop_file_origin": "Archivo de origen:",
-  "hp_pop_user_answers": "Tus respuestas:"
+  "hp_pop_user_answers": "Tus respuestas:",
+    "rpc_toggle": "Habilita/Deshabilita la Presencia Rica de Discord",
+  "gs_settings_animate_background": "Fondo animado",
+  "gs_settings_show_romaji": "Mostrar Romaji",
+  "gs_settings_font_weight": "Peso de la fuente",
+  "gs_settings_max_time": "Tiempo máximo",
+  "gs_dict_open_jisho": "Abrir Jisho",
+  "gs_dict_play_audio": "Reproducir audio",
+    "gs_dict_no_audio": "Audio no disponible",
+  "gs_dict_error_loading": "No se pudo cargar la información de la palabra.",
+  "gs_dict_empty": "No se encontraron datos."
 }

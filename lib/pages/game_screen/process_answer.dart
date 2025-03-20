@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kana_kit/kana_kit.dart';
-import 'package:kanjilogia/pages/custom_widgets/gs_card.dart';
+import 'package:kanjilogia/pages/game_screen/gs_card.dart';
 
 class AnswerProcessor {
   final List<Map<String, dynamic>> words;
@@ -32,7 +32,7 @@ class AnswerProcessor {
   }) : _customCardKey = customCardKey;
 
   void processAnswer(String answer) {
-    if (gameOver || currentIndex >= words.length) return;
+    if (currentIndex >= words.length) return;
     bool isCorrect = false;
     final currentWord = words[currentIndex];
     if (currentWord['word'] != null && currentWord['word'].isNotEmpty) {
@@ -45,11 +45,7 @@ class AnswerProcessor {
       answers.add(answer);
       attemptsString = answers.join(", ");
 
-      if (currentIndex >= words.length - 1) {
-        _finalizeGame(isCorrect);
-      } else {
-        _handleAnswer(isCorrect, answer, currentWord);
-      }
+      _handleAnswer(isCorrect, answer, currentWord);
     } else {
       final List<dynamic> alternatives = currentWord['alternatives']
               ?.split(',')
@@ -78,21 +74,13 @@ class AnswerProcessor {
           answer = '';
         }
       }
-      if (currentIndex >= words.length - 1) {
-        _finalizeGame(isCorrect);
-      } else {
-        _handleAnswer(isCorrect, answer, currentWord);
-      }
+
+      _handleAnswer(isCorrect, answer, currentWord);
     }
   }
 
   String _normalizeInput(String input) {
     return kanaKit.toHiragana(input.replaceAll('nn', 'n-')).replaceAll('ー', '');
-  }
-
-  void _finalizeGame(bool isCorrect) {
-    if (isCorrect) score++;
-    gameOver = true;
   }
 
   void _handleAnswer(
@@ -124,6 +112,7 @@ class AnswerProcessor {
       }
       restartTimer();
       answers.clear();
+
       _moveToNextWord();
     }
   }

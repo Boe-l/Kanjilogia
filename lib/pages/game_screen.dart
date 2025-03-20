@@ -7,23 +7,24 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
-import 'package:kana_kit/kana_kit.dart';
 import 'package:kanjilogia/common/langstuff.dart';
 import 'package:kanjilogia/common/theme.dart';
-import 'package:kanjilogia/pages/custom_widgets/bg_painter.dart';
-import 'package:kanjilogia/pages/custom_widgets/game_over.dart';
-import 'package:kanjilogia/pages/custom_widgets/last_word.dart';
-import 'package:kanjilogia/pages/custom_widgets/timer.dart';
+import 'package:kanjilogia/pages/custom_widgets/external_dict.dart';
+import 'package:kanjilogia/pages/game_screen/game_over.dart';
+import 'package:kanjilogia/pages/game_screen/last_word.dart';
+import 'package:kanjilogia/pages/game_screen/timer.dart';
 import 'package:kanjilogia/pages/custom_widgets/windows_buttons.dart';
-import 'package:kanjilogia/pages/custom_widgets/gs_card.dart';
+import 'package:kanjilogia/pages/game_screen/gs_card.dart';
 import 'package:kanjilogia/pages/game_screen/process_answer.dart';
 import 'package:kanjilogia/pages/history_page.dart';
 import 'package:kanjilogia/utils/discord_rpc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../common/sharedpref.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kanjilogia/common/debg.dart';
 import 'package:kanjilogia/common/transition.dart';
+import 'package:flutter_popup/flutter_popup.dart';
 
 final GlobalKey<GameScreenState> gameScreenKey = GlobalKey<GameScreenState>();
 
@@ -36,7 +37,7 @@ class GameScreen extends StatefulWidget {
   GameScreenState createState() => GameScreenState();
 }
 
-class GameScreenState extends State<GameScreen> {
+class GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   final TextEditingController controller = TextEditingController();
   List<Map<String, dynamic>> gameitems = [];
   List<String> pastItems = [];
@@ -45,6 +46,8 @@ class GameScreenState extends State<GameScreen> {
   int currentIndex = 0;
   int score = 0;
   bool isGameOver = false;
+  bool romaji = false;
+  bool animateBg = false;
   List<String> answers = [];
   String attemptsString = '';
   Timer? _timer;
@@ -56,9 +59,12 @@ class GameScreenState extends State<GameScreen> {
 
   final GlobalKey<GameScreenCardState> _customCardKey =
       GlobalKey<GameScreenCardState>();
-  double fontSizeCard = 32.0;
+  final ValueNotifier<double> fontSizeCard = ValueNotifier(24.0);
+  final ValueNotifier<double> recentFontSize = ValueNotifier(24.0);
   int fontWeightCard = 100;
   FocusNode focusNode = FocusNode();
+  late AnimationController _animationController;
+
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(
@@ -72,14 +78,18 @@ class GameScreenState extends State<GameScreen> {
       imageDetails: 'Kanjilogia',
     );
     _loadWords();
-
     SharedPrefs().getMaxTime().then((value) {
       timeLeftNotifier.value = value;
       startTimer();
     });
     SharedPrefs().getCardFontSize().then((value) {
       setState(() {
-        fontSizeCard = value;
+        fontSizeCard.value = value;
+      });
+    });
+    SharedPrefs().getRecentFontSize().then((value) {
+      setState(() {
+        recentFontSize.value = value;
       });
     });
     SharedPrefs().getCardFontWeight().then((value) {
@@ -87,9 +97,48 @@ class GameScreenState extends State<GameScreen> {
         fontWeightCard = value;
       });
     });
+    SharedPrefs().getRomaji().then((value) {
+      setState(() {
+        romaji = value;
+      });
+    });
+    SharedPrefs().getAnimateBg().then((value) {
+      setAnimateBg(value);
+    });
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 15),
+    );
+    if (!animateBg) {
+      _animationController.stop();
+    }
   }
 
-  static const kanaKit = KanaKit();
+  void setRomaji(bool a) async {
+    setState(() {
+      romaji = a;
+    });
+    await SharedPrefs().saveRomaji(a);
+  }
+
+  void setAnimateBg(bool b) async {
+    setState(() {
+      animateBg = b;
+    });
+    if (animateBg) {
+      _animationController.repeat();
+    } else {
+      _animationController.stop();
+    }
+    await SharedPrefs().saveAnimateBg(b);
+  }
+
+  void changeTime(int time) async {
+    timeLeftNotifier.value = time;
+    await SharedPrefs().saveMaxTime(time);
+    setState(() {});
+    startTimer();
+  }
 
   void _loadWords() {
     final Map<String, dynamic> data = widget.data;
@@ -162,7 +211,6 @@ class GameScreenState extends State<GameScreen> {
       customCardKey: _customCardKey,
       context: context,
     );
-    setState(() {});
     restartTimer();
   }
 
@@ -228,20 +276,20 @@ class GameScreenState extends State<GameScreen> {
     setState(() {});
   }
 
-  void _adjustFontSize(double delta) async {
-    setState(() {
-      fontSizeCard = (fontSizeCard + delta).clamp(24.0, 128.0);
-      SharedPrefs().saveCardFontSize(fontSizeCard);
-    });
+  void _adjustCardFontSize(double delta) async {
+    fontSizeCard.value = (fontSizeCard.value + delta).clamp(24.0, 128.0);
+    SharedPrefs().saveCardFontSize(fontSizeCard.value);
   }
 
-  void toggleFontWeight() async {
-    setState(() {
-      fontWeightCard += 300;
+  void _adjustRecentFontSize(double delta) async {
+    recentFontSize.value = (recentFontSize.value + delta).clamp(24.0, 128.0);
+    SharedPrefs().saveRecentFontSize(recentFontSize.value);
+  }
 
-      if (fontWeightCard > 900) {
-        fontWeightCard = 300;
-      }
+  void toggleFontWeight(int weight) async {
+    setState(() {
+      fontWeightCard = weight;
+
       SharedPrefs().saveCardFontWeight(fontWeightCard);
       Debg().info('Changed "word" font weight: $fontWeightCard');
     });
@@ -250,6 +298,7 @@ class GameScreenState extends State<GameScreen> {
   @override
   void dispose() {
     focusNode.dispose();
+    _animationController.dispose();
     _timer?.cancel();
     timeLeftNotifier.dispose();
     super.dispose();
@@ -277,27 +326,27 @@ class GameScreenState extends State<GameScreen> {
       child: GestureDetector(
         onScaleUpdate: (details) {
           if (details.scale > 1) {
-            _adjustFontSize(0.2);
+            _adjustCardFontSize(0.7);
           } else if (details.scale < 1) {
-            _adjustFontSize(-0.2);
+            _adjustCardFontSize(-0.7);
           }
         },
         child: Scaffold(
           body: Stack(
             children: [
-              Positioned.fill(
-                top: 2,
-                child: RepaintBoundary(
-                  child: CustomPaint(
-                    painter: CharacterBackgroundPainter(
-                        seed: bgparameters['seed'],
-                        enableFlip: bgparameters['flip'],
-                        enableRotation: bgparameters['rotation'],
-                        minFontSize: bgparameters['minFontSize'],
-                        maxFontSize: bgparameters['maxFontSize'],
-                        colorPalette: colorPalette),
-                  ),
-                ),
+              Lottie.asset('assets/lottie/1.json',
+                  repeat: false,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Lottie.asset('assets/lottie/2.json',
+                    repeat: animateBg,
+                    controller: _animationController,
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.5),
               ),
               Positioned.fill(
                 child: BackdropFilter(
@@ -353,47 +402,68 @@ class GameScreenState extends State<GameScreen> {
                                           },
                                           scrollbars: false,
                                         ),
-                                        child: GestureDetector(
-                                            onTap: () => toggleFontWeight(),
-                                            child: Listener(
-                                              onPointerSignal: (event) {
-                                                if (event
-                                                    is PointerScrollEvent) {
-                                                  _adjustFontSize(
-                                                      event.scrollDelta.dy > 0
-                                                          ? -2.0
-                                                          : 2.0);
-                                                }
-                                              },
-                                              child: SingleChildScrollView(
-                                                reverse: true,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    if (gameitems.isNotEmpty)
-                                                      Listener(
-                                                        onPointerSignal:
-                                                            (event) {
-                                                          if (event
-                                                              is PointerScrollEvent) {
-                                                            _adjustFontSize(
-                                                                event.scrollDelta
-                                                                            .dy >
-                                                                        0
-                                                                    ? -2.0
-                                                                    : 2.0);
-                                                          }
-                                                        },
-                                                        child: isGameOver
-                                                            ? GameOverWidget(
-                                                                restart:
-                                                                    _restartGame,
-                                                                correctItems:
-                                                                    correctItems,
-                                                                errorItems:
-                                                                    errorItems)
-                                                            : GameScreenCard(
+                                        child: SingleChildScrollView(
+                                          reverse: true,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              if (gameitems.isNotEmpty)
+                                                Listener(
+                                                  onPointerSignal: (event) {
+                                                    if (event
+                                                        is PointerScrollEvent) {
+                                                      _adjustCardFontSize(
+                                                          event.scrollDelta.dy >
+                                                                  0
+                                                              ? -7.0
+                                                              : 7.0);
+                                                    }
+                                                  },
+                                                  child: isGameOver
+                                                      ? GameOverWidget(
+                                                          restart: _restartGame,
+                                                          correctItems:
+                                                              correctItems,
+                                                          errorItems:
+                                                              errorItems)
+                                                      : ValueListenableBuilder<
+                                                              double>(
+                                                          valueListenable:
+                                                              fontSizeCard,
+                                                          builder: (context,
+                                                              fontSize, child) {
+                                                            return CustomPopup(
+                                                              arrowColor:
+                                                                  const Color
+                                                                      .fromARGB(
+                                                                      255,
+                                                                      45,
+                                                                      35,
+                                                                      70),
+                                                              barrierColor: Colors
+                                                                  .green
+                                                                  .withValues(
+                                                                      alpha:
+                                                                          0.1),
+                                                              backgroundColor:
+                                                                  const Color
+                                                                      .fromARGB(
+                                                                      255,
+                                                                      45,
+                                                                      35,
+                                                                      70),
+                                                              content:
+                                                                  WordDetailsWidget(
+                                                                word: gameitems[
+                                                                        currentIndex]
+                                                                    ['word'],
+                                                                isRomaji:
+                                                                    romaji,
+                                                              ),
+                                                              isLongPress: true,
+                                                              child:
+                                                                  GameScreenCard(
                                                                 colorPalette:
                                                                     colorPalette,
                                                                 processAnswer: (String
@@ -405,118 +475,162 @@ class GameScreenState extends State<GameScreen> {
                                                                 words: gameitems[
                                                                     currentIndex],
                                                                 fontSize:
-                                                                    fontSizeCard,
+                                                                    fontSize,
                                                                 fontWeight:
                                                                     fontWeightCard,
                                                               ),
-                                                      ),
-                                                    SizedBox(height: 10),
-                                                  ],
+                                                            );
+                                                          }),
                                                 ),
-                                              ),
-                                            )),
+                                              SizedBox(height: 10),
+                                            ],
+                                          ),
+                                        ),
                                       )
                                     ],
                                   ),
                                   Stack(
                                     children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              if (pastItems.isNotEmpty)
-                                                Expanded(
-                                                    child: LastWord(
-                                                        pastItems: pastItems,
-                                                        correctItems:
-                                                            correctItems,
-                                                        errorItems: errorItems,
-                                                        screenWidth:
-                                                            screenWidth,
-                                                        words: gameitems,
-                                                        localization:
-                                                            localization)),
-                                              SizedBox(
-                                                height: 65,
-                                                child: pastItems.isNotEmpty
-                                                    ? IconButton(
-                                                        icon: Icon(
-                                                          Icons.history,
-                                                          color: colorPalette
-                                                              .iconColor,
-                                                        ),
-                                                        onPressed: () {
-                                                          pauseTimer();
-                                                          navigateWithCircularAnimation(
-                                                            onComplete:
-                                                                resumeTimer,
-                                                            context,
-                                                            History(
-                                                              correctItems:
-                                                                  correctItems,
-                                                              incorrectItems:
-                                                                  errorItems,
-                                                            ),
-                                                          );
-                                                        },
-                                                        tooltip: localization!
-                                                            .gs_see_full_history,
-                                                      )
-                                                    : null,
-                                              ),
-                                            ],
-                                          ),
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: TextField(
-                                              focusNode: focusNode,
-                                              textInputAction:
-                                                  TextInputAction.none,
-                                              controller: controller,
-                                              onSubmitted: (value) {
-                                                _processAnswer(value);
-                                              },
-                                              decoration: InputDecoration(
-                                                labelText: localization!
-                                                    .gs_search_tooltip,
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
+                                      GestureDetector(
+                                        onScaleUpdate: (details) {
+                                          if (details.scale > 1) {
+                                            _adjustRecentFontSize(0.2);
+                                          } else if (details.scale < 1) {
+                                            _adjustRecentFontSize(-0.2);
+                                          }
+                                        },
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                if (pastItems.isNotEmpty)
+                                                  Expanded(
+                                                      child: Listener(
+                                                    onPointerSignal: (event) {
+                                                      if (event
+                                                          is PointerScrollEvent) {
+                                                        _adjustRecentFontSize(
+                                                            event.scrollDelta
+                                                                        .dy >
+                                                                    0
+                                                                ? -7.0
+                                                                : 7.0);
+                                                      }
+                                                    },
+                                                    child:
+                                                        ValueListenableBuilder<
+                                                                double>(
+                                                            valueListenable:
+                                                                recentFontSize,
+                                                            builder: (context,
+                                                                fontSize,
+                                                                child) {
+                                                              return LastWord(
+                                                                  fontSize:
+                                                                      recentFontSize
+                                                                          .value,
+                                                                  isRomaji:
+                                                                      romaji,
+                                                                  pastItems:
+                                                                      pastItems,
+                                                                  correctItems:
+                                                                      correctItems,
+                                                                  errorItems:
+                                                                      errorItems,
+                                                                  screenWidth:
+                                                                      screenWidth,
+                                                                  words:
+                                                                      gameitems,
+                                                                  localization:
+                                                                      localization);
+                                                            }),
+                                                  )),
+                                                SizedBox(
+                                                  height: 65,
+                                                  child: pastItems.isNotEmpty
+                                                      ? IconButton(
+                                                          icon: Icon(
+                                                            Icons.history,
+                                                            color: colorPalette
+                                                                .iconColor,
+                                                          ),
+                                                          onPressed: () {
+                                                            pauseTimer();
+                                                            navigateWithCircularAnimation(
+                                                              onComplete:
+                                                                  resumeTimer,
+                                                              context,
+                                                              History(
+                                                                correctItems:
+                                                                    correctItems,
+                                                                incorrectItems:
+                                                                    errorItems,
+                                                              ),
+                                                            );
+                                                          },
+                                                          tooltip: localization!
+                                                              .gs_see_full_history,
+                                                        )
+                                                      : null,
                                                 ),
-                                                prefixIcon: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Image.asset(
-                                                    LocaleUtils.getFlagPath(gameitems[
-                                                                    currentIndex]
-                                                                .isNotEmpty &&
-                                                            gameitems[currentIndex]
-                                                                    ['tags'] !=
-                                                                null
-                                                        ? gameitems[
-                                                                currentIndex]
-                                                            ['tags']
-                                                        : ''),
-                                                    width: 30,
-                                                    height: 30,
+                                              ],
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: TextField(
+                                                focusNode: focusNode,
+                                                textInputAction:
+                                                    TextInputAction.none,
+                                                controller: controller,
+                                                onSubmitted: (value) {
+                                                  _processAnswer(value);
+                                                },
+                                                decoration: InputDecoration(
+                                                  labelText: localization!
+                                                      .gs_search_tooltip,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
                                                   ),
-                                                ),
-                                                suffixIcon: IconButton(
-                                                  icon: Icon(Icons.send,
-                                                      color: colorPalette
-                                                          .iconColor),
-                                                  onPressed: () =>
-                                                      _processAnswer(
-                                                          controller.text),
+                                                  prefixIcon: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Image.asset(
+                                                      LocaleUtils.getFlagPath(gameitems[
+                                                                      currentIndex]
+                                                                  .isNotEmpty &&
+                                                              gameitems[currentIndex]
+                                                                      [
+                                                                      'tags'] !=
+                                                                  null
+                                                          ? gameitems[
+                                                                  currentIndex]
+                                                              ['tags']
+                                                          : ''),
+                                                      width: 30,
+                                                      height: 30,
+                                                    ),
+                                                  ),
+                                                  suffixIcon: IconButton(
+                                                    icon: Icon(Icons.send,
+                                                        color: colorPalette
+                                                            .iconColor),
+                                                    onPressed: () =>
+                                                        _processAnswer(
+                                                            controller.text),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   )
@@ -552,6 +666,31 @@ class GameScreenState extends State<GameScreen> {
                                     color: colorPalette.iconColor),
                                 tooltip: localization.gs_game_restart2,
                               ),
+                              CustomPopup(
+                                arrowColor:
+                                    const Color.fromARGB(255, 45, 35, 70),
+                                barrierColor:
+                                    Colors.green.withValues(alpha: 0.1),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 45, 35, 70),
+                                content: PopUp(
+                                  changeAnimateBg: (bool a) => setAnimateBg(a),
+                                  changeRomaji: (bool b) => setRomaji(b),
+                                  animateBg: animateBg,
+                                  romaji: romaji,
+                                  fontWeight: fontWeightCard,
+                                  changeTime: (int time) => changeTime(time),
+                                  changeFontWeight: (int weight) =>
+                                      toggleFontWeight(weight),
+                                ),
+                                child: Tooltip(
+                                  message: localization.settings,
+                                  child: Icon(
+                                    Icons.settings,
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                              ),
                               TimerWidget(
                                 fontSize: fontSize,
                                 timeLeftNotifier: timeLeftNotifier,
@@ -567,6 +706,207 @@ class GameScreenState extends State<GameScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class PopUp extends StatefulWidget {
+  final Function(int) changeFontWeight;
+  final Function(int) changeTime;
+  final Function(bool) changeRomaji;
+  final Function(bool) changeAnimateBg;
+  final int fontWeight;
+  final bool romaji;
+  final bool animateBg;
+
+  const PopUp({
+    super.key,
+    required this.changeFontWeight,
+    required this.changeTime,
+    required this.romaji,
+    required this.animateBg,
+    required this.fontWeight,
+    required this.changeRomaji,
+    required this.changeAnimateBg,
+  });
+
+  @override
+  State<PopUp> createState() => _PopUpState();
+}
+
+class _PopUpState extends State<PopUp> {
+  double selectedTime = 30.0;
+  late bool animateBackground;
+  late bool romaji;
+  late int weight;
+  @override
+  void initState() {
+    super.initState();
+    romaji = widget.romaji;
+    weight = widget.fontWeight;
+    animateBackground = widget.animateBg;
+
+    start();
+  }
+
+  void start() async {
+    final value = await SharedPrefs().getMaxTime();
+    setState(() {
+      selectedTime = value.toDouble();
+    });
+  }
+
+  void _setFontWeight(double c) {
+    setState(() {
+      weight = c.toInt();
+      widget.changeFontWeight(c.toInt());
+    });
+  }
+
+  void _setTime(double value) {
+    setState(() {
+      selectedTime = value;
+      widget.changeTime(value.toInt());
+    });
+  }
+
+  void _setAnimate(bool value) {
+    setState(() {
+      animateBackground = value;
+    });
+    widget.changeAnimateBg(value);
+  }
+
+  void _setRomaji(bool value) {
+    setState(() {
+      romaji = value;
+    });
+    widget.changeRomaji(value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(maxHeight: 300, maxWidth: 320),
+      padding: EdgeInsets.all(8),
+      child: Column(
+        children: [
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    AppLocalizations.of(context)!
+                        .gs_settings_animate_background,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    softWrap: true,
+                  ),
+                ),
+                Switch(
+                  value: animateBackground,
+                  onChanged: (value) => _setAnimate(value),
+                ),
+              ],
+            ),
+          ),
+          Divider(),
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    AppLocalizations.of(context)!.gs_settings_show_romaji,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    softWrap: true,
+                  ),
+                ),
+                Switch(value: romaji, onChanged: (value) => _setRomaji(value)),
+              ],
+            ),
+          ),
+          Divider(),
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                      AppLocalizations.of(context)!.gs_settings_font_weight,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      softWrap: true),
+                ),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => _setFontWeight(300),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 97, 76, 151),
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(12.0),
+                        side: weight == 300
+                            ? BorderSide(color: Colors.white, width: 2)
+                            : BorderSide.none,
+                      ),
+                      child: Text('300'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => _setFontWeight(600),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 97, 76, 151),
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(12.0),
+                        side: weight == 600
+                            ? BorderSide(color: Colors.white, width: 2)
+                            : BorderSide.none,
+                      ),
+                      child: Text('600'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => _setFontWeight(900),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 97, 76, 151),
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(12.0),
+                        side: weight == 900
+                            ? BorderSide(color: Colors.white, width: 2)
+                            : BorderSide.none,
+                      ),
+                      child: Text('900'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Divider(),
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    AppLocalizations.of(context)!.gs_settings_max_time,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    softWrap: true,
+                  ),
+                ),
+                Slider(
+                  value: selectedTime,
+                  min: 10,
+                  max: 60,
+                  divisions: 5,
+                  label: '${selectedTime.toInt()}',
+                  onChanged: (value) => _setTime(value),
+                ),
+              ],
+            ),
+          ),
+          Divider(),
+        ],
       ),
     );
   }

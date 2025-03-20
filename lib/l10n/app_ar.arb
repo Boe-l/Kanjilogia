@@ -83,5 +83,16 @@
   "hp_error_appear_here": "الإجابات الخاطئة ستظهر هنا.",
   "hp_pop_meaning": "المعنى:",
   "hp_pop_file_origin": "ملف المصدر:",
-  "hp_pop_user_answers": "إجاباتك:"
+  "hp_pop_user_answers": "إجاباتك:",
+  "rpc_toggle": "يتم تمكين/تعطيل الحضور الغني في ديسكورد",
+  "gs_settings_animate_background": "خلفية متحركة",
+  "gs_settings_show_romaji": "عرض الرومجي",
+  "gs_settings_font_weight": "وزن الخط",
+  "gs_settings_max_time": "الوقت الأقصى",
+  "gs_dict_open_jisho": "افتح جيشو",
+  "gs_dict_play_audio": "تشغيل الصوت",
+  "gs_dict_no_audio": "الصوت غير متاح",
+  "gs_dict_error_loading": "تعذر تحميل معلومات الكلمة.",
+  "gs_dict_empty": "لم يتم العثور على بيانات."
+
 }

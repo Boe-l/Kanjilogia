@@ -83,5 +83,15 @@
   "hp_error_appear_here": "Неправильные ответы появятся здесь.",
   "hp_pop_meaning": "Значение:",
   "hp_pop_file_origin": "Исходный файл:",
-  "hp_pop_user_answers": "Ваши ответы:"
+  "hp_pop_user_answers": "Ваши ответы:",
+  "rpc_toggle": "Включает/выключает Discord Rich Presence",
+  "gs_settings_animate_background": "Анимированный фон",
+  "gs_settings_show_romaji": "Показать ромадзи",
+  "gs_settings_font_weight": "Толщина шрифта",
+  "gs_settings_max_time": "Максимальное время",
+  "gs_dict_open_jisho": "Открыть Jisho",
+  "gs_dict_play_audio": "Воспроизвести аудио",
+  "gs_dict_no_audio": "Аудио недоступно",
+  "gs_dict_error_loading": "Не удалось загрузить информацию о слове.",
+  "gs_dict_empty": "Данные не найдены."
 }

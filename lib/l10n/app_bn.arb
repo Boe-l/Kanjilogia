@@ -83,5 +83,15 @@
   "hp_error_appear_here": "ভুল উত্তর এখানে দেখাবে।",
   "hp_pop_meaning": "অর্থ:",
   "hp_pop_file_origin": "উৎস ফাইল:",
-  "hp_pop_user_answers": "আপনার উত্তর:"
+  "hp_pop_user_answers": "আপনার উত্তর:",
+  "rpc_toggle": "Discord রিচ প্রেজেন্স সক্রিয়/নিষ্ক্রিয় করে",
+  "gs_settings_animate_background": "অ্যানিমেটেড ব্যাকগ্রাউন্ড",
+  "gs_settings_show_romaji": "রোমাজি দেখান",
+  "gs_settings_font_weight": "ফন্টের ওজন",
+  "gs_settings_max_time": "সর্বাধিক সময়",
+  "gs_dict_open_jisho": "Jisho খুলুন",
+  "gs_dict_play_audio": "অডিও বাজান",
+  "gs_dict_no_audio": "অডিও উপলব্ধ নয়",
+  "gs_dict_error_loading": "শব্দের তথ্য লোড করা যায়নি।",
+  "gs_dict_empty": "কোনও ডেটা পাওয়া যায়নি।"
 }

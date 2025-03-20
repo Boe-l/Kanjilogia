@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kanjilogia/common/sharedpref.dart';
 import 'package:kanjilogia/utils/discord_rpc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import 'package:kanjilogia/common/langstuff.dart';
@@ -29,7 +30,9 @@ class HistoryPage extends State<History> with TickerProviderStateMixin {
   final Map<String, List<dynamic>> incorrectItems;
   late TabController _tabController;
   late ColorPalette colorPalette;
-
+  late AnimationController _animationController;
+  bool animateBg = false;
+  bool show1 = false;
   @override
   void initState() {
     super.initState();
@@ -40,12 +43,28 @@ class HistoryPage extends State<History> with TickerProviderStateMixin {
       subtitle: 'Checking answers',
       imageDetails: 'Kanjilogia',
     );
-    onStart();
-
+    // onStart();
+    SharedPrefs().getAnimateBg().then((value) {
+      setAnimateBg(value);
+    });
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 4),
+    );
+    if (!animateBg) {
+      _animationController.stop();
+    }
   }
 
-  onStart() {
-    setState(() {});
+  void setAnimateBg(bool b) async {
+    setState(() {
+      animateBg = b;
+    });
+    if (animateBg) {
+      _animationController.forward();
+    } else {
+      _animationController.stop();
+    }
   }
 
   @override
@@ -56,8 +75,22 @@ class HistoryPage extends State<History> with TickerProviderStateMixin {
       top: false,
       child: Stack(
         children: [
+          Lottie.asset('assets/lottie/1.json',
+              repeat: false,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              controller: _animationController),
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+              child: Container(
+                color: colorPalette.background.withValues(alpha: 0.4),
+              ),
+            ),
+          ),
           Scaffold(
-            backgroundColor: colorPalette.background,
+            backgroundColor: Colors.transparent,
             appBar: AppBar(
               toolbarHeight: 50,
               backgroundColor: colorPalette.fillColor[0],
@@ -181,6 +214,7 @@ class HistoryPage extends State<History> with TickerProviderStateMixin {
   @override
   void dispose() {
     _tabController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 }
@@ -207,7 +241,7 @@ class Correct extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: colorPalette.background,
+        backgroundColor: Colors.transparent,
         body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 600),
@@ -256,7 +290,7 @@ class Correct extends StatelessWidget {
                             children: [
                               if (values[0][0].isNotEmpty)
                                 Text(
-                                  '「${values[0]}」',
+                                  '「${values[0].join('、 ')}」',
                                   style: TextStyle(fontWeight: FontWeight.w800),
                                 ),
                               Text(values[1]),
@@ -309,7 +343,7 @@ class Incorrect extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: colorPalette.background,
+        backgroundColor: Colors.transparent,
         body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 600),
@@ -355,7 +389,7 @@ class Incorrect extends StatelessWidget {
                             children: [
                               if (values[0][0].isNotEmpty)
                                 Text(
-                                  '「${values[0]}」',
+                                  '「${values[0].join('、 ')}」',
                                   style: TextStyle(fontWeight: FontWeight.w800),
                                 ),
                               Text(values[1]),

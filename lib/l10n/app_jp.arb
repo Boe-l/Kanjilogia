@@ -83,5 +83,15 @@
   "hp_error_appear_here": "間違いがここに表示されます。",
   "hp_pop_meaning": "意味：",
   "hp_pop_file_origin": "元ファイル：",
-  "hp_pop_user_answers": "あなたの答え："
+  "hp_pop_user_answers": "あなたの答え：",
+  "rpc_toggle": "Discord リッチプレゼンスを有効/無効にする",
+  "gs_settings_animate_background": "アニメーション背景",
+  "gs_settings_show_romaji": "ローマ字を表示",
+  "gs_settings_font_weight": "フォントの太さ",
+  "gs_settings_max_time": "最大時間",
+  "gs_dict_open_jisho": "Jishoを開く",
+  "gs_dict_play_audio": "オーディオを再生",
+  "gs_dict_no_audio": "オーディオは利用できません",
+  "gs_dict_error_loading": "単語情報の読み込みに失敗しました。",
+  "gs_dict_empty": "データが見つかりません。"
 }

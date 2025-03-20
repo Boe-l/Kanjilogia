@@ -297,7 +297,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                       subtitle: Text(
-                        'Enables/Disables Discord Rich Presence',
+                        AppLocalizations.of(context)!.rpc_toggle,
                         style: TextStyle(color: Colors.white70),
                       ),
                       trailing: Switch(

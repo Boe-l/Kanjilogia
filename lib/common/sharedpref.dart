@@ -14,6 +14,9 @@ class SharedPrefs {
   static const String _cachedFilesKey = 'cachedFiles';
   static const String _lastFetchTimeKey = 'lastFetchTime';
   static const String _rpcEnabledKey = 'rpcEnabled';
+  static const String _romajiEnabledKey = 'romajiEnabled';
+  static const String _animateBgKey = 'animateBgEnabled';
+  static const String _recentFontSizeKey = 'recentFontSize';
 
   Future<void> saveTutorialComplete(bool isComplete) async {
     final prefs = await SharedPreferences.getInstance();
@@ -48,6 +51,16 @@ class SharedPrefs {
   Future<double> getCardFontSize() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getDouble(_cardFontSizeKey) ?? 30.0;
+  }
+
+  Future<void> saveRecentFontSize(double recentFontSize) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_recentFontSizeKey, recentFontSize);
+  }
+
+  Future<double> getRecentFontSize() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble(_recentFontSizeKey) ?? 22.0;
   }
 
   Future<void> saveLocale(Locale locale) async {
@@ -88,6 +101,26 @@ class SharedPrefs {
   Future<int> getMaxTime() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_maxTimeKey) ?? 30;
+  }
+
+  Future<void> saveRomaji(bool isEnabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_romajiEnabledKey, isEnabled);
+  }
+
+  Future<bool> getRomaji() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_romajiEnabledKey) ?? false;
+  }
+
+  Future<void> saveAnimateBg(bool isEnabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_animateBgKey, isEnabled);
+  }
+
+  Future<bool> getAnimateBg() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_animateBgKey) ?? false;
   }
 
   Future<void> fetchAndSaveFiles() async {
