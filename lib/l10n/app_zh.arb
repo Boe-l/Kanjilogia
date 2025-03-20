@@ -83,5 +83,15 @@
   "hp_error_appear_here": "错误答案将在此显示。",
   "hp_pop_meaning": "含义：",
   "hp_pop_file_origin": "源文件：",
-  "hp_pop_user_answers": "你的答案："
+  "hp_pop_user_answers": "你的答案：",
+  "rpc_toggle": "启用/禁用 Discord 富态",
+  "gs_settings_animate_background": "动画背景",
+  "gs_settings_show_romaji": "显示罗马字",
+  "gs_settings_font_weight": "字体重量",
+  "gs_settings_max_time": "最大时间",
+  "gs_dict_open_jisho": "打开 Jisho",
+  "gs_dict_play_audio": "播放音频",
+  "gs_dict_no_audio": "音频不可用",
+  "gs_dict_error_loading": "无法加载单词信息。",
+  "gs_dict_empty": "未找到数据。"
 }

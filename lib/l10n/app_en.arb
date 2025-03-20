@@ -83,5 +83,15 @@
   "hp_error_appear_here": "Incorrect answers will appear here.",
   "hp_pop_meaning": "Meaning:",
   "hp_pop_file_origin": "Source file:",
-  "hp_pop_user_answers": "Your answers:"
+  "hp_pop_user_answers": "Your answers:",
+  "rpc_toggle": "Enables/Disables Discord Rich Presence",
+   "gs_settings_animate_background": "Animated Background",
+  "gs_settings_show_romaji": "Show Romaji",
+  "gs_settings_font_weight": "Font Weight",
+  "gs_settings_max_time": "Max Time",
+  "gs_dict_open_jisho": "Open Jisho",
+  "gs_dict_play_audio": "Play audio",
+  "gs_dict_no_audio": "Audio unavailable",
+  "gs_dict_error_loading": "Could not load word information.",
+  "gs_dict_empty": "No data found."
 }

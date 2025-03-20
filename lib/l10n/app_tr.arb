@@ -83,5 +83,15 @@
   "hp_error_appear_here": "Yanlış cevaplar burada görünecek.",
   "hp_pop_meaning": "Anlam:",
   "hp_pop_file_origin": "Kaynak dosya:",
-  "hp_pop_user_answers": "Cevapların:"
+  "hp_pop_user_answers": "Cevapların:",
+  "rpc_toggle": "Discord Rich Presence'ı Etkinleştir/Devre Dışı Bırak",
+  "gs_settings_animate_background": "Animasyonlu Arka Plan",
+  "gs_settings_show_romaji": "Romaji Göster",
+  "gs_settings_font_weight": "Yazı Tipi Ağırlığı",
+  "gs_settings_max_time": "Maksimum Zaman",
+  "gs_dict_open_jisho": "Jisho'yu Aç",
+  "gs_dict_play_audio": "Ses Çal",
+  "gs_dict_no_audio": "Ses mevcut değil",
+  "gs_dict_error_loading": "Kelime bilgisi yüklenemedi.",
+  "gs_dict_empty": "Veri bulunamadı."
 }

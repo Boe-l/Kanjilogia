@@ -83,5 +83,15 @@
   "hp_error_appear_here": "Falsche Antworten erscheinen hier.",
   "hp_pop_meaning": "Bedeutung:",
   "hp_pop_file_origin": "Quelldatei:",
-  "hp_pop_user_answers": "Deine Antworten:"
+  "hp_pop_user_answers": "Deine Antworten:",
+  "rpc_toggle": "Aktiviert/deaktiviert Discord Rich Presence",
+  "gs_settings_animate_background": "Animierter Hintergrund",
+  "gs_settings_show_romaji": "Romaji anzeigen",
+  "gs_settings_font_weight": "Schriftstärke",
+  "gs_settings_max_time": "Maximale Zeit",
+  "gs_dict_open_jisho": "Jisho öffnen",
+  "gs_dict_play_audio": "Audio abspielen",
+  "gs_dict_no_audio": "Audio nicht verfügbar",
+  "gs_dict_error_loading": "Wortinformationen konnten nicht geladen werden.",
+  "gs_dict_empty": "Keine Daten gefunden."
 }

@@ -83,5 +83,15 @@
   "hp_error_appear_here": "गलत उत्तर यहाँ दिखेंगे।",
   "hp_pop_meaning": "अर्थ:",
   "hp_pop_file_origin": "स्रोत फ़ाइल:",
-  "hp_pop_user_answers": "आपके उत्तर:"
+  "hp_pop_user_answers": "आपके उत्तर:",
+  "rpc_toggle": "Discord रिच प्रजेंस को सक्षम/अक्षम करता है",
+  "gs_settings_animate_background": "एनीमेटेड बैकग्राउंड",
+  "gs_settings_show_romaji": "रोमाजी दिखाएं",
+  "gs_settings_font_weight": "फ़ॉन्ट का वजन",
+  "gs_settings_max_time": "अधिकतम समय",
+  "gs_dict_open_jisho": "Jisho खोलें",
+  "gs_dict_play_audio": "ऑडियो बजाएं",
+  "gs_dict_no_audio": "ऑडियो उपलब्ध नहीं है",
+  "gs_dict_error_loading": "शब्द जानकारी लोड नहीं हो सका।",
+  "gs_dict_empty": "कोई डेटा नहीं मिला।"
 }
