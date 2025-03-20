@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:js_interop';
+// ignore: deprecated_member_use, avoid_web_libraries_in_flutter
 import 'dart:js_util';
 
 import 'package:flutter/foundation.dart';
@@ -89,6 +90,7 @@ class LocalFonts {
         throw Exception('Result is not a JSArray.');
       }
 
+      // ignore: invalid_runtime_check_with_js_interop_types
       final fontsArray = jsArray as List;
       List<FontMetadata> fonts = [];
 
@@ -127,7 +129,7 @@ class LocalFonts {
 
   Future<void> loadFont(String fontname) async {
     if (!kIsWeb) {
-      Debg().error('LocalFonts only works on web platforms.');
+      Debg().error('LocalFonts(web) only works on web platforms.');
       return;
     }
     fontname = fontname.replaceAll(' ', '-');

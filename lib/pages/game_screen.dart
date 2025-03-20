@@ -433,53 +433,9 @@ class GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                                               fontSizeCard,
                                                           builder: (context,
                                                               fontSize, child) {
-                                                            return CustomPopup(
-                                                              arrowColor:
-                                                                  const Color
-                                                                      .fromARGB(
-                                                                      255,
-                                                                      45,
-                                                                      35,
-                                                                      70),
-                                                              barrierColor: Colors
-                                                                  .green
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.1),
-                                                              backgroundColor:
-                                                                  const Color
-                                                                      .fromARGB(
-                                                                      255,
-                                                                      45,
-                                                                      35,
-                                                                      70),
-                                                              content:
-                                                                  WordDetailsWidget(
-                                                                word: gameitems[
-                                                                        currentIndex]
-                                                                    ['word'],
-                                                                isRomaji:
-                                                                    romaji,
-                                                              ),
-                                                              isLongPress: true,
-                                                              child:
-                                                                  GameScreenCard(
-                                                                colorPalette:
-                                                                    colorPalette,
-                                                                processAnswer: (String
-                                                                        answer) =>
-                                                                    _processAnswer(
-                                                                        answer),
-                                                                key:
-                                                                    _customCardKey,
-                                                                words: gameitems[
-                                                                    currentIndex],
-                                                                fontSize:
-                                                                    fontSize,
-                                                                fontWeight:
-                                                                    fontWeightCard,
-                                                              ),
-                                                            );
+                                                            return centerWord(
+                                                                colorPalette,
+                                                                fontSize);
                                                           }),
                                                 ),
                                               SizedBox(height: 10),
@@ -707,6 +663,38 @@ class GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           ),
         ),
       ),
+    );
+  }
+
+  Container centerWord(ColorPalette colorPalette, double fontSize) {
+    return Container(
+      child: kIsWeb
+          ? GameScreenCard(
+              colorPalette: colorPalette,
+              processAnswer: (String answer) => _processAnswer(answer),
+              key: _customCardKey,
+              words: gameitems[currentIndex],
+              fontSize: fontSize,
+              fontWeight: fontWeightCard,
+            )
+          : CustomPopup(
+              arrowColor: const Color.fromARGB(255, 45, 35, 70),
+              barrierColor: Colors.green.withValues(alpha: 0.1),
+              backgroundColor: const Color.fromARGB(255, 45, 35, 70),
+              content: WordDetailsWidget(
+                word: gameitems[currentIndex]['word'],
+                isRomaji: romaji,
+              ),
+              isLongPress: true,
+              child: GameScreenCard(
+                colorPalette: colorPalette,
+                processAnswer: (String answer) => _processAnswer(answer),
+                key: _customCardKey,
+                words: gameitems[currentIndex],
+                fontSize: fontSize,
+                fontWeight: fontWeightCard,
+              ),
+            ),
     );
   }
 }
