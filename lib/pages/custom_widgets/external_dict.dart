@@ -63,10 +63,15 @@ class WordDetailsWidgetState extends State<WordDetailsWidget> {
     try {
       final response = await http.get(
         Uri.parse('https://jisho.org/api/v1/search/words?keyword=$keyword'),
+        headers: {
+          'Origin': 'https://boe-l.github.io/Kanjilogia/',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
       );
 
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body);
+
         var wordInfos = jsonResponse['data'];
 
         List<WordData> wordDataList = [];
@@ -150,6 +155,8 @@ class WordDetailsWidgetState extends State<WordDetailsWidget> {
   @override
   void initState() {
     player = AudioPlayer();
+    fetchWordData(widget.word);
+    wordDataFuture = fetchWordData(widget.word);
 
     super.initState();
   }
@@ -164,7 +171,7 @@ class WordDetailsWidgetState extends State<WordDetailsWidget> {
       child: Container(
         constraints: BoxConstraints(maxHeight: 300, maxWidth: 300),
         child: FutureBuilder<List<WordData>>(
-          future: fetchWordData(widget.word),
+          future: wordDataFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -261,8 +268,8 @@ class WordDetailsWidgetState extends State<WordDetailsWidget> {
                                                 child: child,
                                               );
                                             },
-                                            child: Image.network(
-                                              'https://assets.jisho.org/assets/jisho-logo-v4-dark@2x-e676613b426d34187b61928823730a225b52165aaef99f948bd3dc5fc16fa787.png',
+                                            child: Image.asset(
+                                              'assets/icon/Jisho.png',
                                             ),
                                           ),
                                         ),

@@ -22,7 +22,6 @@ class FeedPageState extends State<FeedPage> {
     super.initState();
     fetchData();
 
-    // Garanta que a execução de updateActivity aconteça após a renderização do frame
     Provider.of<DiscordRichPresenceNotifier>(context, listen: false)
         .updateActivity(
       title: 'Viewing Feed',
@@ -34,7 +33,6 @@ class FeedPageState extends State<FeedPage> {
   void fetchData() async {
     final url = 'https://api.github.com/gists/1df9d4323d9ec27cbe79664e5440e00a';
 
-    // Fazendo a requisição GET
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -72,7 +70,7 @@ class FeedPageState extends State<FeedPage> {
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 600),
                 child: ListView.builder(
-                  reverse: true,
+                  reverse: false,
                   itemCount: updates.length,
                   itemBuilder: (context, index) {
                     final update = updates[index];
@@ -85,8 +83,33 @@ class FeedPageState extends State<FeedPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(update.title),
-                          Text(update.message),
+                          Text(
+                            update.title,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(1.5, 1.5),
+                                  blurRadius: 2.0,
+                                  color: Colors.black.withValues(alpha: 0.5),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            update.message,
+                            style: TextStyle(
+                              fontSize: 16,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(1.5, 1.5),
+                                  blurRadius: 2.0,
+                                  color: Colors.black.withValues(alpha: 0.5),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       leading: Image(image: NetworkImage(userAvatarUrl)),

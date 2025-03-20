@@ -11,9 +11,9 @@ class LastWord extends StatefulWidget {
   final bool isRomaji;
   final List<Map<String, dynamic>> words;
   final AppLocalizations? localization;
-  double fontSize;
+  final double fontSize;
 
-  LastWord({
+  const LastWord({
     super.key,
     required this.pastItems,
     required this.isRomaji,

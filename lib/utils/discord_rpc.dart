@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:discord_rich_presence/discord_rich_presence.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kanjilogia/common/debg.dart';
 import 'package:kanjilogia/common/sharedpref.dart';
 
@@ -80,7 +80,7 @@ class DiscordRichPresenceNotifier extends ChangeNotifier {
     );
 
     // Verifica se o sistema operacional é Windows antes de tentar conectar
-    if (_isRichPresenceEnabled && Platform.isWindows) {
+    if (!kIsWeb && _isRichPresenceEnabled && Platform.isWindows) {
       connect();
     }
   }
@@ -139,7 +139,7 @@ class DiscordRichPresenceNotifier extends ChangeNotifier {
     await _saveRichPresencePreference(value); // Salva a escolha do usuário
     notifyListeners();
 
-    if (_isRichPresenceEnabled && Platform.isWindows) {
+    if (!kIsWeb && _isRichPresenceEnabled && Platform.isWindows) {
       connect();
     } else {
       disconnect();

@@ -37,7 +37,7 @@ void main() {
       child: Kanjilogia(key: kanjilogiaKey),
     ),
   );
-  if (Platform.isWindows) {
+  if (!kIsWeb && Platform.isWindows) {
     doWhenWindowReady(() {
       const initialSize = Size(600, 600);
       appWindow.minSize = initialSize;

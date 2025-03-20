@@ -270,7 +270,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                 ),
-                if (Platform.isWindows)
+                if (!kIsWeb && Platform.isWindows)
                   Container(
                     margin: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 16),
