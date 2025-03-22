@@ -61,7 +61,7 @@ class GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       GlobalKey<GameScreenCardState>();
   final ValueNotifier<double> fontSizeCard = ValueNotifier(24.0);
   final ValueNotifier<double> recentFontSize = ValueNotifier(24.0);
-  int fontWeightCard = 100;
+  int fontWeightCard = 300;
   FocusNode focusNode = FocusNode();
   late AnimationController _animationController;
 
