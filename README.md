@@ -1,8 +1,10 @@
 # Kanjilogia - 漢字ロギア
 
-[Switch to English](README-en.md)
+[![Flutter Builds](https://github.com/Boe-l/Kanjilogia/actions/workflows/flutter-build.yaml/badge.svg)](https://github.com/Boe-l/Kanjilogia/actions/workflows/flutter-build.yaml) 
 
-Kanjilogia é um aplicativo de aprendizado de idiomas projetado para aprimorar a retenção de vocabulário por meio da repetição de palavras e gamificação. Ao contrário dos flashcards tradicionais, o aplicativo incentiva os usuários a responder corretamente as leituras das palavras para ganhar pontos, tornando o processo de aprendizagem mais interativo e divertido. O app suporta vários idiomas, incluindo:
+[Switch to English](#english)
+
+## <a id="portuguese"></a> Kanjilogia é um aplicativo de aprendizado de idiomas projetado para aprimorar a retenção de vocabulário por meio da repetição de palavras e gamificação. Ao contrário dos flashcards tradicionais, o aplicativo incentiva os usuários a responder corretamente as leituras das palavras para ganhar pontos, tornando o processo de aprendizagem mais interativo e divertido. O app suporta vários idiomas, incluindo:
 
 - Português
 - Espanhol
@@ -31,7 +33,7 @@ Kanjilogia é um aplicativo de aprendizado de idiomas projetado para aprimorar a
 
 - **Android 13**
 - **Windows 11**
-- **Web (Chrome versão 131.0.6778.265 no Windows 11 e Android 13)**
+- **Web (Chrome versão 131.0.6778.265 no Windows 11/10 e Android 13)**
 
 ### Aviso
 
@@ -40,3 +42,44 @@ Kanjilogia é um aplicativo de aprendizado de idiomas projetado para aprimorar a
 ---
 
 Fique à vontade para contribuir ou sugerir melhorias!
+
+## <a id="english"></a> English version
+
+Kanjilogia is a language learning app designed to enhance vocabulary retention through word repetition and gamification. Unlike traditional flashcards, the app encourages users to correctly answer the readings of words to earn points, making the learning process more interactive and fun. The app supports multiple languages, including:
+
+- Portuguese
+- Spanish
+- Italian
+- English
+- Mandarin Chinese
+- Hindi
+- Arabic
+- Bengali
+- French
+- Russian
+- Japanese
+- German
+- Korean
+- Turkish
+
+### Features
+
+- **Language Indicator:** The app displays a prefix icon in the text box to indicate the language of each word, with a flag icon. This is especially useful when multiple languages are selected, helping to avoid confusion between similar words.
+- **Font Adjustment:** Users can adjust the font size of the words using the mouse wheel or pinch gestures on mobile, providing an accessible and customizable experience.
+- **File Import:** The app supports importing and loading JSON data files, which are stored in an Indexed DB for web users or an Isar DB for mobile and Windows platforms.
+- **File Download:** Users can download files directly from GitHub through the settings tab or import local files.
+- **User Preferences:** User preferences, such as maximum response time and font settings, are saved using Shared Preferences, ensuring the app remembers customized settings between sessions.
+
+### Tested on
+
+- **Android 13**
+- **Windows 11**
+- **Web (Chrome version 131.0.6778.265 on Windows 11/10 and Android 13)**
+
+### Warning
+
+This project may contain bugs. If you find any, please open an *issue* in the appropriate format to help improve the project.
+
+---
+
+Feel free to contribute or suggest improvements!
