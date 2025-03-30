@@ -1,8 +1,8 @@
 # Kanjilogia - 漢字ロギア
 
-[![Flutter Builds](https://github.com/Boe-l/Kanjilogia/actions/workflows/flutter-build.yaml/badge.svg)](https://github.com/Boe-l/Kanjilogia/actions/workflows/flutter-build.yaml) 
-[Video mostrando o app](#video)
-[Switch to English](#english)
+[![Flutter Builds](https://github.com/Boe-l/Kanjilogia/actions/workflows/flutter-build.yaml/badge.svg)](https://github.com/Boe-l/Kanjilogia/actions/workflows/flutter-build.yaml)  
+[Video mostrando o app](#video)  
+[Switch to English](#english)  
 
 ## <a id="portuguese"></a> Kanjilogia é um aplicativo de aprendizado de idiomas projetado para aprimorar a retenção de vocabulário por meio da repetição de palavras e gamificação. Ao contrário dos flashcards tradicionais, o aplicativo incentiva os usuários a responder corretamente as leituras das palavras para ganhar pontos, tornando o processo de aprendizagem mais interativo e divertido. O app suporta vários idiomas, incluindo:
 
