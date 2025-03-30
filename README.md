@@ -87,4 +87,5 @@ Feel free to contribute or suggest improvements!
 
 
 <a id="video"></a>
+## Click on the image to open the video/Clique na imagem para abrir o video
 [![Video showing the app/Video mostrando o app](https://github.com/user-attachments/assets/92213c76-920e-4727-8072-cf6e769c7853)](https://www.youtube.com/shorts/F0FPtgouL_0)
