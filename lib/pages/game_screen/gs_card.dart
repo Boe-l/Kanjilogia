@@ -248,7 +248,6 @@ class Quiz extends StatefulWidget {
 
 class QuizState extends State<Quiz> with TickerProviderStateMixin {
   QuizState({required this.processAnswer});
-
   final Function(String) processAnswer;
   bool evaluate = false;
   bool selected = false;
@@ -266,9 +265,9 @@ class QuizState extends State<Quiz> with TickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ConstrainedBox(
-              constraints: BoxConstraints(minHeight: 60, maxHeight: 60),
+              constraints: BoxConstraints(minHeight: 60, maxHeight: 100),
               child: Text(
-                widget.words['question'] ?? '',
+                "${widget.words['question']}\n「${widget.words['mean']}」",
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
               ),

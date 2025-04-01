@@ -172,8 +172,19 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                       ),
                     ),
                     SizedBox(height: 16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            spreadRadius: 2,
+                            blurRadius: 30,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
                       child: TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
@@ -308,35 +319,51 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                                                             Image.asset(
                                                               LocaleUtils.getFlagPath(
                                                                   _filteredJsonFiles[
-                                                                              fileName]!
-                                                                          .toList()[
-                                                                      0]), // Converte Set para List e acessa o primeiro elemento
+                                                                          fileName]!
+                                                                      .toList()[0]),
                                                               fit: BoxFit
                                                                   .contain,
                                                             ),
-                                                            // Segunda bandeira (idioma secundário) posicionada com deslocamento
                                                             Positioned(
-                                                              bottom:
-                                                                  0, // Ajuste o valor para controlar a posição vertical
-                                                              right:
-                                                                  0, // Ajuste o valor para controlar a posição horizontal
-                                                              child:
-                                                                  Image.asset(
-                                                                LocaleUtils.getFlagPath(
-                                                                    _filteredJsonFiles[
-                                                                            fileName]!
-                                                                        .toList()[1]),
-                                                                scale:
-                                                                    3, // Converte Set para List e acessa o segundo elemento
-                                                                fit: BoxFit
-                                                                    .contain,
+                                                              bottom: 0,
+                                                              right: 0,
+                                                              child: Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                      color: Colors
+                                                                          .black
+                                                                          .withValues(
+                                                                              alpha: 0.4),
+                                                                      spreadRadius:
+                                                                          2,
+                                                                      blurRadius:
+                                                                          10,
+                                                                      offset:
+                                                                          Offset(
+                                                                              2,
+                                                                              2),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                child:
+                                                                    Image.asset(
+                                                                  LocaleUtils.getFlagPath(
+                                                                      _filteredJsonFiles[fileName]!
+                                                                              .toList()[
+                                                                          1]), // Segunda bandeira(idioma segundario)
+                                                                  scale: 3,
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                ),
                                                               ),
                                                             ),
                                                           ],
                                                         ),
                                                       ),
                                                       Expanded(
-                                                        flex: 2,
+                                                        flex: 3,
                                                         child: Text(
                                                           fileName,
                                                           textAlign:
@@ -344,9 +371,9 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                                                           style: TextStyle(
                                                             fontSize:
                                                                 screenWidth <
-                                                                        360
+                                                                        1000
                                                                     ? 14
-                                                                    : 18,
+                                                                    : 16,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             shadows: [
@@ -362,7 +389,6 @@ class GameMainState extends State<GameMain> with TickerProviderStateMixin {
                                                           maxLines: 2,
                                                         ),
                                                       ),
-                                                      Spacer(flex: 1),
                                                     ],
                                                   ),
                                                 ),

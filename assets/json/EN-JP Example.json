@@ -1,0 +1,48 @@
+{
+    "filename": "Example EN-JP",
+    "tags": [
+        "jp",
+        "en",
+        "N5"
+    ],
+    "words": [
+        {
+            "word": "人",
+            "reading": [
+                "ひと",
+                "にん",
+                "じん"
+            ],
+            "mean": "person"
+        },
+        {
+            "word": "犬",
+            "reading": [
+                "いぬ"
+            ],
+            "mean": "dog"
+        },
+        {
+            "word": "行く",
+            "reading": [
+                "いく"
+            ],
+            "mean": "go"
+        },
+        {
+            "word": "本",
+            "reading": [
+                "ほん"
+            ],
+            "mean": "book"
+        },
+        {
+            "word": "見る",
+            "reading": [
+                "みる"
+            ],
+            "mean": "see"
+        }
+    ],
+    "grammarQuestions": []
+}

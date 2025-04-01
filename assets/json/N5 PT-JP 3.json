@@ -1,0 +1,446 @@
+{
+  "filename": "N5 PT-JP 3",
+  "tags": [
+    "ja",
+    "pt",
+    "N5"
+  ],
+  "words": [
+    {
+      "word": "朝",
+      "reading": [
+        "あさ"
+      ],
+      "mean": "manhã"
+    },
+    {
+      "word": "昼",
+      "reading": [
+        "ひる"
+      ],
+      "mean": "meio-dia"
+    },
+    {
+      "word": "夕方",
+      "reading": [
+        "ゆうがた"
+      ],
+      "mean": "tarde"
+    },
+    {
+      "word": "夜",
+      "reading": [
+        "よる"
+      ],
+      "mean": "noite"
+    },
+    {
+      "word": "今",
+      "reading": [
+        "いま"
+      ],
+      "mean": "agora"
+    },
+    {
+      "word": "昨日",
+      "reading": [
+        "きのう"
+      ],
+      "mean": "ontem"
+    },
+    {
+      "word": "今日",
+      "reading": [
+        "きょう"
+      ],
+      "mean": "hoje"
+    },
+    {
+      "word": "明日",
+      "reading": [
+        "あした"
+      ],
+      "mean": "amanhã"
+    },
+    {
+      "word": "月",
+      "reading": [
+        "つき",
+        "げつ"
+      ],
+      "mean": "lua, mês"
+    },
+    {
+      "word": "年",
+      "reading": [
+        "とし",
+        "ねん"
+      ],
+      "mean": "ano"
+    },
+    {
+      "word": "曜日",
+      "reading": [
+        "ようび"
+      ],
+      "mean": "dia da semana"
+    },
+    {
+      "word": "月曜日",
+      "reading": [
+        "げつようび"
+      ],
+      "mean": "segunda-feira"
+    },
+    {
+      "word": "火曜日",
+      "reading": [
+        "かようび"
+      ],
+      "mean": "terça-feira"
+    },
+    {
+      "word": "水曜日",
+      "reading": [
+        "すいようび"
+      ],
+      "mean": "quarta-feira"
+    },
+    {
+      "word": "木曜日",
+      "reading": [
+        "もくようび"
+      ],
+      "mean": "quinta-feira"
+    },
+    {
+      "word": "金曜日",
+      "reading": [
+        "きんようび"
+      ],
+      "mean": "sexta-feira"
+    },
+    {
+      "word": "土曜日",
+      "reading": [
+        "どようび"
+      ],
+      "mean": "sábado"
+    },
+    {
+      "word": "日曜日",
+      "reading": [
+        "にちようび"
+      ],
+      "mean": "domingo"
+    },
+    {
+      "word": "春",
+      "reading": [
+        "はる"
+      ],
+      "mean": "primavera"
+    },
+    {
+      "word": "夏",
+      "reading": [
+        "なつ"
+      ],
+      "mean": "verão"
+    },
+    {
+      "word": "秋",
+      "reading": [
+        "あき"
+      ],
+      "mean": "outono"
+    },
+    {
+      "word": "冬",
+      "reading": [
+        "ふゆ"
+      ],
+      "mean": "inverno"
+    },
+    {
+      "word": "朝ご飯",
+      "reading": [
+        "あさごはん"
+      ],
+      "mean": "café da manhã"
+    },
+    {
+      "word": "昼ご飯",
+      "reading": [
+        "ひるごはん"
+      ],
+      "mean": "almoço"
+    },
+    {
+      "word": "晩ご飯",
+      "reading": [
+        "ばんごはん"
+      ],
+      "mean": "jantar"
+    },
+    {
+      "word": "牛乳",
+      "reading": [
+        "ぎゅうにゅう"
+      ],
+      "mean": "leite"
+    },
+    {
+      "word": "卵",
+      "reading": [
+        "たまご"
+      ],
+      "mean": "ovo"
+    },
+    {
+      "word": "魚",
+      "reading": [
+        "さかな"
+      ],
+      "mean": "peixe"
+    },
+    {
+      "word": "肉",
+      "reading": [
+        "にく"
+      ],
+      "mean": "carne"
+    },
+    {
+      "word": "野菜",
+      "reading": [
+        "やさい"
+      ],
+      "mean": "verdura"
+    },
+    {
+      "word": "果物",
+      "reading": [
+        "くだもの"
+      ],
+      "mean": "fruta"
+    },
+    {
+      "word": "水",
+      "reading": [
+        "みず"
+      ],
+      "mean": "água"
+    },
+    {
+      "word": "お茶",
+      "reading": [
+        "おちゃ"
+      ],
+      "mean": "chá"
+    },
+    {
+      "word": "ご飯",
+      "reading": [
+        "ごはん"
+      ],
+      "mean": "arroz cozido, comida"
+    },
+    {
+      "word": "砂糖",
+      "reading": [
+        "さとう"
+      ],
+      "mean": "açúcar"
+    },
+    {
+      "word": "塩",
+      "reading": [
+        "しお"
+      ],
+      "mean": "sal"
+    },
+    {
+      "word": "学校",
+      "reading": [
+        "がっこう"
+      ],
+      "mean": "escola"
+    },
+    {
+      "word": "大学",
+      "reading": [
+        "だいがく"
+      ],
+      "mean": "universidade"
+    },
+    {
+      "word": "中学校",
+      "reading": [
+        "ちゅうがっこう"
+      ],
+      "mean": "escola secundária"
+    },
+    {
+      "word": "小学校",
+      "reading": [
+        "しょうがっこう"
+      ],
+      "mean": "escola primária"
+    },
+    {
+      "word": "図書館",
+      "reading": [
+        "としょかん"
+      ],
+      "mean": "biblioteca"
+    },
+    {
+      "word": "公園",
+      "reading": [
+        "こうえん"
+      ],
+      "mean": "parque"
+    },
+    {
+      "word": "郵便局",
+      "reading": [
+        "ゆうびんきょく"
+      ],
+      "mean": "correio"
+    },
+    {
+      "word": "銀行",
+      "reading": [
+        "ぎんこう"
+      ],
+      "mean": "banco"
+    },
+    {
+      "word": "駅",
+      "reading": [
+        "えき"
+      ],
+      "mean": "estação"
+    },
+    {
+      "word": "空港",
+      "reading": [
+        "くうこう"
+      ],
+      "mean": "aeroporto"
+    },
+    {
+      "word": "病院",
+      "reading": [
+        "びょういん"
+      ],
+      "mean": "hospital"
+    },
+    {
+      "word": "薬",
+      "reading": [
+        "くすり"
+      ],
+      "mean": "remédio"
+    },
+    {
+      "word": "風邪",
+      "reading": [
+        "かぜ"
+      ],
+      "mean": "resfriado"
+    },
+    {
+      "word": "熱",
+      "reading": [
+        "ねつ"
+      ],
+      "mean": "febre"
+    },
+    {
+      "word": "先生",
+      "reading": [
+        "せんせい"
+      ],
+      "mean": "professor/a, mestre"
+    },
+    {
+      "word": "生徒",
+      "reading": [
+        "せいと"
+      ],
+      "mean": "aluno/a"
+    },
+    {
+      "word": "仕事",
+      "reading": [
+        "しごと"
+      ],
+      "mean": "trabalho"
+    },
+    {
+      "word": "会社員",
+      "reading": [
+        "かいしゃいん"
+      ],
+      "mean": "funcionário/a de empresa"
+    },
+    {
+      "word": "警察",
+      "reading": [
+        "けいさつ"
+      ],
+      "mean": "polícia"
+    },
+    {
+      "word": "消防士",
+      "reading": [
+        "しょうぼうし"
+      ],
+      "mean": "bombeiro/a"
+    },
+    {
+      "word": "運転手",
+      "reading": [
+        "うんてんしゅ"
+      ],
+      "mean": "motorista"
+    },
+    {
+      "word": "美容師",
+      "reading": [
+        "びようし"
+      ],
+      "mean": "cabeleireiro/a"
+    },
+    {
+      "word": "歌手",
+      "reading": [
+        "かしゅ"
+      ],
+      "mean": "cantor/a"
+    },
+    {
+      "word": "医者",
+      "reading": [
+        "いしゃ"
+      ],
+      "mean": "médico/a"
+    },
+    {
+      "word": "看護師",
+      "reading": [
+        "かんごし"
+      ],
+      "mean": "enfermeiro/a"
+    },
+    {
+      "word": "弁護士",
+      "reading": [
+        "べんごし"
+      ],
+      "mean": "advogado/a"
+    }
+  ]
+}

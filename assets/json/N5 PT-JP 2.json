@@ -1,0 +1,423 @@
+{
+  "filename": "N5 PT-JP 2",
+  "tags": [
+    "jp",
+    "pt",
+    "N5"
+  ],
+  "words": [
+    {
+      "word": "青",
+      "reading": [
+        "あお"
+      ],
+      "mean": "azul"
+    },
+    {
+      "word": "赤",
+      "reading": [
+        "あか"
+      ],
+      "mean": "vermelho"
+    },
+    {
+      "word": "白",
+      "reading": [
+        "しろ"
+      ],
+      "mean": "branco"
+    },
+    {
+      "word": "黒",
+      "reading": [
+        "くろ"
+      ],
+      "mean": "preto"
+    },
+    {
+      "word": "黄色",
+      "reading": [
+        "きいろ"
+      ],
+      "mean": "amarelo"
+    },
+    {
+      "word": "高い",
+      "reading": [
+        "たかい"
+      ],
+      "mean": "alto, caro"
+    },
+    {
+      "word": "安い",
+      "reading": [
+        "やすい"
+      ],
+      "mean": "barato"
+    },
+    {
+      "word": "新しい",
+      "reading": [
+        "あたらしい"
+      ],
+      "mean": "novo"
+    },
+    {
+      "word": "古い",
+      "reading": [
+        "ふるい"
+      ],
+      "mean": "velho (não para pessoas)"
+    },
+    {
+      "word": "大きい",
+      "reading": [
+        "おおきい"
+      ],
+      "mean": "grande"
+    },
+    {
+      "word": "小さい",
+      "reading": [
+        "ちいさい"
+      ],
+      "mean": "pequeno"
+    },
+    {
+      "word": "長い",
+      "reading": [
+        "ながい"
+      ],
+      "mean": "longo"
+    },
+    {
+      "word": "短い",
+      "reading": [
+        "みじかい"
+      ],
+      "mean": "curto"
+    },
+    {
+      "word": "早い",
+      "reading": [
+        "はやい"
+      ],
+      "mean": "rápido, cedo"
+    },
+    {
+      "word": "遅い",
+      "reading": [
+        "おそい"
+      ],
+      "mean": "lento, tarde"
+    },
+    {
+      "word": "暑い",
+      "reading": [
+        "あつい"
+      ],
+      "mean": "quente (clima)"
+    },
+    {
+      "word": "寒い",
+      "reading": [
+        "さむい"
+      ],
+      "mean": "frio (clima)"
+    },
+    {
+      "word": "熱い",
+      "reading": [
+        "あつい"
+      ],
+      "mean": "quente (coisas)"
+    },
+    {
+      "word": "冷たい",
+      "reading": [
+        "つめたい"
+      ],
+      "mean": "frio (coisas)"
+    },
+    {
+      "word": "楽しい",
+      "reading": [
+        "たのしい"
+      ],
+      "mean": "divertido, agradável"
+    },
+    {
+      "word": "難しい",
+      "reading": [
+        "むずかしい"
+      ],
+      "mean": "difícil"
+    },
+    {
+      "word": "簡単",
+      "reading": [
+        "かんたん"
+      ],
+      "mean": "fácil, simples"
+    },
+    {
+      "word": "好き",
+      "reading": [
+        "すき"
+      ],
+      "mean": "gostar, querer"
+    },
+    {
+      "word": "嫌い",
+      "reading": [
+        "きらい"
+      ],
+      "mean": "não gostar, odiar"
+    },
+    {
+      "word": "多い",
+      "reading": [
+        "おおい"
+      ],
+      "mean": "muito, muitos"
+    },
+    {
+      "word": "少ない",
+      "reading": [
+        "すくない"
+      ],
+      "mean": "pouco, poucos"
+    },
+    {
+      "word": "強い",
+      "reading": [
+        "つよい"
+      ],
+      "mean": "forte"
+    },
+    {
+      "word": "弱い",
+      "reading": [
+        "よわい"
+      ],
+      "mean": "fraco"
+    },
+    {
+      "word": "太い",
+      "reading": [
+        "ふとい"
+      ],
+      "mean": "grosso, gordo"
+    },
+    {
+      "word": "細い",
+      "reading": [
+        "ほそい"
+      ],
+      "mean": "fino, magro"
+    },
+    {
+      "word": "甘い",
+      "reading": [
+        "あまい"
+      ],
+      "mean": "doce"
+    },
+    {
+      "word": "辛い",
+      "reading": [
+        "からい"
+      ],
+      "mean": "picante"
+    },
+    {
+      "word": "美しい",
+      "reading": [
+        "うつくしい"
+      ],
+      "mean": "bonito, belo"
+    },
+    {
+      "word": "汚い",
+      "reading": [
+        "きたない"
+      ],
+      "mean": "sujo"
+    },
+    {
+      "word": "静か",
+      "reading": [
+        "しずか"
+      ],
+      "mean": "tranquilo"
+    },
+    {
+      "word": "うるさい",
+      "reading": [
+        "うるさい"
+      ],
+      "mean": "barulhento, irritante"
+    },
+    {
+      "word": "元気",
+      "reading": [
+        "げんき"
+      ],
+      "mean": "saudável, enérgico"
+    },
+    {
+      "word": "有名",
+      "reading": [
+        "ゆうめい"
+      ],
+      "mean": "famoso"
+    },
+    {
+      "word": "便利",
+      "reading": [
+        "べんり"
+      ],
+      "mean": "conveniente"
+    },
+    {
+      "word": "不便",
+      "reading": [
+        "ふべん"
+      ],
+      "mean": "inconveniente"
+    },
+    {
+      "word": "忙しい",
+      "reading": [
+        "いそがしい"
+      ],
+      "mean": "ocupado"
+    },
+    {
+      "word": "楽",
+      "reading": [
+        "らく"
+      ],
+      "mean": "confortável, fácil"
+    },
+    {
+      "word": "危ない",
+      "reading": [
+        "あぶない"
+      ],
+      "mean": "perigoso"
+    },
+    {
+      "word": "大変",
+      "reading": [
+        "たいへん"
+      ],
+      "mean": "difícil, muito"
+    },
+    {
+      "word": "同じ",
+      "reading": [
+        "おなじ"
+      ],
+      "mean": "igual"
+    },
+    {
+      "word": "違う",
+      "reading": [
+        "ちがう"
+      ],
+      "mean": "diferente"
+    },
+    {
+      "word": "必要",
+      "reading": [
+        "ひつよう"
+      ],
+      "mean": "necessário"
+    },
+    {
+      "word": "十分",
+      "reading": [
+        "じゅうぶん"
+      ],
+      "mean": "suficiente"
+    },
+    {
+      "word": "緑",
+      "reading": [
+        "みどり"
+      ],
+      "mean": "verde"
+    },
+    {
+      "word": "茶色",
+      "reading": [
+        "ちゃいろ"
+      ],
+      "mean": "marrom"
+    },
+    {
+      "word": "灰色",
+      "reading": [
+        "はいいろ"
+      ],
+      "mean": "cinza"
+    },
+    {
+      "word": "紫",
+      "reading": [
+        "むらさき"
+      ],
+      "mean": "roxo"
+    },
+    {
+      "word": "桃色",
+      "reading": [
+        "ももいろ"
+      ],
+      "mean": "rosa"
+    },
+    {
+      "word": "銀色",
+      "reading": [
+        "ぎんいろ"
+      ],
+      "mean": "prateado"
+    },
+    {
+      "word": "金色",
+      "reading": [
+        "きんいろ"
+      ],
+      "mean": "dourado"
+    },
+    {
+      "word": "星",
+      "reading": [
+        "ほし"
+      ],
+      "mean": "estrela"
+    },
+    {
+      "word": "海",
+      "reading": [
+        "うみ"
+      ],
+      "mean": "mar, oceano"
+    },
+    {
+      "word": "池",
+      "reading": [
+        "いけ"
+      ],
+      "mean": "lagoa"
+    },
+    {
+      "word": "島",
+      "reading": [
+        "しま"
+      ],
+      "mean": "ilha"
+    }
+  ]
+}
