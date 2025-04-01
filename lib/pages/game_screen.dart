@@ -666,9 +666,10 @@ class GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     );
   }
 
+  //TODO add romaji to multiple choice
   Container centerWord(ColorPalette colorPalette, double fontSize) {
     return Container(
-      child: kIsWeb
+      child: kIsWeb || gameitems[currentIndex]['word'] == null
           ? GameScreenCard(
               colorPalette: colorPalette,
               processAnswer: (String answer) => _processAnswer(answer),

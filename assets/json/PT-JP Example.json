@@ -1,0 +1,48 @@
+{
+    "filename": "Exemplo PT-JP",
+    "tags": [
+        "jp",
+        "pt",
+        "N5"
+    ],
+    "words": [
+        {
+            "word": "人",
+            "reading": [
+                "ひと",
+                "にん",
+                "じん"
+            ],
+            "mean": "pessoa"
+        },
+        {
+            "word": "犬",
+            "reading": [
+                "いぬ"
+            ],
+            "mean": "cachorro"
+        },
+        {
+            "word": "行く",
+            "reading": [
+                "いく"
+            ],
+            "mean": "ir"
+        },
+        {
+            "word": "本",
+            "reading": [
+                "ほん"
+            ],
+            "mean": "livro"
+        },
+        {
+            "word": "見る",
+            "reading": [
+                "みる"
+            ],
+            "mean": "ver"
+        }
+    ],
+    "grammarQuestions": []
+}

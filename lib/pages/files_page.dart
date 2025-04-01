@@ -277,19 +277,23 @@ class ManagerPageState extends State<ManagerPage>
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: TextField(
-                          onChanged: (value) {
-                            newController.add(counter + 1);
-                            filterFiles(value);
-                          },
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                .main_searchtooltip,
-                            prefixIcon: const Icon(Icons.search),
-                            border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                    Radius.elliptical(16, 16))),
-                          ),
+                        child: Column(
+                          children: [
+                            TextField(
+                              onChanged: (value) {
+                                newController.add(counter + 1);
+                                filterFiles(value);
+                              },
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                    .main_searchtooltip,
+                                prefixIcon: const Icon(Icons.search),
+                                border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.elliptical(16, 16))),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 8.0),
@@ -315,8 +319,8 @@ class ManagerPageState extends State<ManagerPage>
                               itemCount: filteredFiles.length,
                               itemBuilder: (context, index) {
                                 final file = filteredFiles[index];
-                                final flagPath =
-                                    fileData[file['name']]!['flag'] ?? '';
+                                final tags =
+                                    fileData[file['name']]!['tags'] ?? '';
 
                                 return AnimationConfiguration.staggeredList(
                                   position:
@@ -339,17 +343,32 @@ class ManagerPageState extends State<ManagerPage>
                                         ),
                                         elevation: 4,
                                         child: ListTile(
-                                          leading: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Image.asset(
-                                              flagPath.isNotEmpty
-                                                  ? flagPath
-                                                  : 'default',
-                                              width: 40,
-                                              height: 40,
-                                              fit: BoxFit.cover,
-                                            ),
+                                          leading: Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              // Primeira bandeira
+                                              Image.asset(
+                                                LocaleUtils.getFlagPath(
+                                                    tags.isNotEmpty
+                                                        ? tags.first
+                                                        : 'default'),
+                                                width: 50,
+                                                height: 50,
+                                                fit: BoxFit.cover,
+                                              ),
+                                              if (tags.length > 1)
+                                                Positioned(
+                                                  bottom: 0,
+                                                  right: 0,
+                                                  child: Image.asset(
+                                                    LocaleUtils.getFlagPath(
+                                                        tags.elementAt(1)),
+                                                    width: 25,
+                                                    height: 25,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                            ],
                                           ),
                                           title: Text(
                                             file['name']
