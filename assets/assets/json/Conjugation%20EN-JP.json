@@ -1,0 +1,1013 @@
+{
+    "filename": "Conjugation EN-JP",
+    "tags": [
+        "jp",
+        "en",
+        "verbal conjugation",
+        "quiz"
+    ],
+    "words": [],
+    "grammarQuestions": [
+        {
+            "question": "What is the correct conjugation of the verb 行く (to go) to say 'I went yesterday'?",
+            "mean": "昨日、私は___。",
+            "alternatives": [
+                "行きます",
+                "行った",
+                "行きません",
+                "行く"
+            ],
+            "correct": "行った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 食べる (to eat) to say 'I don’t eat'?",
+            "mean": "私は___。",
+            "alternatives": [
+                "食べます",
+                "食べない",
+                "食べません",
+                "食べた"
+            ],
+            "correct": "食べません"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 見る (to see) to say 'Please look'?",
+            "mean": "これを___。",
+            "alternatives": [
+                "見て",
+                "見ます",
+                "見てください",
+                "見ない"
+            ],
+            "correct": "見てください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 書く (to write) to say 'I wrote a letter'?",
+            "mean": "手紙を___。",
+            "alternatives": [
+                "書きます",
+                "書いた",
+                "書いて",
+                "書かない"
+            ],
+            "correct": "書いた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 来る (to come) to say 'He didn’t come'?",
+            "mean": "彼は___。",
+            "alternatives": [
+                "来ます",
+                "来なかった",
+                "来ません",
+                "来た"
+            ],
+            "correct": "来なかった"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 飲む (to drink) to say 'Drink now'?",
+            "mean": "今、___。",
+            "alternatives": [
+                "飲みます",
+                "飲んで",
+                "飲め",
+                "飲まない"
+            ],
+            "correct": "飲め"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 聞く (to listen) to say 'I listened to music'?",
+            "mean": "音楽を___。",
+            "alternatives": [
+                "聞きます",
+                "聞いた",
+                "聞いて",
+                "聞きません"
+            ],
+            "correct": "聞いた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 寝る (to sleep) to say 'I won’t sleep'?",
+            "mean": "今夜は___。",
+            "alternatives": [
+                "寝ます",
+                "寝ない",
+                "寝ません",
+                "寝た"
+            ],
+            "correct": "寝ません"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 話す (to speak) to say 'Speak with me'?",
+            "mean": "私と___。",
+            "alternatives": [
+                "話して",
+                "話してください",
+                "話します",
+                "話さない"
+            ],
+            "correct": "話してください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 買う (to buy) to say 'I bought this'?",
+            "mean": "これを___。",
+            "alternatives": [
+                "買います",
+                "買った",
+                "買う",
+                "買いません"
+            ],
+            "correct": "買った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 読む (to read) to say 'Read this book'?",
+            "mean": "この本を___。",
+            "alternatives": [
+                "読みます",
+                "読んで",
+                "読め",
+                "読まない"
+            ],
+            "correct": "読め"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 起きる (to wake up) to say 'I wake up early'?",
+            "mean": "毎朝、___。",
+            "alternatives": [
+                "起きる",
+                "起きます",
+                "起きた",
+                "起きません"
+            ],
+            "correct": "起きます"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 泳ぐ (to swim) to say 'I can’t swim'?",
+            "mean": "私は___。",
+            "alternatives": [
+                "泳ぎます",
+                "泳げない",
+                "泳がない",
+                "泳いだ"
+            ],
+            "correct": "泳げない"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 作る (to make) to say 'I made food'?",
+            "mean": "料理を___。",
+            "alternatives": [
+                "作ります",
+                "作った",
+                "作る",
+                "作りません"
+            ],
+            "correct": "作った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 待つ (to wait) to say 'Please wait'?",
+            "mean": "少し___。",
+            "alternatives": [
+                "待って",
+                "待ちます",
+                "待ってください",
+                "待たない"
+            ],
+            "correct": "待ってください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 会う (to meet) to say 'I met him'?",
+            "mean": "昨日、彼に___。",
+            "alternatives": [
+                "会います",
+                "会った",
+                "会う",
+                "会いません"
+            ],
+            "correct": "会った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 勉強する (to study) to say 'I don’t study Japanese'?",
+            "mean": "日本語を___。",
+            "alternatives": [
+                "勉強します",
+                "勉強しない",
+                "勉強しません",
+                "勉強した"
+            ],
+            "correct": "勉強しません"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 帰る (to return) to say 'Return soon'?",
+            "mean": "早く___。",
+            "alternatives": [
+                "帰ります",
+                "帰って",
+                "帰れ",
+                "帰らない"
+            ],
+            "correct": "帰れ"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 使う (to use) to say 'I used this'?",
+            "mean": "これを___。",
+            "alternatives": [
+                "使います",
+                "使った",
+                "使う",
+                "使いません"
+            ],
+            "correct": "使った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 切る (to cut) to say 'I can’t cut'?",
+            "mean": "これを___。",
+            "alternatives": [
+                "切ります",
+                "切れない",
+                "切りません",
+                "切った"
+            ],
+            "correct": "切れない"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 遊ぶ (to play) to say 'Let’s play'?",
+            "mean": "一緒に___。",
+            "alternatives": [
+                "遊びます",
+                "遊ぼう",
+                "遊んで",
+                "遊ばない"
+            ],
+            "correct": "遊ぼう"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 開ける (to open) to say 'Open the window'?",
+            "mean": "窓を___。",
+            "alternatives": [
+                "開けて",
+                "開けます",
+                "開けてください",
+                "開けない"
+            ],
+            "correct": "開けてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 閉じる (to close) to say 'I closed the door'?",
+            "mean": "ドアを___。",
+            "alternatives": [
+                "閉じます",
+                "閉じた",
+                "閉じる",
+                "閉じません"
+            ],
+            "correct": "閉じた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 始める (to start) to say 'I started yesterday'?",
+            "mean": "昨日、___。",
+            "alternatives": [
+                "始めます",
+                "始めた",
+                "始める",
+                "始めません"
+            ],
+            "correct": "始めた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 終わる (to finish) to say 'It hasn’t finished yet'?",
+            "mean": "まだ___。",
+            "alternatives": [
+                "終わります",
+                "終わらない",
+                "終わりません",
+                "終わった"
+            ],
+            "correct": "終わりません"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 持つ (to hold) to say 'Hold this'?",
+            "mean": "これを___。",
+            "alternatives": [
+                "持ちます",
+                "持って",
+                "持て",
+                "持たない"
+            ],
+            "correct": "持て"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 送る (to send) to say 'I sent a letter'?",
+            "mean": "手紙を___。",
+            "alternatives": [
+                "送ります",
+                "送った",
+                "送る",
+                "送りません"
+            ],
+            "correct": "送った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 知る (to know) to say 'I know about this'?",
+            "mean": "それについて___。",
+            "alternatives": [
+                "知ります",
+                "知った",
+                "知る",
+                "知りません"
+            ],
+            "correct": "知ります"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 忘れる (to forget) to say 'Don’t forget'?",
+            "mean": "これを___。",
+            "alternatives": [
+                "忘れます",
+                "忘れないでください",
+                "忘れて",
+                "忘れません"
+            ],
+            "correct": "忘れないでください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 教える (to teach) to say 'Teach me'?",
+            "mean": "私に___。",
+            "alternatives": [
+                "教えて",
+                "教えます",
+                "教えてください",
+                "教えない"
+            ],
+            "correct": "教えてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 走る (to run) to say 'I ran yesterday'?",
+            "mean": "昨日、___。",
+            "alternatives": [
+                "走ります",
+                "走った",
+                "走る",
+                "走りません"
+            ],
+            "correct": "走った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 立つ (to stand) to say 'Stand up'?",
+            "mean": "ここで___。",
+            "alternatives": [
+                "立ちます",
+                "立って",
+                "立て",
+                "立たない"
+            ],
+            "correct": "立て"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 座る (to sit) to say 'I sat down'?",
+            "mean": "椅子に___。",
+            "alternatives": [
+                "座ります",
+                "座った",
+                "座る",
+                "座りません"
+            ],
+            "correct": "座った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 入る (to enter) to say 'Don’t enter'?",
+            "mean": "ここに___。",
+            "alternatives": [
+                "入ります",
+                "入らないでください",
+                "入って",
+                "入りません"
+            ],
+            "correct": "入らないでください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 出る (to leave) to say 'I left at 8'?",
+            "mean": "8時に___。",
+            "alternatives": [
+                "出ます",
+                "出た",
+                "出る",
+                "出ません"
+            ],
+            "correct": "出た"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 洗う (to wash) to say 'Wash your hands'?",
+            "mean": "手を___。",
+            "alternatives": [
+                "洗います",
+                "洗って",
+                "洗ってください",
+                "洗わない"
+            ],
+            "correct": "洗ってください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 消す (to turn off) to say 'I turned off the light'?",
+            "mean": "電気を___。",
+            "alternatives": [
+                "消します",
+                "消した",
+                "消す",
+                "消しません"
+            ],
+            "correct": "消した"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 点ける (to turn on) to say 'Turn on the light'?",
+            "mean": "電気を___。",
+            "alternatives": [
+                "点けます",
+                "点けて",
+                "点けてください",
+                "点けない"
+            ],
+            "correct": "点けてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 飛ぶ (to fly) to say 'I didn’t fly'?",
+            "mean": "昨日、___。",
+            "alternatives": [
+                "飛びます",
+                "飛ばなかった",
+                "飛びません",
+                "飛んだ"
+            ],
+            "correct": "飛ばなかった"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 歌う (to sing) to say 'Sing a song'?",
+            "mean": "歌を___。",
+            "alternatives": [
+                "歌います",
+                "歌って",
+                "歌え",
+                "歌わない"
+            ],
+            "correct": "歌え"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 笑う (to laugh) to say 'I laughed a lot'?",
+            "mean": "昨日、たくさん___。",
+            "alternatives": [
+                "笑います",
+                "笑った",
+                "笑う",
+                "笑いません"
+            ],
+            "correct": "笑った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 泣く (to cry) to say 'Don’t cry'?",
+            "mean": "今、___。",
+            "alternatives": [
+                "泣きます",
+                "泣かないでください",
+                "泣いて",
+                "泣きません"
+            ],
+            "correct": "泣かないでください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 貸す (to lend) to say 'Lend me'?",
+            "mean": "私に___。",
+            "alternatives": [
+                "貸します",
+                "貸して",
+                "貸してください",
+                "貸さない"
+            ],
+            "correct": "貸してください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 借りる (to borrow) to say 'I borrowed'?",
+            "mean": "本を___。",
+            "alternatives": [
+                "借ります",
+                "借りた",
+                "借りる",
+                "借りません"
+            ],
+            "correct": "借りた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 撮る (to take a photo) to say 'Take a photo'?",
+            "mean": "写真を___。",
+            "alternatives": [
+                "撮ります",
+                "撮って",
+                "撮れ",
+                "撮らない"
+            ],
+            "correct": "撮れ"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 覚える (to memorize) to say 'I memorized everything'?",
+            "mean": "全部___。",
+            "alternatives": [
+                "覚えます",
+                "覚えた",
+                "覚える",
+                "覚えません"
+            ],
+            "correct": "覚えた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 続ける (to continue) to say 'Continue like this'?",
+            "mean": "そのままで___。",
+            "alternatives": [
+                "続けます",
+                "続けて",
+                "続けてください",
+                "続けない"
+            ],
+            "correct": "続けてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 飛ぶ (to fly) to say 'I didn’t fly'?",
+            "mean": "昨日、___。",
+            "alternatives": [
+                "飛びます",
+                "飛ばなかった",
+                "飛びません",
+                "飛んだ"
+            ],
+            "correct": "飛ばなかった"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 歌う (to sing) to say 'Sing a song'?",
+            "mean": "歌を___。",
+            "alternatives": [
+                "歌います",
+                "歌って",
+                "歌え",
+                "歌わない"
+            ],
+            "correct": "歌え"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 笑う (to laugh) to say 'I laughed a lot'?",
+            "mean": "昨日、たくさん___。",
+            "alternatives": [
+                "笑います",
+                "笑った",
+                "笑う",
+                "笑いません"
+            ],
+            "correct": "笑った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 泣く (to cry) to say 'Don’t cry'?",
+            "mean": "今、___。",
+            "alternatives": [
+                "泣きます",
+                "泣かないでください",
+                "泣いて",
+                "泣きません"
+            ],
+            "correct": "泣かないでください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 貸す (to lend) to say 'Lend me'?",
+            "mean": "私に___。",
+            "alternatives": [
+                "貸します",
+                "貸して",
+                "貸してください",
+                "貸さない"
+            ],
+            "correct": "貸してください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 借りる (to borrow) to say 'I borrowed'?",
+            "mean": "本を___。",
+            "alternatives": [
+                "借ります",
+                "借りた",
+                "借りる",
+                "借りません"
+            ],
+            "correct": "借りた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 撮る (to take a photo) to say 'Take a photo'?",
+            "mean": "写真を___。",
+            "alternatives": [
+                "撮ります",
+                "撮って",
+                "撮れ",
+                "撮らない"
+            ],
+            "correct": "撮れ"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 覚える (to memorize) to say 'I memorized everything'?",
+            "mean": "全部___。",
+            "alternatives": [
+                "覚えます",
+                "覚えた",
+                "覚える",
+                "覚えません"
+            ],
+            "correct": "覚えた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 考える (to think) to say 'Think about this'?",
+            "mean": "それについて___。",
+            "alternatives": [
+                "考えます",
+                "考えて",
+                "考えてください",
+                "考えない"
+            ],
+            "correct": "考えてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 直す (to fix) to say 'I fixed the car'?",
+            "mean": "車を___。",
+            "alternatives": [
+                "直します",
+                "直した",
+                "直す",
+                "直しません"
+            ],
+            "correct": "直した"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 壊す (to break) to say 'Don’t break'?",
+            "mean": "これを___。",
+            "alternatives": [
+                "壊します",
+                "壊さないでください",
+                "壊して",
+                "壊しません"
+            ],
+            "correct": "壊さないでください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 置く (to place) to say 'Place it here'?",
+            "mean": "ここに___。",
+            "alternatives": [
+                "置きます",
+                "置いて",
+                "置いてください",
+                "置かない"
+            ],
+            "correct": "置いてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 取る (to take) to say 'I took the book'?",
+            "mean": "本を___。",
+            "alternatives": [
+                "取ります",
+                "取った",
+                "取る",
+                "取りません"
+            ],
+            "correct": "取った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 捨てる (to throw away) to say 'Throw this away'?",
+            "mean": "これを___。",
+            "alternatives": [
+                "捨てます",
+                "捨てて",
+                "捨ててください",
+                "捨てない"
+            ],
+            "correct": "捨ててください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 見せる (to show) to say 'Show me'?",
+            "mean": "私に___。",
+            "alternatives": [
+                "見せます",
+                "見せて",
+                "見せてください",
+                "見せない"
+            ],
+            "correct": "見せてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 掛ける (to call) to say 'I called him'?",
+            "mean": "彼に___。",
+            "alternatives": [
+                "掛けます",
+                "掛けた",
+                "掛ける",
+                "掛けません"
+            ],
+            "correct": "掛けた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 落ちる (to fall) to say 'It fell on the floor'?",
+            "mean": "床に___。",
+            "alternatives": [
+                "落ちます",
+                "落ちた",
+                "落ちる",
+                "落ちません"
+            ],
+            "correct": "落ちた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 乗る (to ride) to say 'Ride the train'?",
+            "mean": "電車に___。",
+            "alternatives": [
+                "乗ります",
+                "乗って",
+                "乗ってください",
+                "乗らない"
+            ],
+            "correct": "乗ってください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 降りる (to get off) to say 'I got off the bus'?",
+            "mean": "バスから___。",
+            "alternatives": [
+                "降ります",
+                "降りた",
+                "降りる",
+                "降りません"
+            ],
+            "correct": "降りた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 止める (to stop) to say 'Stop here'?",
+            "mean": "ここで___。",
+            "alternatives": [
+                "止めます",
+                "止めて",
+                "止めてください",
+                "止まない"
+            ],
+            "correct": "止めてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 動く (to move) to say 'Don’t move'?",
+            "mean": "今、___。",
+            "alternatives": [
+                "動きます",
+                "動かないでください",
+                "動いて",
+                "動きません"
+            ],
+            "correct": "動かないでください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 焼く (to bake) to say 'I baked bread'?",
+            "mean": "パンを___。",
+            "alternatives": [
+                "焼きます",
+                "焼いた",
+                "焼く",
+                "焼きません"
+            ],
+            "correct": "焼いた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 沸かす (to boil) to say 'Boil the water'?",
+            "mean": "水を___。",
+            "alternatives": [
+                "沸かします",
+                "沸かして",
+                "沸かしてください",
+                "沸かさない"
+            ],
+            "correct": "沸かしてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 冷やす (to cool) to say 'I will cool the drink'?",
+            "mean": "飲み物を___。",
+            "alternatives": [
+                "冷やします",
+                "冷やした",
+                "冷やす",
+                "冷やしません"
+            ],
+            "correct": "冷やします"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 温める (to warm) to say 'Warm the food'?",
+            "mean": "料理を___。",
+            "alternatives": [
+                "温めます",
+                "温めて",
+                "温めてください",
+                "温めない"
+            ],
+            "correct": "温めてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 混ぜる (to mix) to say 'I mixed the ingredients'?",
+            "mean": "材料を___。",
+            "alternatives": [
+                "混ぜます",
+                "混ぜた",
+                "混ぜる",
+                "混ぜません"
+            ],
+            "correct": "混ぜた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 並ぶ (to line up) to say 'Line up here'?",
+            "mean": "ここで___。",
+            "alternatives": [
+                "並びます",
+                "並んで",
+                "並んでください",
+                "並ばない"
+            ],
+            "correct": "並んでください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 並べる (to arrange) to say 'I arranged the books'?",
+            "mean": "本を___。",
+            "alternatives": [
+                "並べます",
+                "並べた",
+                "並べる",
+                "並べません"
+            ],
+            "correct": "並べた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 売る (to sell) to say 'I sold my car'?",
+            "mean": "車を___。",
+            "alternatives": [
+                "売ります",
+                "売った",
+                "売る",
+                "売りません"
+            ],
+            "correct": "売った"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 買う (to buy) to say 'Buy now'?",
+            "mean": "今、___。",
+            "alternatives": [
+                "買います",
+                "買って",
+                "買え",
+                "買いません"
+            ],
+            "correct": "買え"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 吸う (to smoke) to say 'I don’t smoke'?",
+            "mean": "私は___。",
+            "alternatives": [
+                "吸います",
+                "吸わない",
+                "吸いません",
+                "吸った"
+            ],
+            "correct": "吸いません"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 脱ぐ (to take off) to say 'Take off your shoes'?",
+            "mean": "靴を___。",
+            "alternatives": [
+                "脱ぎます",
+                "脱いで",
+                "脱いでください",
+                "脱がない"
+            ],
+            "correct": "脱いでください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 着る (to wear) to say 'I wore a shirt'?",
+            "mean": "シャツを___。",
+            "alternatives": [
+                "着ます",
+                "着た",
+                "着る",
+                "着ません"
+            ],
+            "correct": "着た"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 履く (to put on) to say 'Put on your shoes'?",
+            "mean": "靴を___。",
+            "alternatives": [
+                "履きます",
+                "履いて",
+                "履いてください",
+                "履かない"
+            ],
+            "correct": "履いてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 疲れる (to get tired) to say 'I got tired'?",
+            "mean": "昨日、___。",
+            "alternatives": [
+                "疲れます",
+                "疲れた",
+                "疲れる",
+                "疲れません"
+            ],
+            "correct": "疲れた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 休む (to rest) to say 'Rest a little'?",
+            "mean": "少し___。",
+            "alternatives": [
+                "休みます",
+                "休んで",
+                "休んでください",
+                "休まない"
+            ],
+            "correct": "休んでください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 働く (to work) to say 'I worked yesterday'?",
+            "mean": "昨日、___。",
+            "alternatives": [
+                "働きます",
+                "働いた",
+                "働く",
+                "働きません"
+            ],
+            "correct": "働いた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 旅行する (to travel) to say 'I won’t travel'?",
+            "mean": "来週、___。",
+            "alternatives": [
+                "旅行します",
+                "旅行しない",
+                "旅行しません",
+                "旅行した"
+            ],
+            "correct": "旅行しません"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 急ぐ (to hurry) to say 'Let’s hurry'?",
+            "mean": "一緒に___。",
+            "alternatives": [
+                "急ぎます",
+                "急ごう",
+                "急いで",
+                "急がない"
+            ],
+            "correct": "急ごう"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 答える (to answer) to say 'Answer the question'?",
+            "mean": "質問に___。",
+            "alternatives": [
+                "答えます",
+                "答えて",
+                "答えてください",
+                "答えません"
+            ],
+            "correct": "答えてください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 調べる (to research) to say 'I researched this'?",
+            "mean": "これを___。",
+            "alternatives": [
+                "調べます",
+                "調べた",
+                "調べる",
+                "調べません"
+            ],
+            "correct": "調べた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 練習する (to practice) to say 'Practice Japanese'?",
+            "mean": "日本語を___。",
+            "alternatives": [
+                "練習します",
+                "練習して",
+                "練習してください",
+                "練習しない"
+            ],
+            "correct": "練習してください"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 信じる (to believe) to say 'I believed in him'?",
+            "mean": "彼を___。",
+            "alternatives": [
+                "信じます",
+                "信じた",
+                "信じる",
+                "信じません"
+            ],
+            "correct": "信じた"
+        },
+        {
+            "question": "What is the correct conjugation of the verb 続ける (to continue) to say 'Continue like this'?",
+            "mean": "そのままで___。",
+            "alternatives": [
+                "続けます",
+                "続けて",
+                "続けてください",
+                "続けない"
+            ],
+            "correct": "続けてください"
+        }
+    ]
+}

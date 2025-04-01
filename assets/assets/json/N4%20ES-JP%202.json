@@ -1,0 +1,543 @@
+{
+  "filename": "N4 ES-JP 2",
+  "tags": [
+    "jp",
+    "es",
+    "N4"
+  ],
+  "words": [
+    {
+      "word": "聞こえる",
+      "reading": [
+        "きこえる"
+      ],
+      "mean": "ser oído"
+    },
+    {
+      "word": "持ち物",
+      "reading": [
+        "もちもの"
+      ],
+      "mean": "pertenencias"
+    },
+    {
+      "word": "楽しい",
+      "reading": [
+        "たのしい"
+      ],
+      "mean": "divertido"
+    },
+    {
+      "word": "会話",
+      "reading": [
+        "かいわ"
+      ],
+      "mean": "conversación"
+    },
+    {
+      "word": "話題",
+      "reading": [
+        "わだい"
+      ],
+      "mean": "tema"
+    },
+    {
+      "word": "町",
+      "reading": [
+        "まち"
+      ],
+      "mean": "pueblo"
+    },
+    {
+      "word": "事",
+      "reading": [
+        "こと"
+      ],
+      "mean": "cosa, asunto"
+    },
+    {
+      "word": "特別",
+      "reading": [
+        "とくべつ"
+      ],
+      "mean": "especial"
+    },
+    {
+      "word": "全然",
+      "reading": [
+        "ぜんぜん"
+      ],
+      "mean": "nada en absoluto"
+    },
+    {
+      "word": "好き",
+      "reading": [
+        "すき"
+      ],
+      "mean": "gustar, favorito"
+    },
+    {
+      "word": "嫌い",
+      "reading": [
+        "きらい"
+      ],
+      "mean": "no gustar"
+    },
+    {
+      "word": "明るい",
+      "reading": [
+        "あかるい"
+      ],
+      "mean": "brillante"
+    },
+    {
+      "word": "暗い",
+      "reading": [
+        "くらい"
+      ],
+      "mean": "oscuro"
+    },
+    {
+      "word": "近く",
+      "reading": [
+        "ちかく"
+      ],
+      "mean": "cerca"
+    },
+    {
+      "word": "後で",
+      "reading": [
+        "あとで"
+      ],
+      "mean": "después"
+    },
+    {
+      "word": "外",
+      "reading": [
+        "そと"
+      ],
+      "mean": "afuera"
+    },
+    {
+      "word": "中",
+      "reading": [
+        "なか"
+      ],
+      "mean": "adentro"
+    },
+    {
+      "word": "言葉",
+      "reading": [
+        "ことば"
+      ],
+      "mean": "palabra, idioma"
+    },
+    {
+      "word": "図書館",
+      "reading": [
+        "としょかん"
+      ],
+      "mean": "biblioteca"
+    },
+    {
+      "word": "言う",
+      "reading": [
+        "いう"
+      ],
+      "mean": "decir"
+    },
+    {
+      "word": "使う",
+      "reading": [
+        "つかう"
+      ],
+      "mean": "usar"
+    },
+    {
+      "word": "見る",
+      "reading": [
+        "みる"
+      ],
+      "mean": "ver"
+    },
+    {
+      "word": "聞く",
+      "reading": [
+        "きく"
+      ],
+      "mean": "preguntar"
+    },
+    {
+      "word": "作る",
+      "reading": [
+        "つくる"
+      ],
+      "mean": "hacer"
+    },
+    {
+      "word": "食べる",
+      "reading": [
+        "たべる"
+      ],
+      "mean": "comer"
+    },
+    {
+      "word": "見る",
+      "reading": [
+        "みる"
+      ],
+      "mean": "mirar"
+    },
+    {
+      "word": "歩く",
+      "reading": [
+        "あるく"
+      ],
+      "mean": "caminar"
+    },
+    {
+      "word": "手伝う",
+      "reading": [
+        "てつだう"
+      ],
+      "mean": "ayudar"
+    },
+    {
+      "word": "助ける",
+      "reading": [
+        "たすける"
+      ],
+      "mean": "asistir"
+    },
+    {
+      "word": "料理",
+      "reading": [
+        "りょうり"
+      ],
+      "mean": "cocina"
+    },
+    {
+      "word": "運転",
+      "reading": [
+        "うんてん"
+      ],
+      "mean": "conducción"
+    },
+    {
+      "word": "掃除",
+      "reading": [
+        "そうじ"
+      ],
+      "mean": "limpieza"
+    },
+    {
+      "word": "洗濯",
+      "reading": [
+        "せんたく"
+      ],
+      "mean": "lavado"
+    },
+    {
+      "word": "買い物",
+      "reading": [
+        "かいもの"
+      ],
+      "mean": "compras"
+    },
+    {
+      "word": "遊ぶ",
+      "reading": [
+        "あそぶ"
+      ],
+      "mean": "jugar"
+    },
+    {
+      "word": "読書",
+      "reading": [
+        "どくしょ"
+      ],
+      "mean": "lectura"
+    },
+    {
+      "word": "寝る",
+      "reading": [
+        "ねる"
+      ],
+      "mean": "dormir"
+    },
+    {
+      "word": "起きる",
+      "reading": [
+        "おきる"
+      ],
+      "mean": "despertarse"
+    },
+    {
+      "word": "行く",
+      "reading": [
+        "いく"
+      ],
+      "mean": "ir"
+    },
+    {
+      "word": "来る",
+      "reading": [
+        "くる"
+      ],
+      "mean": "venir"
+    },
+    {
+      "word": "帰る",
+      "reading": [
+        "かえる"
+      ],
+      "mean": "volver a casa"
+    },
+    {
+      "word": "する",
+      "reading": [
+        "する"
+      ],
+      "mean": "hacer"
+    },
+    {
+      "word": "飲む",
+      "reading": [
+        "のむ"
+      ],
+      "mean": "tomar"
+    },
+    {
+      "word": "見せる",
+      "reading": [
+        "みせる"
+      ],
+      "mean": "mostrar"
+    },
+    {
+      "word": "話す",
+      "reading": [
+        "はなす"
+      ],
+      "mean": "hablar"
+    },
+    {
+      "word": "待つ",
+      "reading": [
+        "まつ"
+      ],
+      "mean": "esperar"
+    },
+    {
+      "word": "作業",
+      "reading": [
+        "さぎょう"
+      ],
+      "mean": "tarea, trabajo"
+    },
+    {
+      "word": "掃除機",
+      "reading": [
+        "そうじき"
+      ],
+      "mean": "aspiradora"
+    },
+    {
+      "word": "自転車",
+      "reading": [
+        "じてんしゃ"
+      ],
+      "mean": "bicicleta"
+    },
+    {
+      "word": "車",
+      "reading": [
+        "くるま"
+      ],
+      "mean": "auto"
+    },
+    {
+      "word": "電車",
+      "reading": [
+        "でんしゃ"
+      ],
+      "mean": "tren"
+    },
+    {
+      "word": "飛行機",
+      "reading": [
+        "ひこうき"
+      ],
+      "mean": "avión"
+    },
+    {
+      "word": "船",
+      "reading": [
+        "ふね"
+      ],
+      "mean": "barco"
+    },
+    {
+      "word": "地域",
+      "reading": [
+        "ちいき"
+      ],
+      "mean": "región"
+    },
+    {
+      "word": "世界",
+      "reading": [
+        "せかい"
+      ],
+      "mean": "mundo"
+    },
+    {
+      "word": "町",
+      "reading": [
+        "まち"
+      ],
+      "mean": "ciudad"
+    },
+    {
+      "word": "村",
+      "reading": [
+        "むら"
+      ],
+      "mean": "aldea"
+    },
+    {
+      "word": "大学",
+      "reading": [
+        "だいがく"
+      ],
+      "mean": "universidad"
+    },
+    {
+      "word": "学校",
+      "reading": [
+        "がっこう"
+      ],
+      "mean": "escuela"
+    },
+    {
+      "word": "教師",
+      "reading": [
+        "きょうし"
+      ],
+      "mean": "profesor"
+    },
+    {
+      "word": "生徒",
+      "reading": [
+        "せいと"
+      ],
+      "mean": "alumno/a"
+    },
+    {
+      "word": "テスト",
+      "reading": [
+        "てすと"
+      ],
+      "mean": "examen"
+    },
+    {
+      "word": "勉強",
+      "reading": [
+        "べんきょう"
+      ],
+      "mean": "estudio"
+    },
+    {
+      "word": "問題",
+      "reading": [
+        "もんだい"
+      ],
+      "mean": "problema"
+    },
+    {
+      "word": "答え",
+      "reading": [
+        "こたえ"
+      ],
+      "mean": "respuesta"
+    },
+    {
+      "word": "書く",
+      "reading": [
+        "かく"
+      ],
+      "mean": "escribir"
+    },
+    {
+      "word": "読んで",
+      "reading": [
+        "よんで"
+      ],
+      "mean": "lee (imperativo)"
+    },
+    {
+      "word": "聞いて",
+      "reading": [
+        "きいて"
+      ],
+      "mean": "escucha (imperativo)"
+    },
+    {
+      "word": "会話",
+      "reading": [
+        "かいわ"
+      ],
+      "mean": "conversación"
+    },
+    {
+      "word": "表現",
+      "reading": [
+        "ひょうげん"
+      ],
+      "mean": "expresión"
+    },
+    {
+      "word": "意味",
+      "reading": [
+        "いみ"
+      ],
+      "mean": "significado"
+    },
+    {
+      "word": "直す",
+      "reading": [
+        "なおす"
+      ],
+      "mean": "arreglar"
+    },
+    {
+      "word": "新しい",
+      "reading": [
+        "あたらしい"
+      ],
+      "mean": "nuevo"
+    },
+    {
+      "word": "古い",
+      "reading": [
+        "ふるい"
+      ],
+      "mean": "viejo"
+    },
+    {
+      "word": "明るい",
+      "reading": [
+        "あかるい"
+      ],
+      "mean": "brillante"
+    },
+    {
+      "word": "暗い",
+      "reading": [
+        "くらい"
+      ],
+      "mean": "oscuro"
+    }
+  ],
+  "grammarQuestions": []
+}

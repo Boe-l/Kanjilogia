@@ -1,0 +1,258 @@
+{
+  "filename": "N5 ES-JP 1",
+  "tags": [
+    "jp",
+    "es",
+    "N5"
+  ],
+  "words": [
+    {
+      "word": "人",
+      "reading": [
+        "ひと",
+        "にん",
+        "じん"
+      ],
+      "mean": "persona"
+    },
+    {
+      "word": "日",
+      "reading": [
+        "ひ",
+        "にち",
+        "じつ"
+      ],
+      "mean": "día, sol"
+    },
+    {
+      "word": "時",
+      "reading": [
+        "とき",
+        "じ"
+      ],
+      "mean": "tiempo, hora"
+    },
+    {
+      "word": "行く",
+      "reading": [
+        "いく",
+        "ゆく"
+      ],
+      "mean": "ir"
+    },
+    {
+      "word": "来る",
+      "reading": [
+        "くる",
+        "きたる"
+      ],
+      "mean": "venir"
+    },
+    {
+      "word": "食べる",
+      "reading": [
+        "たべる"
+      ],
+      "mean": "comer"
+    },
+    {
+      "word": "飲む",
+      "reading": [
+        "のむ"
+      ],
+      "mean": "tomar, beber"
+    },
+    {
+      "word": "見る",
+      "reading": [
+        "みる"
+      ],
+      "mean": "ver, mirar"
+    },
+    {
+      "word": "聞く",
+      "reading": [
+        "きく"
+      ],
+      "mean": "escuchar, oír"
+    },
+    {
+      "word": "話す",
+      "reading": [
+        "はなす"
+      ],
+      "mean": "hablar"
+    },
+    {
+      "word": "読む",
+      "reading": [
+        "よむ"
+      ],
+      "mean": "leer"
+    },
+    {
+      "word": "書く",
+      "reading": [
+        "かく"
+      ],
+      "mean": "escribir"
+    },
+    {
+      "word": "買う",
+      "reading": [
+        "かう"
+      ],
+      "mean": "comprar"
+    },
+    {
+      "word": "学校",
+      "reading": [
+        "がっこう"
+      ],
+      "mean": "escuela"
+    },
+    {
+      "word": "先生",
+      "reading": [
+        "せんせい"
+      ],
+      "mean": "profesor/a, maestro/a"
+    },
+    {
+      "word": "学生",
+      "reading": [
+        "がくせい"
+      ],
+      "mean": "estudiante"
+    },
+    {
+      "word": "友達",
+      "reading": [
+        "ともだち"
+      ],
+      "mean": "amigo/a"
+    },
+    {
+      "word": "家",
+      "reading": [
+        "いえ",
+        "うち",
+        "や"
+      ],
+      "mean": "casa, hogar"
+    },
+    {
+      "word": "車",
+      "reading": [
+        "くるま"
+      ],
+      "mean": "auto"
+    },
+    {
+      "word": "駅",
+      "reading": [
+        "えき"
+      ],
+      "mean": "estación"
+    },
+    {
+      "word": "店",
+      "reading": [
+        "みせ",
+        "てん"
+      ],
+      "mean": "tienda, negocio"
+    },
+    {
+      "word": "会社",
+      "reading": [
+        "かいしゃ"
+      ],
+      "mean": "empresa"
+    },
+    {
+      "word": "病院",
+      "reading": [
+        "びょういん"
+      ],
+      "mean": "hospital"
+    },
+    {
+      "word": "犬",
+      "reading": [
+        "いぬ"
+      ],
+      "mean": "perro"
+    },
+    {
+      "word": "猫",
+      "reading": [
+        "ねこ"
+      ],
+      "mean": "gato"
+    },
+    {
+      "word": "本",
+      "reading": [
+        "ほん"
+      ],
+      "mean": "libro"
+    },
+    {
+      "word": "音楽",
+      "reading": [
+        "おんがく"
+      ],
+      "mean": "música"
+    },
+    {
+      "word": "映画",
+      "reading": [
+        "えいが"
+      ],
+      "mean": "película"
+    },
+    {
+      "word": "天気",
+      "reading": [
+        "てんき"
+      ],
+      "mean": "clima"
+    },
+    {
+      "word": "雨",
+      "reading": [
+        "あめ"
+      ],
+      "mean": "lluvia"
+    },
+    {
+      "word": "雪",
+      "reading": [
+        "ゆき"
+      ],
+      "mean": "nieve"
+    },
+    {
+      "word": "風",
+      "reading": [
+        "かぜ"
+      ],
+      "mean": "viento"
+    },
+    {
+      "word": "山",
+      "reading": [
+        "やま"
+      ],
+      "mean": "montaña"
+    },
+    {
+      "word": "川",
+      "reading": [
+        "かわ"
+      ],
+      "mean": "río"
+    }
+  ]
+}
